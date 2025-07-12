@@ -1,5 +1,5 @@
 ---
-title: "2_Tidy"
+title: "Tidy"
 author: "Trevor S"
 ---
 
