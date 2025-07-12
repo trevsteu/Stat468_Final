@@ -7,8 +7,13 @@ book:
   date: "2025-07-12"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
+    - question.qmd
+    - 1_import.qmd
+    - 2_tidy.qmd
+    - 3_transform.qmd
+    - 4_visualize.qmd
+    - 5_model.qmd
+    - 6_communicate.qmd
     - references.qmd
 
 bibliography: references.bib
