@@ -9,7 +9,7 @@
 <meta name="author" content="Trevor S">
 <meta name="dcterms.date" content="2025-07-12">
 
-<title>Stat468_Final</title>
+<title>Stat468 Final Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -126,7 +126,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Stat468_Final</a> 
+      <a href="./">Stat468 Final Project</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -209,7 +209,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Stat468_Final</h1>
+<h1 class="title">Stat468 Final Project</h1>
 </div>
 
 
@@ -240,17 +240,20 @@ window.Quarto = {
 
 <section id="abstract" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Abstract</h1>
-<p>Relative to every other pick, much is each selection in the NHL Entry Draft worth? This question is important because trades involving solely draft picks are rather common (there were 18 this past year) and knowing the relative value of draft picks allows teams to make better decisions regarding these trades.</p>
-<p>Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, if estimating the fairness of a trade, one could compare the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the points contributed and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with a <span class="math inline">\(k\)</span>-nearest neighbours algorithm.</p>
-<p>The data from this report is taken from <a href="https://www.hockey-reference.com/draft/">HockeyReference</a>, which has data on the NHL Draft and player games played and point share counts dating back to 1963.</p>
+<p>In the days leading up to and days of the 2025 NHL Entry Draft there were 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams.</p>
+<p>Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, one could estimate the fairness of a trade by comparing the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the points contributed and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with a <span class="math inline">\(k\)</span>-nearest neighbours algorithm.</p>
+<p>The data from this report is taken from <a href="https://www.hockey-reference.com/draft/">HockeyReference</a>, which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later.</p>
 <p>Some work in this area has been done before, such as:</p>
 <ul>
 <li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a></p></li>
 <li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a></p></li>
 <li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a></p></li>
 </ul>
-<p>As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. As can be seen by the charts presented in the resources above, NHL draft picks do <u><strong>not</strong></u> decrease in value linearly (ie the difference in value pick 1 and 30 is much greater than between pick 101 and 130).</p>
-<p>Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. The primary concern with including data from many years ago is that teams have likely become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft “steals” in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations because it would overestimate contributions by players who were drafted in the later rounds, since those players would potentially have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor estimator of draft pick value for drafts occurring in the 2020s. That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recent either. Ideally, we should wait until all players from a draft class have retired before including it in our analysis . Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004) which would force us to include older drafts to maintain the same sample size, which is also unideal as explained above.</p>
+<p>As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. One critical point that it is common knowledge in ice hockey circles and confirmed by the resources above, along with the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a> of this report is that NHL draft picks do <u><strong>not</strong></u> decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130. Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have</p>
+<p><span class="math display">\[
+v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c
+\]</span></p>
+<p>where <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(v_i\)</span> is the value of the <span class="math inline">\(i^{\text{th}}\)</span> selection.</p>
 
 
 </section>

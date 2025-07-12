@@ -1,7 +1,7 @@
 # References {.unnumbered}
 
 ::: {#refs}
--   [ChatGPT Usage](https://chatgpt.com/c/6872b228-8478-8008-a76f-717881103689)
+-   ChatGPT Usage (will add link when done)
 
 -   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
 

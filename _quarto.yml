@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "Stat468_Final"
+  title: "Stat468 Final Project"
   author: "Trevor Steunenberg"
   date: "2025-07-12"
   chapters:
