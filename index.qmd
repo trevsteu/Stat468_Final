@@ -1,0 +1,15 @@
+# Question {.unnumbered}
+
+Relative to every other pick, much is each selection in the NHL Entry Draft worth? This question is important because trades involving solely draft picks are rather common (there were 18 this past year) and knowing the relative value of draft picks allows teams to make better decisions regarding these trades.
+
+Some work in this area has been done before, such as:
+
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
+
+-   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
+
+-   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
+
+As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.
+
+As can be seen by the charts presented in the resources above, NHL draft picks do not decrease in value linearly (ie the difference in value pick 1 and 30 is much greater than between pick 101 and 130).
