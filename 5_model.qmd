@@ -1,0 +1,6 @@
+---
+title: "5_Model"
+author: "Trevor S"
+---
+
+This is a placeholder for Ch5 – Model.

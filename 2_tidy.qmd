@@ -1,0 +1,6 @@
+---
+title: "2_Tidy"
+author: "Trevor S"
+---
+
+This is a placeholder for Ch2 – Tidy.

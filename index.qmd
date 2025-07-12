@@ -1,4 +1,7 @@
-# Abstract
+---
+title: "Abstract"
+author: "Trevor S"
+---
 
 Relative to every other pick, much is each selection in the NHL Entry Draft worth? This question is important because trades involving solely draft picks are rather common (there were 18 this past year) and knowing the relative value of draft picks allows teams to make better decisions regarding these trades.
 

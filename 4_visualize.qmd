@@ -1,0 +1,6 @@
+---
+title: "4_Visualize"
+author: "Trevor S"
+---
+
+This is a placeholder for Ch4 – Visualize.
