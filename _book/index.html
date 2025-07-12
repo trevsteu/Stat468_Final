@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -82,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Question</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Abstract</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -110,19 +139,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Question</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Abstract</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -141,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#question" id="toc-question" class="nav-link active" data-scroll-target="#question">Question</a></li>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract"><span class="header-section-number">1</span> Abstract</a></li>
   </ul>
 </nav>
     </div>
@@ -179,17 +208,18 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="question" class="level1 unnumbered">
-<h1 class="unnumbered">Question</h1>
+<section id="abstract" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Abstract</h1>
 <p>Relative to every other pick, much is each selection in the NHL Entry Draft worth? This question is important because trades involving solely draft picks are rather common (there were 18 this past year) and knowing the relative value of draft picks allows teams to make better decisions regarding these trades.</p>
+<p>Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, if estimating the fairness of a trade, one could compare the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the points contributed and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with a <span class="math inline">\(k\)</span>-nearest neighbours algorithm.</p>
+<p>The data from this report is taken from <a href="https://www.hockey-reference.com/draft/">HockeyReference</a>, which has data on the NHL Draft and player games played and point share counts dating back to 1963. Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. The primary concern with including data from many years ago is that teams have likely become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft ``steals” in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations because it would overestimate contributions by players who were drafted in the later rounds, since those players would potentially have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor estimator of draft pick value for drafts occurring in the 2020s. That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recent either. Ideally, we should wait until all players from a draft class have retired before including it in our analysis . Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004) which would force us to include older drafts to maintain the same sample size, which is also unideal as explained above.</p>
 <p>Some work in this area has been done before, such as:</p>
 <ul>
 <li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a></p></li>
 <li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a></p></li>
 <li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a></p></li>
 </ul>
-<p>As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.</p>
-<p>As can be seen by the charts presented in the resources above, NHL draft picks do not decrease in value linearly (ie the difference in value pick 1 and 30 is much greater than between pick 101 and 130).</p>
+<p>As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. As can be seen by the charts presented in the resources above, NHL draft picks do <u><strong>not</strong></u> decrease in value linearly (ie the difference in value pick 1 and 30 is much greater than between pick 101 and 130).</p>
 
 
 </section>
@@ -609,7 +639,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./intro.html" class="pagination-link" aria-label="Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
