@@ -1,5 +1,5 @@
 ---
-title: "6_Communicate"
+title: "Communicate"
 author: "Trevor S"
 ---
 

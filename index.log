@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.12)  12 JUL 2025 17:24
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.12)  12 JUL 2025 17:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -987,35 +987,35 @@ No file index.toc.
 
 ]
 chapter 1.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.665pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.475pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.95099pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.66568pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.4755pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.94882pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.66417pt on input line 210.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.47441pt on input line 210.
 
 
 [3
 
 ]
-
-[4]
 chapter 2.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.665pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.475pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.95099pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.66568pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.4755pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 10.94882pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 7.66417pt on input line 214.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 5.47441pt on input line 214.
 
 
-[5
+[4
 
 ]
+
+[5]
 chapter 3.
 
 
@@ -1052,6 +1052,12 @@ chapter 8.
 [11
 
 ]
+chapter 9.
+
+
+[12
+
+]
 
 ! LaTeX Error: Something's wrong--perhaps a missing \item.
 
@@ -1059,18 +1065,18 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.312 \end{CSLReferences}
-                         
+l.316 \begin{itemize}
+                     
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
  
 Here is how much of TeX's memory you used:
- 21859 strings out of 470473
- 422944 string characters out of 5489892
+ 21856 strings out of 470473
+ 422828 string characters out of 5489892
  1109421 words of memory out of 5000000
- 49922 multiletter control sequences out of 15000+600000
+ 49919 multiletter control sequences out of 15000+600000
  633537 words of font info for 87 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,7n,114p,10900b,394s stack positions out of 10000i,1000n,20000p,200000b,200000s
-Output written on index.pdf (11 pages).
+Output written on index.pdf (12 pages).

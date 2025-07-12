@@ -1,4 +1,15 @@
 # References {.unnumbered}
 
 ::: {#refs}
+-   [ChatGPT Usage](https://chatgpt.com/c/6872b228-8478-8008-a76f-717881103689)
+
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
+
+-   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
+
+-   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
+
+-   [HockeyReference](https://www.hockey-reference.com/draft/)
 :::
+
+For now this is just a list of links. Later I will formalize it.
