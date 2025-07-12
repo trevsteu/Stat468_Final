@@ -3,7 +3,7 @@ project:
 
 book:
   title: "Stat468_Final"
-  author: "Norah Jones"
+  author: "Trevor Steunenberg"
   date: "2025-07-12"
   chapters:
     - index.qmd
