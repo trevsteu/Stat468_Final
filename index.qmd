@@ -28,7 +28,9 @@ The data used by this report is imported from [Hockey Reference](https://www.hoc
 -   `Amateur Team`: the team the player was drafted from (confusingly this could be a pro team in Europe).
 -   `GP`, `G`, `A`, `PTS`, `+/-`, `PIM`: the player's career games played, goals, assists, points (goals plus assists), plus minus, and penalty minutes. For players who never played in the NHL this will be the empty string.
 -   `GP`, `W`, `L`, `T/O`, `SV%`, `GAA`: the goalie's career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For skater and goalies who never played in the NHL all of these columns will be the empty string.
--   `PS`: the player's estimated point share, or career points addedto their team (here we mean points in the standings, not goals and assists). There is more info on point share [here](https://www.hockey-reference.com/about/point_shares.html). \\end{itemize} \`\`\` Note that we will only use a subset of these columns, as will be explained in the [Tidy chapter](https://trevsteu.github.io/Stat468_Final/tidy.html).
+-   `PS`: the player's estimated point share, or career points addedto their team (here we mean points in the standings, not goals and assists). There is more info on point share [here](https://www.hockey-reference.com/about/point_shares.html).
+
+Note that we will only use a subset of these columns, as will be explained in the [Tidy chapter](https://trevsteu.github.io/Stat468_Final/tidy.html).
 
 ## Previous Work
 

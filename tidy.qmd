@@ -30,7 +30,15 @@ Now that we have imported the data, we must clean it. Despite the table from the
 import_draft(start_year)[23:30,]
 ```
 
-Two problems that immediately come up are numbers being used as strings, the two rows that get inserted at the end of every round, and the fact that (at least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team. By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have `NA`s listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don't care about.
+Three problems that immediately come up are:
+
+-   Two rows get inserted at the end of every round to indicate the round changed.
+
+-   Numbers are being coded as strings (`overall`, `age`, `to`, etc).
+
+-   (At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.
+
+By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don't care about.
 
 ## Setup
 
