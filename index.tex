@@ -474,11 +474,15 @@ We build a function to tidy the data. In particular, we want it to:
   Change \texttt{gp} and \texttt{ps} values to 0 for players who never
   played in the NHL or have a negative \texttt{ps}.
 \item
+  If \texttt{is.na(to)}, then the player never played in the NHL, so set
+  it to the draft year.
+\item
   Add a \texttt{year} column so we can adjust the stats of players
   drafted more recently.
 \item
   Select the columns we care about (\texttt{year}, \texttt{overall},
-  \texttt{pos}, \texttt{to}, \texttt{gp}, and \texttt{ps}).
+  \texttt{pos}, \texttt{to}, \texttt{gp}, and \texttt{ps}) in that
+  order.
 \end{itemize}
 
 Note that there were originally two \texttt{gp} columns (one for games
@@ -496,30 +500,31 @@ different numbers of picks.
 \NormalTok{  draft\_year\_table }\OtherTok{\textless{}{-}} \FunctionTok{import\_draft}\NormalTok{(year) }\SpecialCharTok{|\textgreater{}} 
     \FunctionTok{filter}\NormalTok{(overall }\SpecialCharTok{!=} \StringTok{"Overall"} \SpecialCharTok{\&}\NormalTok{ overall }\SpecialCharTok{!=} \StringTok{""}\NormalTok{)}\SpecialCharTok{|\textgreater{}} \CommentTok{\# remove extra rows}
     \FunctionTok{type\_convert}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
-    \FunctionTok{mutate}\NormalTok{(}\StringTok{"year"} \OtherTok{=}\NormalTok{ year, }\StringTok{"ps"} \OtherTok{=} \FunctionTok{coalesce}\NormalTok{(ps, }\DecValTok{0}\NormalTok{), }\StringTok{"gp"} \OtherTok{=} \FunctionTok{coalesce}\NormalTok{(gp, }\DecValTok{0}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{mutate}\NormalTok{(}\StringTok{"year"} \OtherTok{=}\NormalTok{ year, }\StringTok{"ps"} \OtherTok{=} \FunctionTok{pmax}\NormalTok{(}\FunctionTok{coalesce}\NormalTok{(ps, }\DecValTok{0}\NormalTok{), }\DecValTok{0}\NormalTok{), }
+           \StringTok{"gp"} \OtherTok{=} \FunctionTok{coalesce}\NormalTok{(gp, }\DecValTok{0}\NormalTok{), }\StringTok{"to"} \OtherTok{=} \FunctionTok{coalesce}\NormalTok{(to, year)) }\SpecialCharTok{|\textgreater{}} 
     \FunctionTok{select}\NormalTok{(year, overall, to, pos, gp, ps)}
 \NormalTok{  draft\_year\_table}
 \NormalTok{\}}
 
-\FunctionTok{tidy\_draft}\NormalTok{(}\DecValTok{2020}\NormalTok{)}
+\FunctionTok{tidy\_draft}\NormalTok{(}\DecValTok{1996}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-# A tibble: 216 x 6
+# A tibble: 241 x 6
     year overall    to pos      gp    ps
    <dbl>   <dbl> <dbl> <chr> <dbl> <dbl>
- 1  2020       1  2025 LW      380  17.8
- 2  2020       2  2025 C       260  13.9
- 3  2020       3  2025 LW      367  30.3
- 4  2020       4  2025 LW      320  22.6
- 5  2020       5  2025 D       236  19.9
- 6  2020       6  2025 D       217   6.5
- 7  2020       7  2025 RW      163   2.7
- 8  2020       8  2025 RW      178   7.8
- 9  2020       9  2025 C       185   9.1
-10  2020      10  2025 C       222  12.9
-# i 206 more rows
+ 1  1996       1  2015 D      1179  64.6
+ 2  1996       2  2008 D       496  25.8
+ 3  1996       3  2011 RW      822  56.6
+ 4  1996       4  2000 C         3   0  
+ 5  1996       5  2007 D       231   8.8
+ 6  1996       6  2009 C       627  12.5
+ 7  1996       7  2007 LW/C    545   9.2
+ 8  1996       8  2004 D        44   0  
+ 9  1996       9  2011 D       917  46.9
+10  1996      10  2004 D       209   2.7
+# i 231 more rows
 \end{verbatim}
 
 \bookmarksetup{startatroot}

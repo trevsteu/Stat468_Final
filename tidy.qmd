@@ -49,9 +49,11 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Change `gp` and `ps` values to 0 for players who never played in the NHL or have a negative `ps`.
 
+-   If `is.na(to)`, then the player never played in the NHL, so set it to the draft year.
+
 -   Add a `year` column so we can adjust the stats of players drafted more recently.
 
--   Select the columns we care about (`year`, `overall`, `pos`, `to`, `gp`, and `ps`).
+-   Select the columns we care about (`year`, `overall`, `pos`, `to`, `gp`, and `ps`) in that order.
 
 Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
 
@@ -60,10 +62,11 @@ tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
     filter(overall != "Overall" & overall != "")|> # remove extra rows
     type_convert() |> 
-    mutate("year" = year, "ps" = coalesce(ps, 0), "gp" = coalesce(gp, 0)) |> 
+    mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
+           "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 
     select(year, overall, to, pos, gp, ps)
   draft_year_table
 }
 
-tidy_draft(2020)
+tidy_draft(1996)
 ```
