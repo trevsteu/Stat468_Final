@@ -111,7 +111,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Abstract</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -139,7 +139,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Abstract</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Index</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -242,18 +242,19 @@ window.Quarto = {
 <h1 data-number="1"><span class="header-section-number">1</span> Abstract</h1>
 <p>In the days leading up to and days of the 2025 NHL Entry Draft there were 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams.</p>
 <p>Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, one could estimate the fairness of a trade by comparing the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the points contributed and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with a <span class="math inline">\(k\)</span>-nearest neighbours algorithm.</p>
-<p>The data from this report is taken from <a href="https://www.hockey-reference.com/draft/">HockeyReference</a>, which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later.</p>
+<p>The data used by this report is imported from <a href="https://www.hockey-reference.com/draft/">HockeyReference</a>, which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later.</p>
 <p>Some work in this area has been done before, such as:</p>
 <ul>
 <li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a></p></li>
 <li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a></p></li>
 <li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a></p></li>
 </ul>
-<p>As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. One critical point that it is common knowledge in ice hockey circles and confirmed by the resources above, along with the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a> of this report is that NHL draft picks do <u><strong>not</strong></u> decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130. Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have</p>
+<p>As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. One critical point that it is common knowledge in ice hockey circles and confirmed by the resources above, along with the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a> of this report is that NHL draft picks do <u><strong>not</strong></u> decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.</p>
+<p>Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have</p>
 <p><span class="math display">\[
 v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c
 \]</span></p>
-<p>where <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(v_i\)</span> is the value of the <span class="math inline">\(i^{\text{th}}\)</span> selection.</p>
+<p>where <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(v_i\)</span> is the value of the <span class="math inline">\(i^{\text{th}}\)</span> selection, meaning we would only have to find the value of <span class="math inline">\(c\)</span>.</p>
 
 
 </section>

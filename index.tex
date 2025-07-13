@@ -59,6 +59,46 @@
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
 
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
@@ -195,11 +235,11 @@
 }
 \bookmarksetup{startatroot}
 
-\chapter{Abstract}\label{abstract}
+\chapter{Index}\label{index}
 
 \bookmarksetup{startatroot}
 
-\chapter{Abstract}\label{abstract-1}
+\chapter{Abstract}\label{abstract}
 
 In the days leading up to and days of the 2025 NHL Entry Draft there
 were 18 trades which only included draft picks. This report aims to use
@@ -216,7 +256,7 @@ value of pick \(n\) by utilizing the points contributed and games played
 by previous players selected at pick \(n\) along with a \(k\)-nearest
 neighbours algorithm.
 
-The data from this report is taken from
+The data used by this report is imported from
 \href{https://www.hockey-reference.com/draft/}{HockeyReference}, which
 has data on the NHL Draft and player games played and point share counts
 dating back to 1963, though we will only use a subset of this data as
@@ -243,47 +283,78 @@ circles and confirmed by the resources above, along with the
 \href{https://trevsteu.github.io/Stat468_Final/model.html}{Model
 chapter} of this report is that NHL draft picks do \ul{\textbf{not}}
 decrease in value linearly. In particular, the difference in value pick
-1 and 30 is much greater than between pick 101 and 130. Note that if
-picks did decrease linearly in value linearly then it would be very easy
-to create a model of draft pick value since we would have
+1 and 30 is much greater than between pick 101 and 130.
+
+Note that if picks did decrease linearly in value linearly then it would
+be very easy to create a model of draft pick value since we would have
 
 \[
 v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c
 \]
 
 where \(c > 0\) and \(v_i\) is the value of the \(i^{\text{th}}\)
-selection.
+selection, meaning we would only have to find the value of \(c\).
 
 \bookmarksetup{startatroot}
 
 \chapter{Question}\label{question}
 
-This is a placeholder for Ch0 -- Question.
+\bookmarksetup{startatroot}
+
+\chapter{Question}\label{question-1}
+
+This report will estimate the relative value of selections in the NHL
+Entry Draft. I am not sure what else I am supposed to put here.
 
 \bookmarksetup{startatroot}
 
 \chapter{Import}\label{import}
 
-Since the NHL has changed dramatically over the years, care must be
-taken to ensure we do not include drafts from too long ago. The primary
-concern with including data from many years ago is that teams have
-likely become better at evaluating prospects as more advanced statistics
-have been developed, meaning that there are likely fewer late round
-draft ``steals'' in the 2020s than there were in the 1980s. Thus
-including drafts from the 1980s would skew our calculations because it
-would overestimate contributions by players who were drafted in the
-later rounds, since those players would potentially have been drafted
-sooner if the teams of the 1980s had the resources available to teams
-today. This would make our model a poor estimator of draft pick value
-for drafts occurring in the 2020s. That being said, players drafted in
+\bookmarksetup{startatroot}
+
+\chapter{Import}\label{import-1}
+
+As mentioned before, we will be importing data from
+\href{https://www.hockey-reference.com/draft}{Hockey Reference}. Before
+we import anything, it's important to consider \emph{which} and
+\emph{how many} years we want to include in this analysis. Since the NHL
+has changed dramatically over the years, care must be taken to ensure we
+do not include drafts from too long ago. The primary concern with
+including data from too many years ago is that teams have likely changed
+their drafting approach over time. For example, teams may have become
+better at evaluating prospects as more advanced statistics have been
+developed, meaning that there are likely fewer late round draft
+``steals'' in the 2020s than there were in the 1980s. Thus including
+drafts from the 1980s would skew our calculations because it would
+overestimate contributions by players who were drafted in the later
+rounds, since those players would potentially have been drafted sooner
+if the teams of the 1980s had the resources available to teams today.
+This would make our model a poor estimator of draft pick value for
+drafts occurring in the 2020s. That being said, players drafted in
 recent years have not had sufficient time to contribute to their teams,
-so we should not include drafts from too recent either. Ideally, we
-should wait until all players from a draft class have retired before
+so we should not include drafts from too recently either. Ideally, we
+would wait until all players from a draft class have retired before
 including it in our analysis . Practically speaking, this is not
 feasible since players can have very long careers (for example, Alex
-Ovechkin was drafted in 2004) which would force us to include older
-drafts to maintain the same sample size, which is also unideal as
-explained above.
+Ovechkin was drafted in 2004 and is still playing) which would force us
+to include older drafts to maintain the same sample size, which is also
+not ideal as explained above.
+
+Having considered this, we make the somewhat arbitrary decision to use
+the 25 drafts between and 1996 and 2020 (inclusive). Note that a
+significant portion of the players in our dataset are still active, so
+we will have to make an adjustment to account for this. Additionally, it
+makes sense to give more recent drafts more weight for the reasons
+described above. We will make both of these adjustments in the
+\href{https://trevsteu.github.io/Stat468_Final/transform.html}{Transform
+chapter}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_year }\OtherTok{\textless{}{-}} \DecValTok{1996}
+\NormalTok{end\_year }\OtherTok{\textless{}{-}} \DecValTok{2020}
+\end{Highlighting}
+\end{Shaded}
 
 \bookmarksetup{startatroot}
 
