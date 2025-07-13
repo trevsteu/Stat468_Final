@@ -7,9 +7,30 @@ author: "Trevor S"
 
 In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams.
 
-Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, one could estimate the fairness of a trade by comparing the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick $n$ by utilizing the points contributed and games played by previous players selected at pick $n$ along with a $k$-nearest neighbours algorithm.
+Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, one could estimate the fairness of a trade by comparing the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick $n$ by utilizing the point shares and games played by previous players selected at pick $n$ along with a $k$-nearest neighbours algorithm.
 
-The data used by this report is imported from [HockeyReference](https://www.hockey-reference.com/draft/), which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later.
+One critical point that it is common knowledge in ice hockey circles and confirmed by the resources listed below, along with the [Model chapter](https://trevsteu.github.io/Stat468_Final/model.html) of this report is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.
+
+Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have
+
+$$ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c $$
+
+where $c > 0$ and $v_i$ is the value of the $i^{\text{th}}$ selection, meaning we would only have to find the value of $c$.
+
+## Data
+
+The data used by this report is imported from [Hockey Reference](https://www.hockey-reference.com/draft/), which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later. Each row on Hockey Reference is one player selected, and the columns included on the site are:
+
+-   `Overall`: the selection where the player was selected
+-   `Team`: the team that selected the player.
+-   `Name`, `Nat`, `Pos`, `Age`: the player's name, nationality, position, at age at the time of the draft.
+-   `To`: the last year a player played in the NHL. For players who never played in the NHL this will be the empty string, for those who are still playing it will be `2025`.
+-   `Amateur Team`: the team the player was drafted from (confusingly this could be a pro team in Europe).
+-   `GP`, `G`, `A`, `PTS`, `+/-`, `PIM`: the player's career games played, goals, assists, points (goals plus assists), plus minus, and penalty minutes. For players who never played in the NHL this will be the empty string.
+-   `GP`, `W`, `L`, `T/O`, `SV%`, `GAA`: the goalie's career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For skater and goalies who never played in the NHL all of these columns will be the empty string.
+-   `PS`: the player's estimated point share, or career points addedto their team (here we mean points in the standings, not goals and assists). There is more info on point share [here](https://www.hockey-reference.com/about/point_shares.html). \\end{itemize} \`\`\` Note that we will only use a subset of these columns, as will be explained in the [Tidy chapter](https://trevsteu.github.io/Stat468_Final/tidy.html).
+
+## Previous Work
 
 Some work in this area has been done before, such as:
 
@@ -19,12 +40,4 @@ Some work in this area has been done before, such as:
 
 -   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
 
-As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. One critical point that it is common knowledge in ice hockey circles and confirmed by the resources above, along with the [Model chapter](https://trevsteu.github.io/Stat468_Final/model.html) of this report is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.
-
-Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have
-
-$$
-v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c
-$$
-
-where $c > 0$ and $v_i$ is the value of the $i^{\text{th}}$ selection, meaning we would only have to find the value of $c$.
+This report will most closely follow the work done in the first paper listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.

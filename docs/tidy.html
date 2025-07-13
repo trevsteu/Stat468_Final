@@ -241,7 +241,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
-<p>Now that we have imported the data, we must clean it. Despite the table from the previous chapter <em>looking</em> fairly clean, we can see that there are some issues.</p>
+<p>Now that we have imported the data, we must clean it. Despite the table from the previous chapter <em>looking</em> fairly clean, further inspection reveals some issues:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">import_draft</span>(start_year)[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -260,7 +260,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #   l &lt;chr&gt;, t_o &lt;chr&gt;, sv_percent &lt;chr&gt;, gaa &lt;chr&gt;, ps &lt;chr&gt;</code></pre>
 </div>
 </div>
-<p>Two problems that immediately come up are the two rows that get inserted at the end of every round, and the fact that (at least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team. By doing a little bit of detective work with some of the other players with missing values, we notice that players who never played in the NHL have <code>NA</code>s listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player’s ages in the 2001 draft, but we aren’t going to use ages for our analysis so we won’t bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don’t care about.</p>
+<p>Two problems that immediately come up are numbers being used as strings, the two rows that get inserted at the end of every round, and the fact that (at least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team. By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have <code>NA</code>s listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player’s ages in the 2001 draft, but we aren’t going to use ages for our analysis so we won’t bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don’t care about.</p>
 </section>
 <section id="setup" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="setup"><span class="header-section-number">4.2</span> Setup</h2>
