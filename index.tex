@@ -362,7 +362,7 @@ These packages will be installed into "~/Downloads/Stat468_Final/renv/library/wi
 
 # Installing packages --------------------------------------------------------
 - Installing rvest ...                          OK [linked from cache]
-Successfully installed 1 package in 15 milliseconds.
+Successfully installed 1 package in 18 milliseconds.
 \end{verbatim}
 
 \begin{Shaded}
@@ -378,7 +378,7 @@ These packages will be installed into "~/Downloads/Stat468_Final/renv/library/wi
 
 # Installing packages --------------------------------------------------------
 - Installing tidyverse ...                      OK [linked from cache]
-Successfully installed 1 package in 16 milliseconds.
+Successfully installed 1 package in 25 milliseconds.
 \end{verbatim}
 
 \begin{Shaded}
@@ -394,7 +394,7 @@ These packages will be installed into "~/Downloads/Stat468_Final/renv/library/wi
 
 # Installing packages --------------------------------------------------------
 - Installing janitor ...                        OK [linked from cache]
-Successfully installed 1 package in 11 milliseconds.
+Successfully installed 1 package in 12 milliseconds.
 \end{verbatim}
 
 \begin{Shaded}
@@ -420,22 +420,17 @@ Reference.
 \NormalTok{import\_draft }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(year)\{}
 \NormalTok{  url }\OtherTok{\textless{}{-}} \FunctionTok{str\_glue}\NormalTok{(}\StringTok{"https://www.hockey{-}reference.com/draft/NHL\_\{year\}\_entry.html"}\NormalTok{)}
 \NormalTok{  html }\OtherTok{\textless{}{-}} \FunctionTok{read\_html}\NormalTok{(url)}
-\NormalTok{  draft\_year\_\_table }\OtherTok{\textless{}{-}}\NormalTok{ html }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{  draft\_year\_table }\OtherTok{\textless{}{-}}\NormalTok{ html }\SpecialCharTok{|\textgreater{}} 
     \FunctionTok{html\_element}\NormalTok{(}\StringTok{"table"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
     \FunctionTok{html\_table}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
 \NormalTok{    janitor}\SpecialCharTok{::}\FunctionTok{row\_to\_names}\NormalTok{(}\DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
 \NormalTok{    janitor}\SpecialCharTok{::}\FunctionTok{clean\_names}\NormalTok{()}
-\NormalTok{  draft\_year\_\_table}
+\NormalTok{  draft\_year\_table}
 \NormalTok{\}}
 
 \FunctionTok{head}\NormalTok{(}\FunctionTok{import\_draft}\NormalTok{(start\_year), }\DecValTok{10}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-Warning: Row 1 does not provide unique names. Consider running clean_names()
-after row_to_names().
-\end{verbatim}
 
 \begin{verbatim}
 # A tibble: 10 x 21
