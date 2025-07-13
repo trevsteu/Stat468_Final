@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.12)  12 JUL 2025 20:28
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.12)  12 JUL 2025 21:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1049,38 +1049,103 @@ chapter 5.
 ]
 chapter 6.
 
+Overfull \hbox (197.0998pt too wide) in paragraph at lines 366--366
+[]\TU/lmtt/m/n/10.95 These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".[] 
+ []
+
+
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 366--366
+[]\TU/lmtt/m/n/10.95 # Installing packages --------------------------------------------------------[] 
+ []
+
+
+Overfull \hbox (197.0998pt too wide) in paragraph at lines 382--382
+[]\TU/lmtt/m/n/10.95 These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".[] 
+ []
+
+
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 382--382
+[]\TU/lmtt/m/n/10.95 # Installing packages --------------------------------------------------------[] 
+ []
+
+
+Overfull \hbox (197.0998pt too wide) in paragraph at lines 398--398
+[]\TU/lmtt/m/n/10.95 These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".[] 
+ []
+
+
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 398--398
+[]\TU/lmtt/m/n/10.95 # Installing packages --------------------------------------------------------[] 
+ []
+
+
 
 [8
 
 ]
+
+[9]
 chapter 7.
 
+Overfull \hbox (13.13986pt too wide) in paragraph at lines 456--456
+[]   \TU/lmtt/m/n/10.95 <chr>   <chr>   <chr>  <chr> <chr> <chr> <chr> <chr>        <chr> <chr> <chr>[] 
+ []
 
-[9
 
-]
-chapter 8.
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 456--456
+[] \TU/lmtt/m/n/10.95 1 1       Ottawa~ Chris~ CA    D     18    2015  Prince Albe~ 1179  71    217[] 
+ []
+
+
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 456--456
+[] \TU/lmtt/m/n/10.95 3 3       New Yo~ J.P. ~ CA    RW    18    2011  Val-d'Or Fo~ 822   214   309[] 
+ []
+
+
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 456--456
+[] \TU/lmtt/m/n/10.95 6 6       Edmont~ Boyd ~ CA    C     18    2009  Kitchener R~ 627   67    112[] 
+ []
+
+
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 456--456
+[] \TU/lmtt/m/n/10.95 9 9       Anahei~ Rusla~ BY    D     21    2011  Las Vegas T~ 917   45    159[] 
+ []
+
 
 
 [10
 
 ]
-chapter 9.
 
-
-[11
-
-]
-chapter 10.
+[11]
+chapter 8.
 
 
 [12
 
 ]
-chapter 11.
+chapter 9.
 
 
 [13
+
+]
+chapter 10.
+
+
+[14
+
+]
+chapter 11.
+
+
+[15
+
+]
+chapter 12.
+
+
+[16
 
 ]
 
@@ -1090,18 +1155,18 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.398 \begin{itemize}
+l.497 \begin{itemize}
                      
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
  
 Here is how much of TeX's memory you used:
- 22372 strings out of 470473
- 431252 string characters out of 5489892
- 1118687 words of memory out of 5000000
- 50419 multiletter control sequences out of 15000+600000
+ 22375 strings out of 470473
+ 431318 string characters out of 5489892
+ 1121687 words of memory out of 5000000
+ 50422 multiletter control sequences out of 15000+600000
  633569 words of font info for 91 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 108i,7n,114p,10900b,394s stack positions out of 10000i,1000n,20000p,200000b,200000s
-Output written on index.pdf (13 pages).
+ 108i,7n,114p,10900b,515s stack positions out of 10000i,1000n,20000p,200000b,200000s
+Output written on index.pdf (16 pages).

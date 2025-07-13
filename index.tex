@@ -299,10 +299,6 @@ selection, meaning we would only have to find the value of \(c\).
 
 \chapter{Question}\label{question}
 
-\bookmarksetup{startatroot}
-
-\chapter{Question}\label{question-1}
-
 This report will estimate the relative value of selections in the NHL
 Entry Draft. I am not sure what else I am supposed to put here.
 
@@ -312,7 +308,7 @@ Entry Draft. I am not sure what else I am supposed to put here.
 
 \bookmarksetup{startatroot}
 
-\chapter{Import}\label{import-1}
+\chapter{Introduction}\label{introduction}
 
 As mentioned before, we will be importing data from
 \href{https://www.hockey-reference.com/draft}{Hockey Reference}. Before
@@ -349,12 +345,115 @@ described above. We will make both of these adjustments in the
 \href{https://trevsteu.github.io/Stat468_Final/transform.html}{Transform
 chapter}.
 
+\bookmarksetup{startatroot}
+
+\chapter{Setup}\label{setup}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{"rvest"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+The following package(s) will be installed:
+- rvest [1.0.4]
+These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".
+
+# Installing packages --------------------------------------------------------
+- Installing rvest ...                          OK [linked from cache]
+Successfully installed 1 package in 15 milliseconds.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{"tidyverse"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+The following package(s) will be installed:
+- tidyverse [2.0.0]
+These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".
+
+# Installing packages --------------------------------------------------------
+- Installing tidyverse ...                      OK [linked from cache]
+Successfully installed 1 package in 16 milliseconds.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{install.packages}\NormalTok{(}\StringTok{"janitor"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+The following package(s) will be installed:
+- janitor [2.2.1]
+These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".
+
+# Installing packages --------------------------------------------------------
+- Installing janitor ...                        OK [linked from cache]
+Successfully installed 1 package in 11 milliseconds.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(rvest)}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\end{Highlighting}
+\end{Shaded}
+
+\bookmarksetup{startatroot}
+
+\chapter{Code}\label{code}
+
+We start off by creating a function to import data from Hockey
+Reference.
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{start\_year }\OtherTok{\textless{}{-}} \DecValTok{1996}
 \NormalTok{end\_year }\OtherTok{\textless{}{-}} \DecValTok{2020}
+
+\NormalTok{import\_draft }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(year)\{}
+\NormalTok{  url }\OtherTok{\textless{}{-}} \FunctionTok{str\_glue}\NormalTok{(}\StringTok{"https://www.hockey{-}reference.com/draft/NHL\_\{year\}\_entry.html"}\NormalTok{)}
+\NormalTok{  html }\OtherTok{\textless{}{-}} \FunctionTok{read\_html}\NormalTok{(url)}
+\NormalTok{  draft\_year\_\_table }\OtherTok{\textless{}{-}}\NormalTok{ html }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{html\_element}\NormalTok{(}\StringTok{"table"}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{html\_table}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    janitor}\SpecialCharTok{::}\FunctionTok{row\_to\_names}\NormalTok{(}\DecValTok{1}\NormalTok{) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{    janitor}\SpecialCharTok{::}\FunctionTok{clean\_names}\NormalTok{()}
+\NormalTok{  draft\_year\_\_table}
+\NormalTok{\}}
+
+\FunctionTok{head}\NormalTok{(}\FunctionTok{import\_draft}\NormalTok{(start\_year), }\DecValTok{10}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+Warning: Row 1 does not provide unique names. Consider running clean_names()
+after row_to_names().
+\end{verbatim}
+
+\begin{verbatim}
+# A tibble: 10 x 21
+   overall team    player nat   pos   age   to    amateur_team gp    g     a    
+   <chr>   <chr>   <chr>  <chr> <chr> <chr> <chr> <chr>        <chr> <chr> <chr>
+ 1 1       Ottawa~ Chris~ CA    D     18    2015  Prince Albe~ 1179  71    217  
+ 2 2       San Jo~ Andre~ RU    D     18    2008  Salavat Yul~ 496   38    82   
+ 3 3       New Yo~ J.P. ~ CA    RW    18    2011  Val-d'Or Fo~ 822   214   309  
+ 4 4       Washin~ Alexa~ RU    C     18    2000  Barrie Colt~ 3     0     0    
+ 5 5       Dallas~ Ric J~ CA    D     18    2007  Soo Greyhou~ 231   19    58   
+ 6 6       Edmont~ Boyd ~ CA    C     18    2009  Kitchener R~ 627   67    112  
+ 7 7       Buffal~ Erik ~ US    LW/C  19    2007  Minnesota (~ 545   52    76   
+ 8 8       Boston~ Johna~ CA    D     18    2004  Medicine Ha~ 44    0     1    
+ 9 9       Anahei~ Rusla~ BY    D     21    2011  Las Vegas T~ 917   45    159  
+10 10      New Je~ Lance~ CA    D     18    2004  Red Deer Re~ 209   4     12   
+# i 10 more variables: pts <chr>, x <chr>, pim <chr>, gp_2 <chr>, w <chr>,
+#   l <chr>, t_o <chr>, sv_percent <chr>, gaa <chr>, ps <chr>
+\end{verbatim}
 
 \bookmarksetup{startatroot}
 

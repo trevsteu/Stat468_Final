@@ -12,10 +12,13 @@ Having considered this, we make the somewhat arbitrary decision to use the 25 dr
 # Setup
 
 ```{r, warning = FALSE, message = FALSE}
-# install.packages(rvest)
-# intsall.packages(tidyverse)
+install.packages("rvest")
+install.packages("tidyverse")
+install.packages("janitor")
+
 library(rvest)
 library(tidyverse)
+library(janitor)
 ```
 
 # Code
