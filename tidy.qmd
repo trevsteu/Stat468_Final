@@ -3,4 +3,67 @@ title: "Tidy"
 author: "Trevor S"
 ---
 
-This is a placeholder for Ch2 – Tidy.
+```{r, echo=FALSE, hide=TRUE, message=FALSE, warning=FALSE}
+library(rvest)
+library(tidyverse)
+library(janitor)
+start_year <- 1996
+end_year <- 2020
+
+import_draft <- function(year){
+  url <- str_glue("https://www.hockey-reference.com/draft/NHL_{year}_entry.html")
+  html <- read_html(url)
+  draft_year_table <- html |> 
+    html_element("table") |> 
+    html_table() |> 
+    janitor::row_to_names(1) |> 
+    janitor::clean_names()
+  draft_year_table
+}
+```
+
+## Introduction
+
+Now that we have imported the data, we must clean it. Despite the table from the previous chapter *looking* fairly clean, we can see that there are some issues.
+
+```{r, warning = FALSE}
+import_draft(start_year)[23:30,]
+```
+
+Two problems that immediately come up are the two rows that get inserted at the end of every round, and the fact that (at least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team. By doing a little bit of detective work with some of the other players with missing values, we notice that players who never played in the NHL have `NA`s listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don't care about.
+
+## Setup
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+## Code
+
+We build a function to tidy the data. In particular, we want it to:
+
+-   Remove the rows added between rounds.
+
+-   Correct the types of each column so we can use numeric columns in calculations.
+
+-   Change `gp` and `ps` values to 0 for players who never played in the NHL or have a negative `ps`.
+
+-   Add a `year` column so we can adjust the stats of players drafted more recently.
+
+-   Select the columns we care about (`year`, `overall`, `pos`, `to`, `gp`, and `ps`).
+
+Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
+
+```{r, warning = FALSE, message = FALSE}
+tidy_draft <- function(year){
+  draft_year_table <- import_draft(year) |> 
+    filter(overall != "Overall" & overall != "")|> # remove extra rows
+    type_convert() |> 
+    mutate("year" = year, "ps" = coalesce(ps, 0), "gp" = coalesce(gp, 0)) |> 
+    select(year, overall, to, pos, gp, ps)
+  draft_year_table
+}
+
+tidy_draft(2020)
+```

@@ -11,6 +11,8 @@ Having considered this, we make the somewhat arbitrary decision to use the 25 dr
 
 ## Setup
 
+We install and load the necessary packages.
+
 ```{r, warnings = FALSE, message = FALSE}
 # install.packages("rvest")
 # install.packages("tidyverse")
@@ -41,3 +43,5 @@ import_draft <- function(year){
 
 head(import_draft(start_year), 10)
 ```
+
+We compare the first 10 rows of the 1996 draft table shown above with the [table on Hockey Reference](https://www.hockey-reference.com/draft/NHL_1996_entry.html) It seems that the function we created does what we want it to do.

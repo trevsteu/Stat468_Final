@@ -239,12 +239,13 @@
 
 \section{Abstract}\label{abstract}
 
-In the days leading up to and days of the 2025 NHL Entry Draft there
-were 18 trades which only included draft picks. This report aims to use
-player contribution data to determine the relative value of selections
-in the NHL Entry Draft. Knowing the relative value of picks allows NHL
-teams to both determine whether they should accept trade offers they
-have received as well as propose favourable trades to other teams.
+In the days of and leading up to the 2025 NHL Entry Draft there were a
+total of 18 trades which only included draft picks. This report aims to
+use player contribution data to determine the relative value of
+selections in the NHL Entry Draft. Knowing the relative value of picks
+allows NHL teams to both determine whether they should accept trade
+offers they have received as well as propose favourable trades to other
+teams.
 
 Depending on the context, there can be countless approaches one could
 take to quantify the value of a draft pick. As one example, one could
@@ -343,6 +344,8 @@ chapter}.
 
 \section{Setup}\label{setup}
 
+We install and load the necessary packages.
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# install.packages("rvest")}
@@ -397,11 +400,127 @@ Reference.
 #   l <chr>, t_o <chr>, sv_percent <chr>, gaa <chr>, ps <chr>
 \end{verbatim}
 
+We compare the first 10 rows of the 1996 draft table shown above with
+the
+\href{https://www.hockey-reference.com/draft/NHL_1996_entry.html}{table
+on Hockey Reference} It seems that the function we created does what we
+want it to do.
+
 \bookmarksetup{startatroot}
 
 \chapter{Tidy}\label{tidy}
 
-This is a placeholder for Ch2 -- Tidy.
+\section{Introduction}\label{introduction-1}
+
+Now that we have imported the data, we must clean it. Despite the table
+from the previous chapter \emph{looking} fairly clean, we can see that
+there are some issues.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{import\_draft}\NormalTok{(start\_year)[}\DecValTok{23}\SpecialCharTok{:}\DecValTok{30}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 8 x 21
+  overall   team   player nat   pos   age   to    amateur_team gp    g     a    
+  <chr>     <chr>  <chr>  <chr> <chr> <chr> <chr> <chr>        <chr> <chr> <chr>
+1 "23"      Pitts~ Craig~ "CA"  "G"   ""    ""    "Ottawa 67'~ ""    ""    ""   
+2 "24"      Phoen~ Danie~ "CA"  "C"   "18"  "201~ "Drummondvi~ "973" "307" "389"
+3 "25"      Color~ Peter~ "US"  "D"   "19"  "200~ "Shattuck-S~ "32"  "1"   "1"  
+4 "26"      Detro~ Jesse~ "CA"  "D"   "18"  "200~ "Red Deer R~ "49"  "0"   "2"  
+5 ""        Round~ Round~ ""    ""    ""    ""    ""           "NHL~ "NHL~ "NHL~
+6 "Overall" Team   Player "Nat~ "Pos" "Age" "To"  "Amateur Te~ "GP"  "G"   "A"  
+7 "27"      Buffa~ Cory ~ "CA"  "D"   "18"  "201~ "Saskatoon ~ "969" "21"  "137"
+8 "28"      Pitts~ Pavel~ "CZ"  "D"   "18"  "200~ "HC Kladno ~ "12"  "0"   "0"  
+# i 10 more variables: pts <chr>, x <chr>, pim <chr>, gp_2 <chr>, w <chr>,
+#   l <chr>, t_o <chr>, sv_percent <chr>, gaa <chr>, ps <chr>
+\end{verbatim}
+
+Two problems that immediately come up are the two rows that get inserted
+at the end of every round, and the fact that (at least) one player is
+missing everything except for their pick number, name, team, position,
+nationality, and amateur team. By doing a little bit of detective work
+with some of the other players with missing values, we notice that
+players who never played in the NHL have \texttt{NA}s listed for
+everything except for the values attributes listed above. We will have
+to deal with this in the tidy step. Note that Hockey Reference begins
+listing player's ages in the 2001 draft, but we aren't going to use ages
+for our analysis so we won't bother coming up for a remedy for the
+players drafted between 1996 and 2000. Finally, it would be helpful to
+remove the columns we don't care about.
+
+\section{Setup}\label{setup-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# install.packages("tidyverse")}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Code}\label{code-1}
+
+We build a function to tidy the data. In particular, we want it to:
+
+\begin{itemize}
+\item
+  Remove the rows added between rounds.
+\item
+  Correct the types of each column so we can use numeric columns in
+  calculations.
+\item
+  Change \texttt{gp} and \texttt{ps} values to 0 for players who never
+  played in the NHL or have a negative \texttt{ps}.
+\item
+  Add a \texttt{year} column so we can adjust the stats of players
+  drafted more recently.
+\item
+  Select the columns we care about (\texttt{year}, \texttt{overall},
+  \texttt{pos}, \texttt{to}, \texttt{gp}, and \texttt{ps}).
+\end{itemize}
+
+Note that there were originally two \texttt{gp} columns (one for games
+played and one for games played as a goalie, goalies have the same
+number in both), but when we used \texttt{janitor::clean\_names()} it
+changed them to \texttt{gp} and \texttt{gp\_2}. Additionally, we cannot
+remove the round separating rows by removing a specified row number
+since many of the drafts in our dataset have different numbers of picks
+per round, and some rounds within the same draft have even had a
+different numbers of picks.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy\_draft }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(year)\{}
+\NormalTok{  draft\_year\_table }\OtherTok{\textless{}{-}} \FunctionTok{import\_draft}\NormalTok{(year) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{filter}\NormalTok{(overall }\SpecialCharTok{!=} \StringTok{"Overall"} \SpecialCharTok{\&}\NormalTok{ overall }\SpecialCharTok{!=} \StringTok{""}\NormalTok{)}\SpecialCharTok{|\textgreater{}} \CommentTok{\# remove extra rows}
+    \FunctionTok{type\_convert}\NormalTok{() }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{mutate}\NormalTok{(}\StringTok{"year"} \OtherTok{=}\NormalTok{ year, }\StringTok{"ps"} \OtherTok{=} \FunctionTok{coalesce}\NormalTok{(ps, }\DecValTok{0}\NormalTok{), }\StringTok{"gp"} \OtherTok{=} \FunctionTok{coalesce}\NormalTok{(gp, }\DecValTok{0}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} 
+    \FunctionTok{select}\NormalTok{(year, overall, to, pos, gp, ps)}
+\NormalTok{  draft\_year\_table}
+\NormalTok{\}}
+
+\FunctionTok{tidy\_draft}\NormalTok{(}\DecValTok{2020}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 216 x 6
+    year overall    to pos      gp    ps
+   <dbl>   <dbl> <dbl> <chr> <dbl> <dbl>
+ 1  2020       1  2025 LW      380  17.8
+ 2  2020       2  2025 C       260  13.9
+ 3  2020       3  2025 LW      367  30.3
+ 4  2020       4  2025 LW      320  22.6
+ 5  2020       5  2025 D       236  19.9
+ 6  2020       6  2025 D       217   6.5
+ 7  2020       7  2025 RW      163   2.7
+ 8  2020       8  2025 RW      178   7.8
+ 9  2020       9  2025 C       185   9.1
+10  2020      10  2025 C       222  12.9
+# i 206 more rows
+\end{verbatim}
 
 \bookmarksetup{startatroot}
 

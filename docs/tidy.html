@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -167,7 +201,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">4.1</span> Introduction</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">4.2</span> Setup</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">4.3</span> Code</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -197,9 +239,78 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a placeholder for Ch2 – Tidy.</p>
+<section id="introduction" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
+<p>Now that we have imported the data, we must clean it. Despite the table from the previous chapter <em>looking</em> fairly clean, we can see that there are some issues.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">import_draft</span>(start_year)[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 21
+  overall   team   player nat   pos   age   to    amateur_team gp    g     a    
+  &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 "23"      Pitts… Craig… "CA"  "G"   ""    ""    "Ottawa 67'… ""    ""    ""   
+2 "24"      Phoen… Danie… "CA"  "C"   "18"  "201… "Drummondvi… "973" "307" "389"
+3 "25"      Color… Peter… "US"  "D"   "19"  "200… "Shattuck-S… "32"  "1"   "1"  
+4 "26"      Detro… Jesse… "CA"  "D"   "18"  "200… "Red Deer R… "49"  "0"   "2"  
+5 ""        Round… Round… ""    ""    ""    ""    ""           "NHL… "NHL… "NHL…
+6 "Overall" Team   Player "Nat… "Pos" "Age" "To"  "Amateur Te… "GP"  "G"   "A"  
+7 "27"      Buffa… Cory … "CA"  "D"   "18"  "201… "Saskatoon … "969" "21"  "137"
+8 "28"      Pitts… Pavel… "CZ"  "D"   "18"  "200… "HC Kladno … "12"  "0"   "0"  
+# ℹ 10 more variables: pts &lt;chr&gt;, x &lt;chr&gt;, pim &lt;chr&gt;, gp_2 &lt;chr&gt;, w &lt;chr&gt;,
+#   l &lt;chr&gt;, t_o &lt;chr&gt;, sv_percent &lt;chr&gt;, gaa &lt;chr&gt;, ps &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Two problems that immediately come up are the two rows that get inserted at the end of every round, and the fact that (at least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team. By doing a little bit of detective work with some of the other players with missing values, we notice that players who never played in the NHL have <code>NA</code>s listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player’s ages in the 2001 draft, but we aren’t going to use ages for our analysis so we won’t bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don’t care about.</p>
+</section>
+<section id="setup" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="setup"><span class="header-section-number">4.2</span> Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="code" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="code"><span class="header-section-number">4.3</span> Code</h2>
+<p>We build a function to tidy the data. In particular, we want it to:</p>
+<ul>
+<li><p>Remove the rows added between rounds.</p></li>
+<li><p>Correct the types of each column so we can use numeric columns in calculations.</p></li>
+<li><p>Change <code>gp</code> and <code>ps</code> values to 0 for players who never played in the NHL or have a negative <code>ps</code>.</p></li>
+<li><p>Add a <code>year</code> column so we can adjust the stats of players drafted more recently.</p></li>
+<li><p>Select the columns we care about (<code>year</code>, <code>overall</code>, <code>pos</code>, <code>to</code>, <code>gp</code>, and <code>ps</code>).</p></li>
+</ul>
+<p>Note that there were originally two <code>gp</code> columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used <code>janitor::clean_names()</code> it changed them to <code>gp</code> and <code>gp_2</code>. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tidy_draft <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> <span class="fu">import_draft</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span>)<span class="sc">|&gt;</span> <span class="co"># remove extra rows</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type_convert</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="st">"year"</span> <span class="ot">=</span> year, <span class="st">"ps"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(ps, <span class="dv">0</span>), <span class="st">"gp"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(gp, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, overall, to, pos, gp, ps)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy_draft</span>(<span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 216 × 6
+    year overall    to pos      gp    ps
+   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  2020       1  2025 LW      380  17.8
+ 2  2020       2  2025 C       260  13.9
+ 3  2020       3  2025 LW      367  30.3
+ 4  2020       4  2025 LW      320  22.6
+ 5  2020       5  2025 D       236  19.9
+ 6  2020       6  2025 D       217   6.5
+ 7  2020       7  2025 RW      163   2.7
+ 8  2020       8  2025 RW      178   7.8
+ 9  2020       9  2025 C       185   9.1
+10  2020      10  2025 C       222  12.9
+# ℹ 206 more rows</code></pre>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
