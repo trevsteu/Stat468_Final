@@ -3,4 +3,6 @@ title: "Question"
 author: "Trevor S"
 ---
 
-This is a placeholder for Ch0 – Question.
+# Question
+
+This report will estimate the relative value of selections in the NHL Entry Draft. I am not sure what else I am supposed to put here.

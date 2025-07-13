@@ -1,5 +1,5 @@
 ---
-title: "Abstract"
+title: "Index"
 author: "Trevor S"
 ---
 
@@ -9,7 +9,7 @@ In the days leading up to and days of the 2025 NHL Entry Draft there were 18 tra
 
 Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, one could estimate the fairness of a trade by comparing the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick $n$ by utilizing the points contributed and games played by previous players selected at pick $n$ along with a $k$-nearest neighbours algorithm.
 
-The data from this report is taken from [HockeyReference](https://www.hockey-reference.com/draft/), which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later.
+The data used by this report is imported from [HockeyReference](https://www.hockey-reference.com/draft/), which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later.
 
 Some work in this area has been done before, such as:
 
@@ -19,10 +19,12 @@ Some work in this area has been done before, such as:
 
 -   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
 
-As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. One critical point that it is common knowledge in ice hockey circles and confirmed by the resources above, along with the [Model chapter](https://trevsteu.github.io/Stat468_Final/model.html) of this report is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130. Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have
+As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024. One critical point that it is common knowledge in ice hockey circles and confirmed by the resources above, along with the [Model chapter](https://trevsteu.github.io/Stat468_Final/model.html) of this report is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.
+
+Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have
 
 $$
 v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c
 $$
 
-where $c > 0$ and $v_i$ is the value of the $i^{\text{th}}$ selection.
+where $c > 0$ and $v_i$ is the value of the $i^{\text{th}}$ selection, meaning we would only have to find the value of $c$.
