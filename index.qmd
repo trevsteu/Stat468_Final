@@ -3,7 +3,7 @@ title: "Index"
 author: "Trevor S"
 ---
 
-# Abstract
+## Abstract
 
 In the days leading up to and days of the 2025 NHL Entry Draft there were 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams.
 

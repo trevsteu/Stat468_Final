@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.12)  12 JUL 2025 21:07
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.7.12)  12 JUL 2025 21:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1002,148 +1002,96 @@ No file index.toc.
 
 ]
 chapter 1.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.665pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.475pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.95099pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.66568pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.4755pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 10.94882pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 7.66417pt on input line 253.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 5.47441pt on input line 253.
 
 
 [3
 
 ]
+
+[4]
 chapter 2.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.665pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.475pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.95099pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.66568pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.4755pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.94882pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.66417pt on input line 255.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.47441pt on input line 255.
-
-
-[4
-
-]
-chapter 3.
 
 
 [5
 
 ]
-chapter 4.
+chapter 3.
 
 
 [6
 
 ]
-chapter 5.
-
-
-[7
-
-]
-chapter 6.
-
-Overfull \hbox (197.0998pt too wide) in paragraph at lines 366--366
-[]\TU/lmtt/m/n/10.95 These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".[] 
- []
-
-
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 366--366
-[]\TU/lmtt/m/n/10.95 # Installing packages --------------------------------------------------------[] 
- []
-
-
-Overfull \hbox (197.0998pt too wide) in paragraph at lines 382--382
-[]\TU/lmtt/m/n/10.95 These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".[] 
- []
-
-
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 382--382
-[]\TU/lmtt/m/n/10.95 # Installing packages --------------------------------------------------------[] 
- []
-
-
-Overfull \hbox (197.0998pt too wide) in paragraph at lines 398--398
-[]\TU/lmtt/m/n/10.95 These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".[] 
- []
-
-
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 398--398
-[]\TU/lmtt/m/n/10.95 # Installing packages --------------------------------------------------------[] 
- []
-
-
-
-[8
-
-]
-
-[9]
-chapter 7.
-
-Overfull \hbox (13.13986pt too wide) in paragraph at lines 451--451
+Overfull \hbox (13.13986pt too wide) in paragraph at lines 398--398
 []   \TU/lmtt/m/n/10.95 <chr>   <chr>   <chr>  <chr> <chr> <chr> <chr> <chr>        <chr> <chr> <chr>[] 
  []
 
 
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 451--451
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 398--398
 [] \TU/lmtt/m/n/10.95 1 1       Ottawa~ Chris~ CA    D     18    2015  Prince Albe~ 1179  71    217[] 
  []
 
 
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 451--451
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 398--398
 [] \TU/lmtt/m/n/10.95 3 3       New Yo~ J.P. ~ CA    RW    18    2011  Val-d'Or Fo~ 822   214   309[] 
  []
 
 
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 451--451
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 398--398
 [] \TU/lmtt/m/n/10.95 6 6       Edmont~ Boyd ~ CA    C     18    2009  Kitchener R~ 627   67    112[] 
  []
 
 
-Overfull \hbox (1.64236pt too wide) in paragraph at lines 451--451
+Overfull \hbox (1.64236pt too wide) in paragraph at lines 398--398
 [] \TU/lmtt/m/n/10.95 9 9       Anahei~ Rusla~ BY    D     21    2011  Las Vegas T~ 917   45    159[] 
  []
 
 
 
+[7]
+chapter 4.
+
+
+[8
+
+]
+chapter 5.
+
+
+[9
+
+]
+chapter 6.
+
+
 [10
 
 ]
-chapter 8.
+chapter 7.
 
 
 [11
 
 ]
-chapter 9.
+chapter 8.
 
 
 [12
-
-]
-chapter 10.
-
-
-[13
-
-]
-chapter 11.
-
-
-[14
-
-]
-chapter 12.
-
-
-[15
 
 ]
 
@@ -1153,18 +1101,18 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.492 \begin{itemize}
+l.439 \begin{itemize}
                      
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
  
 Here is how much of TeX's memory you used:
- 22375 strings out of 470473
- 431318 string characters out of 5489892
- 1121687 words of memory out of 5000000
- 50422 multiletter control sequences out of 15000+600000
- 633569 words of font info for 91 fonts, out of 8000000 for 9000
+ 22388 strings out of 470473
+ 431756 string characters out of 5489892
+ 1122687 words of memory out of 5000000
+ 50434 multiletter control sequences out of 15000+600000
+ 633577 words of font info for 92 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,7n,114p,10900b,394s stack positions out of 10000i,1000n,20000p,200000b,200000s
-Output written on index.pdf (15 pages).
+Output written on index.pdf (12 pages).

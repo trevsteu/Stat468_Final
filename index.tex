@@ -237,9 +237,7 @@
 
 \chapter{Index}\label{index}
 
-\bookmarksetup{startatroot}
-
-\chapter{Abstract}\label{abstract}
+\section{Abstract}\label{abstract}
 
 In the days leading up to and days of the 2025 NHL Entry Draft there
 were 18 trades which only included draft picks. This report aims to use
@@ -306,13 +304,11 @@ Entry Draft. I am not sure what else I am supposed to put here.
 
 \chapter{Import}\label{import}
 
-\bookmarksetup{startatroot}
-
-\chapter{Introduction}\label{introduction}
+\section{Introduction}\label{introduction}
 
 As mentioned before, we will be importing data from
 \href{https://www.hockey-reference.com/draft}{Hockey Reference}. Before
-we import anything, it's important to consider \emph{which} and
+we import any data, it's important to consider \emph{which} and
 \emph{how many} years we want to include in this analysis. Since the NHL
 has changed dramatically over the years, care must be taken to ensure we
 do not include drafts from too long ago. The primary concern with
@@ -345,69 +341,20 @@ described above. We will make both of these adjustments in the
 \href{https://trevsteu.github.io/Stat468_Final/transform.html}{Transform
 chapter}.
 
-\bookmarksetup{startatroot}
-
-\chapter{Setup}\label{setup}
+\section{Setup}\label{setup}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{install.packages}\NormalTok{(}\StringTok{"rvest"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-The following package(s) will be installed:
-- rvest [1.0.4]
-These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".
-
-# Installing packages --------------------------------------------------------
-- Installing rvest ...                          OK [linked from cache]
-Successfully installed 1 package in 18 milliseconds.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{install.packages}\NormalTok{(}\StringTok{"tidyverse"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-The following package(s) will be installed:
-- tidyverse [2.0.0]
-These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".
-
-# Installing packages --------------------------------------------------------
-- Installing tidyverse ...                      OK [linked from cache]
-Successfully installed 1 package in 25 milliseconds.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{install.packages}\NormalTok{(}\StringTok{"janitor"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-The following package(s) will be installed:
-- janitor [2.2.1]
-These packages will be installed into "~/Downloads/Stat468_Final/renv/library/windows/R-4.5/x86_64-w64-mingw32".
-
-# Installing packages --------------------------------------------------------
-- Installing janitor ...                        OK [linked from cache]
-Successfully installed 1 package in 12 milliseconds.
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
+\CommentTok{\# install.packages("rvest")}
+\CommentTok{\# install.packages("tidyverse")}
+\CommentTok{\# install.packages("janitor")}
 \FunctionTok{library}\NormalTok{(rvest)}
 \FunctionTok{library}\NormalTok{(tidyverse)}
 \FunctionTok{library}\NormalTok{(janitor)}
 \end{Highlighting}
 \end{Shaded}
 
-\bookmarksetup{startatroot}
-
-\chapter{Code}\label{code}
+\section{Code}\label{code}
 
 We start off by creating a function to import data from Hockey
 Reference.
