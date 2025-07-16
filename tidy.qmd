@@ -80,9 +80,9 @@ tidy_draft <- function(year){
 tidy_draft(1996)
 ```
 
-This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(10)` line, which is necessary to prevent us getting rate limited). Note that I sent `eval=FALSE` on this chunk to speed up the rendering time.
+This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(10)` line, which is necessary to prevent us getting rate limited). Note that I sent `cache=TRUE` on this chunk to speed up the rendering time.
 
-```{r, warning=FALSE, message=FALSE, eval = FALSE}
+```{r, warning=FALSE, message=FALSE, cache = TRUE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
                    \(x) tidy_draft(x)))
 ```
@@ -93,4 +93,8 @@ We can check that this data has loaded correctly, there should be between 5000 a
 dim(all_data) # confirm there are 5000-6000 rows and 6 columns
 
 length(unique(all_data$year)) # confirm all 25 years have been included
+
+head(all_data, 10)
 ```
+
+These checks all returned what they should, so we proceed to the Transform step.
