@@ -3,31 +3,13 @@ title: "Tidy"
 author: "Trevor S"
 ---
 
-```{r, echo=FALSE, hide=TRUE, message=FALSE, warning=FALSE}
-library(rvest)
-library(tidyverse)
-library(janitor)
-start_year <- 1996
-end_year <- 2020
-
-import_draft <- function(year){
-  url <- str_glue("https://www.hockey-reference.com/draft/NHL_{year}_entry.html")
-  html <- read_html(url)
-  Sys.sleep(10) # to avoid getting rate limited
-  draft_year_table <- html |> 
-    html_element("table") |> 
-    html_table() |> 
-    janitor::row_to_names(1) |> 
-    janitor::clean_names()
-  draft_year_table
-}
-```
-
 ## Setup
 
 ```{r, message = FALSE, warning = FALSE}
 # install.packages("tidyverse")
 library(tidyverse)
+
+source("functions.R") # load functions defined in prior chapters
 ```
 
 ## Introduction
