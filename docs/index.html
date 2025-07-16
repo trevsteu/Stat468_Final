@@ -200,9 +200,12 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract"><span class="header-section-number">0.1</span> Abstract</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">0.2</span> Data</a></li>
-  <li><a href="#previous-work" id="toc-previous-work" class="nav-link" data-scroll-target="#previous-work"><span class="header-section-number">0.3</span> Previous Work</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract"><span class="header-section-number">1.1</span> Abstract</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1.2</span> Data</a></li>
+  <li><a href="#constraints" id="toc-constraints" class="nav-link" data-scroll-target="#constraints"><span class="header-section-number">1.3</span> Constraints</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -240,41 +243,39 @@ window.Quarto = {
 </header>
 
 
-<section id="abstract" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="abstract"><span class="header-section-number">0.1</span> Abstract</h2>
-<p>In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams.</p>
-<p>Depending on the context, there can be countless approaches one could take to quantify the value of a draft pick. As one example, one could estimate the fairness of a trade by comparing the assets given up and acquired to previous trades. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the point shares and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with a <span class="math inline">\(k\)</span>-nearest neighbours algorithm.</p>
-<p>One critical point that it is common knowledge in ice hockey circles and confirmed by the resources listed below, along with the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a> of this report is that NHL draft picks do <u><strong>not</strong></u> decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.</p>
-<p>Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have</p>
-<p><span class="math display">\[ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c \]</span></p>
-<p>where <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(v_i\)</span> is the value of the <span class="math inline">\(i^{\text{th}}\)</span> selection, meaning we would only have to find the value of <span class="math inline">\(c\)</span>.</p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<section id="abstract" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="abstract"><span class="header-section-number">1.1</span> Abstract</h2>
+<p>In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. To do this, data will be imported from <a href="https://www.hockey-reference.com/draft/">Hockey Reference</a>, and a weighted <span class="math inline">\(k\)</span>-nearest neighbours algorithm will be used to estimate the value of each pick based on historical outcomes. Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams. The RShiny app component of this project will allow users to interactively check the fairness of potential trades.</p>
 </section>
-<section id="data" class="level2" data-number="0.2">
-<h2 data-number="0.2" class="anchored" data-anchor-id="data"><span class="header-section-number">0.2</span> Data</h2>
+<section id="data" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="data"><span class="header-section-number">1.2</span> Data</h2>
 <p>The data used by this report is imported from <a href="https://www.hockey-reference.com/draft/">Hockey Reference</a>, which has data on the NHL Draft and player games played and point share counts dating back to 1963, though we will only use a subset of this data as will be explained later. Each row on Hockey Reference is one player selected, and the columns included on the site are:</p>
 <ul>
-<li><code>Overall</code>: the selection where the player was selected</li>
+<li><code>Overall</code>: the selection mumber where the player was selected.</li>
 <li><code>Team</code>: the team that selected the player.</li>
 <li><code>Name</code>, <code>Nat</code>, <code>Pos</code>, <code>Age</code>: the player’s name, nationality, position, at age at the time of the draft.</li>
 <li><code>To</code>: the last year a player played in the NHL. For players who never played in the NHL this will be the empty string, for those who are still playing it will be <code>2025</code>.</li>
-<li><code>Amateur Team</code>: the team the player was drafted from (confusingly this could be a pro team in Europe).</li>
+<li><code>Amateur Team</code>: the team the player was drafted from (confusingly this could be a pro European team).</li>
 <li><code>GP</code>, <code>G</code>, <code>A</code>, <code>PTS</code>, <code>+/-</code>, <code>PIM</code>: the player’s career games played, goals, assists, points (goals plus assists), plus minus, and penalty minutes. For players who never played in the NHL this will be the empty string.</li>
 <li><code>GP</code>, <code>W</code>, <code>L</code>, <code>T/O</code>, <code>SV%</code>, <code>GAA</code>: the goalie’s career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For skater and goalies who never played in the NHL all of these columns will be the empty string.</li>
-<li><code>PS</code>: the player’s estimated point share, or career points addedto their team (here we mean points in the standings, not goals and assists). There is more info on point share <a href="https://www.hockey-reference.com/about/point_shares.html">here</a>.</li>
+<li><code>PS</code>: the player’s estimated point share, or career points added to their team (here we mean points in the standings, not goals and assists). There is more info on point share <a href="https://www.hockey-reference.com/about/point_shares.html">here</a>.</li>
 </ul>
 <p>Note that we will only use a subset of these columns, as will be explained in the <a href="https://trevsteu.github.io/Stat468_Final/tidy.html">Tidy chapter</a>.</p>
 </section>
-<section id="previous-work" class="level2" data-number="0.3">
-<h2 data-number="0.3" class="anchored" data-anchor-id="previous-work"><span class="header-section-number">0.3</span> Previous Work</h2>
-<p>Some work in this area has been done before, such as:</p>
+<section id="constraints" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="constraints"><span class="header-section-number">1.3</span> Constraints</h2>
+<p>There are a number of technical and practical constraints at play. Here are some of them:</p>
 <ul>
-<li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a></p></li>
-<li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a></p></li>
-<li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a></p></li>
+<li><p>There have only been 63 drafts in NHL history, but drafts which occurred too long ago are likely not relevant and drafts which occurred too recently are difficult to evaluate. This will be discussed further in the <a href="https://trevsteu.github.io/Stat468_Final/import.html">Import chapter</a>.</p></li>
+<li><p>Estimating the value of a player’s career is not a trivial task. We will use point shares and games played, but these are not perfect metrics as they can still be dependent on external factors, such as the quality of the player’s team the opportunities the player was given.</p></li>
+<li><p>Additionally, the value of the pick from the team’s perspective depends on how long the player stayed on their team and what (if anything) the team got when the player left the team (via trade, free agency, or retirement). We will ignore this because it is very difficult to take these factors into account.</p></li>
+<li><p>Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into don’t contribute to the team. This is very difficult to account for.</p></li>
 </ul>
-<p>This report will most closely follow the work done in the first paper listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

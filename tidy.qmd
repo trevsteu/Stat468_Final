@@ -24,7 +24,7 @@ import_draft <- function(year){
 
 ## Introduction
 
-Now that we have imported the data, we must clean it. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
+In the tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
 
 ```{r, warning = FALSE}
 import_draft(start_year)[23:30,]
@@ -78,3 +78,5 @@ tidy_draft <- function(year){
 
 tidy_draft(1996)
 ```
+
+This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with.

@@ -241,9 +241,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
-<p>Now that we have imported the data, we must clean it. Despite the table from the previous chapter <em>looking</em> fairly clean, further inspection reveals some issues:</p>
+<p>In the tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter <em>looking</em> fairly clean, further inspection reveals some issues:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">import_draft</span>(start_year)[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 21
   overall   team   player nat   pos   age   to    amateur_team gp    g     a    
@@ -271,8 +274,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="setup" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="setup"><span class="header-section-number">4.2</span> Setup</h2>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="code" class="level2" data-number="4.3">
@@ -288,6 +294,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Note that there were originally two <code>gp</code> columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used <code>janitor::clean_names()</code> it changed them to <code>gp</code> and <code>gp_2</code>. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tidy_draft <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> <span class="fu">import_draft</span>(year) <span class="sc">|&gt;</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span>)<span class="sc">|&gt;</span> <span class="co"># remove extra rows</span></span>
@@ -299,6 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy_draft</span>(<span class="dv">1996</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 241 × 6
     year overall    to pos      gp    ps
@@ -316,6 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 231 more rows</code></pre>
 </div>
 </div>
+<p>This is the form we will use for analysis later. We now load in all of the data and use <code>rbind()</code> to bind the tables together, giving us a single data frame to work with.</p>
 
 
 </section>

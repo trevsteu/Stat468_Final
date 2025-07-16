@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -167,7 +196,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#approach" id="toc-approach" class="nav-link active" data-scroll-target="#approach"><span class="header-section-number">2.1</span> Approach</a></li>
+  <li><a href="#previous-work" id="toc-previous-work" class="nav-link" data-scroll-target="#previous-work"><span class="header-section-number">2.2</span> Previous Work</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -197,9 +233,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This report will estimate the relative value of selections in the NHL Entry Draft. I am not sure what else I am supposed to put here.</p>
+<p>This report will estimate the relative value of selections in the NHL Entry Draft.</p>
+<section id="approach" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="approach"><span class="header-section-number">2.1</span> Approach</h2>
+<p>Depending on the context, there can be countless approaches one could take to quantify the relative value of draft picks. As one example, one could estimate the value of draft picks by comparing the assets given up and acquired to previous trades and obtain the “market value” of each selection. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the point shares and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with its <span class="math inline">\(k\)</span>-nearest neighbours.</p>
+<p>One critical point that it is common knowledge in ice hockey circles and confirmed by the resources listed below is that NHL draft picks do <u><strong>not</strong></u> decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.</p>
+<p>Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have</p>
+<p><span class="math display">\[ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c \]</span></p>
+<p>where <span class="math inline">\(c &gt; 0\)</span> and <span class="math inline">\(v_i\)</span> is the value of the <span class="math inline">\(i^{\text{th}}\)</span> selection, meaning we would only have to find the value of <span class="math inline">\(c\)</span>. We will fit this model in the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a> and perform a statistical test to show that this model is not appropriate.</p>
+</section>
+<section id="previous-work" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="previous-work"><span class="header-section-number">2.2</span> Previous Work</h2>
+<p>Some work in this area has been done before, such as:</p>
+<ul>
+<li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a></p></li>
+<li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a></p></li>
+<li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a></p></li>
+</ul>
+<p>This report will most closely follow the work done in the first paper listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

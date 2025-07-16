@@ -3,4 +3,28 @@ title: "Question"
 author: "Trevor S"
 ---
 
-This report will estimate the relative value of selections in the NHL Entry Draft. I am not sure what else I am supposed to put here.
+This report will estimate the relative value of selections in the NHL Entry Draft.
+
+## Approach
+
+Depending on the context, there can be countless approaches one could take to quantify the relative value of draft picks. As one example, one could estimate the value of draft picks by comparing the assets given up and acquired to previous trades and obtain the "market value" of each selection. In contrast, this report will estimate value of pick $n$ by utilizing the point shares and games played by previous players selected at pick $n$ along with its $k$-nearest neighbours.
+
+One critical point that it is common knowledge in ice hockey circles and confirmed by the resources listed below is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.
+
+Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have
+
+$$ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c $$
+
+where $c > 0$ and $v_i$ is the value of the $i^{\text{th}}$ selection, meaning we would only have to find the value of $c$. We will fit this model in the [Model chapter](https://trevsteu.github.io/Stat468_Final/model.html) and perform a statistical test to show that this model is not appropriate.
+
+## Previous Work
+
+Some work in this area has been done before, such as:
+
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
+
+-   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
+
+-   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
+
+This report will most closely follow the work done in the first paper listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.
