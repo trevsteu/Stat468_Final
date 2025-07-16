@@ -3,11 +3,9 @@ title: "Question"
 author: "Trevor S"
 ---
 
-This report will estimate the relative value of selections in the NHL Entry Draft.
-
 ## Approach
 
-Depending on the context, there can be countless approaches one could take to quantify the relative value of draft picks. As one example, one could estimate the value of draft picks by comparing the assets given up and acquired to previous trades and obtain the "market value" of each selection. In contrast, this report will estimate value of pick $n$ by utilizing the point shares and games played by previous players selected at pick $n$ along with its $k$-nearest neighbours.
+Depending on the context, there can be countless approaches one could take to quantify the relative value of draft picks. As one example, one could estimate the value of draft picks by comparing the assets given up and acquired to previous trades and obtain the "market value" of each selection. In contrast, this report will take the approach of defining the value of selection $n$ to be the average career contributions of players drafted $n^{\text{th}}$ overall. This report will estimate value of pick $n$ by utilizing the point shares and games played by previous players selected at pick $n$ along with its $k$-nearest neighbours.
 
 One critical point that it is common knowledge in ice hockey circles and confirmed by the resources listed below is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.
 

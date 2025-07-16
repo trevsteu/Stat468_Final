@@ -33,6 +33,7 @@ end_year <- 2020
 import_draft <- function(year){
   url <- str_glue("https://www.hockey-reference.com/draft/NHL_{year}_entry.html")
   html <- read_html(url)
+  Sys.sleep(10) # to avoid getting rate limited
   draft_year_table <- html |> 
     html_element("table") |> 
     html_table() |> 

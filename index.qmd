@@ -30,8 +30,8 @@ There are a number of technical and practical constraints at play. Here are some
 
 -   There have only been 63 drafts in NHL history, but drafts which occurred too long ago are likely not relevant and drafts which occurred too recently are difficult to evaluate. This will be discussed further in the [Import chapter](https://trevsteu.github.io/Stat468_Final/import.html).
 
+-   Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into don't contribute to the team. This is very difficult to account for, and we will not attempt to remedy it.
+
 -   Estimating the value of a player's career is not a trivial task. We will use point shares and games played, but these are not perfect metrics as they can still be dependent on external factors, such as the quality of the player's team the opportunities the player was given.
 
 -   Additionally, the value of the pick from the team's perspective depends on how long the player stayed on their team and what (if anything) the team got when the player left the team (via trade, free agency, or retirement). We will ignore this because it is very difficult to take these factors into account.
-
--   Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into don't contribute to the team. This is very difficult to account for.

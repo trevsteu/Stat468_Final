@@ -13,6 +13,7 @@ end_year <- 2020
 import_draft <- function(year){
   url <- str_glue("https://www.hockey-reference.com/draft/NHL_{year}_entry.html")
   html <- read_html(url)
+  Sys.sleep(10) # to avoid getting rate limited
   draft_year_table <- html |> 
     html_element("table") |> 
     html_table() |> 
@@ -20,6 +21,13 @@ import_draft <- function(year){
     janitor::clean_names()
   draft_year_table
 }
+```
+
+## Setup
+
+```{r, message = FALSE, warning = FALSE}
+# install.packages("tidyverse")
+library(tidyverse)
 ```
 
 ## Introduction
@@ -39,13 +47,6 @@ Three problems that immediately come up are:
 -   (At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.
 
 By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don't care about.
-
-## Setup
-
-```{r}
-# install.packages("tidyverse")
-library(tidyverse)
-```
 
 ## Code
 
@@ -69,14 +70,27 @@ Note that there were originally two `gp` columns (one for games played and one f
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
     filter(overall != "Overall" & overall != "")|> # remove extra rows
-    type_convert() |> 
+    type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 
-    select(year, overall, to, pos, gp, ps)
+    select(year, overall, to, pos, gp, ps) # columns we care about
   draft_year_table
 }
 
 tidy_draft(1996)
 ```
 
-This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with.
+This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(10)` line, which is necessary to prevent us getting rate limited). Note that I sent `eval=FALSE` on this chunk to speed up the rendering time.
+
+```{r, warning=FALSE, message=FALSE, eval = FALSE}
+all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
+                   \(x) tidy_draft(x)))
+```
+
+We can check that this data has loaded correctly, there should be between 5000 and 6000 rows (the number of picks in a draft has changed over the years, but is usually between 200 and 240, so 25 drafts will be between 5000 and 6000) and 6 columns:
+
+```{r}
+dim(all_data) # confirm there are 5000-6000 rows and 6 columns
+
+length(unique(all_data$year)) # confirm all 25 years have been included
+```

@@ -233,10 +233,9 @@ window.Quarto = {
 </header>
 
 
-<p>This report will estimate the relative value of selections in the NHL Entry Draft.</p>
 <section id="approach" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="approach"><span class="header-section-number">2.1</span> Approach</h2>
-<p>Depending on the context, there can be countless approaches one could take to quantify the relative value of draft picks. As one example, one could estimate the value of draft picks by comparing the assets given up and acquired to previous trades and obtain the “market value” of each selection. In contrast, this report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the point shares and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with its <span class="math inline">\(k\)</span>-nearest neighbours.</p>
+<p>Depending on the context, there can be countless approaches one could take to quantify the relative value of draft picks. As one example, one could estimate the value of draft picks by comparing the assets given up and acquired to previous trades and obtain the “market value” of each selection. In contrast, this report will take the approach of defining the value of selection <span class="math inline">\(n\)</span> to be the average career contributions of players drafted <span class="math inline">\(n^{\text{th}}\)</span> overall. This report will estimate value of pick <span class="math inline">\(n\)</span> by utilizing the point shares and games played by previous players selected at pick <span class="math inline">\(n\)</span> along with its <span class="math inline">\(k\)</span>-nearest neighbours.</p>
 <p>One critical point that it is common knowledge in ice hockey circles and confirmed by the resources listed below is that NHL draft picks do <u><strong>not</strong></u> decrease in value linearly. In particular, the difference in value pick 1 and 30 is much greater than between pick 101 and 130.</p>
 <p>Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have</p>
 <p><span class="math display">\[ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c \]</span></p>
