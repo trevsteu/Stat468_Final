@@ -1,6 +1,8 @@
 library(rvest)
 library(tidyverse)
 library(janitor)
+library(dplyr)
+library(stringr)
 
 start_year <- 1996
 end_year <- 2020
@@ -9,7 +11,7 @@ end_year <- 2020
 import_draft <- function(year){
   url <- str_glue("https://www.hockey-reference.com/draft/NHL_{year}_entry.html")
   html <- read_html(url)
-  Sys.sleep(10) # to avoid getting rate limited
+  Sys.sleep(5) # to avoid getting rate limited
   draft_year_table <- html |> 
     html_element("table") |> 
     html_table() |> 
@@ -20,7 +22,8 @@ import_draft <- function(year){
 
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
-    filter(overall != "Overall" & overall != "")|> # remove extra rows
+    filter(overall != "Overall" & overall != "" 
+           & as.numeric(overall) < 225)|> # remove extra rows and players after pick 224
     type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 

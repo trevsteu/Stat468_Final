@@ -12,9 +12,6 @@ book:
     - import.qmd
     - tidy.qmd
     - transform.qmd
-    - visualize.qmd
-    - model.qmd
-    - communicate.qmd
     - references.qmd
 
 bibliography: references.bib

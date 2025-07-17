@@ -5,9 +5,15 @@ author: "Trevor S"
 
 ## Setup
 
-```{r, message = FALSE, warning = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(stringr)
+```
+
+```{r, message = FALSE, warning = FALSE, cache = TRUE}
 # install.packages("tidyverse")
 library(tidyverse)
+library(stringr)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -28,7 +34,7 @@ Three problems that immediately come up are:
 
 -   (At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.
 
-By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don't care about.
+By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. The number of picks in the draft has also changed over the years, we will ignore any player drafted after selection 224 (the number of picks in the 2025 NHL Entry Draft). Finally, it would be helpful to remove the columns we don't care about.
 
 ## Code
 
@@ -38,7 +44,7 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Correct the types of each column so we can use numeric columns in calculations.
 
--   Change `gp` and `ps` values to 0 for players who never played in the NHL or have a negative `ps`.
+-   Change `gp` and `ps` values to `0` for players who never played in the NHL or have a negative `ps`.
 
 -   If `is.na(to)`, then the player never played in the NHL, so set it to the draft year.
 
@@ -46,12 +52,14 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Select the columns we care about (`year`, `overall`, `pos`, `to`, `gp`, and `ps`) in that order.
 
-Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
+-   Remove any players selected after $224^{\text{th}}$ overall.
+
+Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks. Finally, we remove
 
 ```{r, warning = FALSE, message = FALSE}
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
-    filter(overall != "Overall" & overall != "")|> # remove extra rows
+    filter(overall != "Overall" & overall != "" & as.numeric(overall) < 225) |> # remove extra rows and players after pick 224
     type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 

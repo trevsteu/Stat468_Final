@@ -104,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -173,24 +202,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./visualize.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Visualize</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./communicate.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Communicate</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -246,8 +257,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -281,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Numbers are being coded as strings (<code>overall</code>, <code>age</code>, <code>to</code>, etc).</p></li>
 <li><p>(At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.</p></li>
 </ul>
-<p>By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player’s ages in the 2001 draft, but we aren’t going to use ages for our analysis so we won’t bother coming up for a remedy for the players drafted between 1996 and 2000. Finally, it would be helpful to remove the columns we don’t care about.</p>
+<p>By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player’s ages in the 2001 draft, but we aren’t going to use ages for our analysis so we won’t bother coming up for a remedy for the players drafted between 1996 and 2000. The number of picks in the draft has also changed over the years, we will ignore any player drafted after selection 224 (the number of picks in the 2025 NHL Entry Draft). Finally, it would be helpful to remove the columns we don’t care about.</p>
 </section>
 <section id="code" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="code"><span class="header-section-number">4.3</span> Code</h2>
@@ -289,18 +301,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>Remove the rows added between rounds.</p></li>
 <li><p>Correct the types of each column so we can use numeric columns in calculations.</p></li>
-<li><p>Change <code>gp</code> and <code>ps</code> values to 0 for players who never played in the NHL or have a negative <code>ps</code>.</p></li>
+<li><p>Change <code>gp</code> and <code>ps</code> values to <code>0</code> for players who never played in the NHL or have a negative <code>ps</code>.</p></li>
 <li><p>If <code>is.na(to)</code>, then the player never played in the NHL, so set it to the draft year.</p></li>
 <li><p>Add a <code>year</code> column so we can adjust the stats of players drafted more recently.</p></li>
 <li><p>Select the columns we care about (<code>year</code>, <code>overall</code>, <code>pos</code>, <code>to</code>, <code>gp</code>, and <code>ps</code>) in that order.</p></li>
+<li><p>Remove any players selected after <span class="math inline">\(224^{\text{th}}\)</span> overall.</p></li>
 </ul>
-<p>Note that there were originally two <code>gp</code> columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used <code>janitor::clean_names()</code> it changed them to <code>gp</code> and <code>gp_2</code>. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.</p>
+<p>Note that there were originally two <code>gp</code> columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used <code>janitor::clean_names()</code> it changed them to <code>gp</code> and <code>gp_2</code>. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks. Finally, we remove</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tidy_draft <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> <span class="fu">import_draft</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span>)<span class="sc">|&gt;</span> <span class="co"># remove extra rows</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span> <span class="fu">as.numeric</span>(overall) <span class="sc">&lt;</span> <span class="dv">225</span>) <span class="sc">|&gt;</span> <span class="co"># remove extra rows and players after pick 224</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type_convert</span>() <span class="sc">|&gt;</span> <span class="co"># fix types </span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="st">"year"</span> <span class="ot">=</span> year, <span class="st">"ps"</span> <span class="ot">=</span> <span class="fu">pmax</span>(<span class="fu">coalesce</span>(ps, <span class="dv">0</span>), <span class="dv">0</span>), </span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">"gp"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(gp, <span class="dv">0</span>), <span class="st">"to"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(to, year)) <span class="sc">|&gt;</span> </span>
@@ -311,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy_draft</span>(<span class="dv">1996</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 241 × 6
+<pre><code># A tibble: 224 × 6
     year overall    to pos      gp    ps
    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
  1  1996       1  2015 D      1179  64.6
@@ -324,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  8  1996       8  2004 D        44   0  
  9  1996       9  2011 D       917  46.9
 10  1996      10  2004 D       209   2.7
-# ℹ 231 more rows</code></pre>
+# ℹ 214 more rows</code></pre>
 </div>
 </div>
 <p>This is the form we will use for analysis later. We now load in all of the data and use <code>rbind()</code> to bind the tables together, giving us a single data frame to work with. Note that this function takes around 4 minutes to run (because of the <code>Sys.sleep(10)</code> line, which is necessary to prevent us getting rate limited). Note that I sent <code>cache=TRUE</code> on this chunk to speed up the rendering time.</p>
