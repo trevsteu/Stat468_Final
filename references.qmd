@@ -18,6 +18,6 @@
 
 -   [Mastering Shiny](https://mastering-shiny.org/index.html)
 
--   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html)
+-   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model Chapter)
 
 For now this is just a list of links. Later I will formalize it.

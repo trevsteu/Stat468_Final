@@ -13,6 +13,8 @@ book:
     - tidy.qmd
     - visualize.qmd
     - transform.qmd
+    - model.qmd
+    - communicate.qmd
     - references.qmd
 
 bibliography: references.bib

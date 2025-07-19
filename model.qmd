@@ -3,4 +3,4 @@ title: "Model"
 author: "Trevor S"
 ---
 
-This is a placeholder for Ch5 – Model.
+This is a placeholder for my model chapter.

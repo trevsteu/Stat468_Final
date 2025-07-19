@@ -5,6 +5,8 @@ author: "Trevor S"
 
 ## Setup
 
+We install and load the necessary packages, along with functions from prior chapters.
+
 ```{r, message = FALSE, warning = FALSE}
 # install.packages("rvest")
 # install.packages("tidyverse")
@@ -20,7 +22,7 @@ end_year <- 2020
 
 ## Introduction
 
-In the tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
+In the Tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
 
 ```{r, warning = FALSE}
 import_draft(start_year)[23:30,]
@@ -80,8 +82,7 @@ all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 all_data <- read.csv("all_data.csv")
 
-# running it with tidy_draft will take a long time to run and render, 
-#   so we cheat and do this 
+# I'm cheating here because tidy_draft will take a long time to run and render
 ```
 
 We can check that this data has loaded correctly, there should be between 5000 and 6000 rows (the number of picks in a draft has changed over the years, but is usually between 200 and 240, so 25 drafts will be between 5000 and 6000) and 6 columns:
@@ -96,8 +97,8 @@ head(all_data, 10)
 
 These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function both take quite a while to run, especially when importing data from a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
 
-```{r}
+```{r, eval = FALSE}
 write.csv(all_data, "all_data.csv")
 ```
 
-In future chapters, we will import data from this csv file to speed up the run and rendering times. Now we proceed to the Visualize step.
+In future chapters, we will import data from this csv file to speed up the run and rendering times (instead of importing it from Hockey Reference every time we simply load it from the csv). Now we proceed to the Visualize step.

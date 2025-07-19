@@ -5,14 +5,56 @@ author: "Trevor S"
 
 ## Setup
 
+We install and load the necessary packages, along with functions from prior chapters and `all_data`.
+
 ```{r,  message = FALSE, warning = FALSE}
-# install.packages("tidyverse")
-# install.packages("dplyr")
-library(tidyverse)
-library(dplyr)
-
-
+library(ggplot2)
 source("functions.R") # load functions defined in prior chapters
 
 all_data <- read.csv("all_data.csv")
+```
+
+## Introduction
+
+In the Visualize step, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the [Model chapter](https://trevsteu.github.io/Stat468_Final/model.html).
+
+## Code
+
+We start out by looking at the point share values of one draft. Recall that points share is a measure of how many points a player contributed to their team in the standings (ie not the points that is goals plus assists).
+
+```{r}
+all_data |> 
+  filter(year == 1996) |> 
+  ggplot(aes(x = overall, y = ps)) +
+  geom_point() +
+  labs(x = "Pick Number", y = "Points Share", 
+       title = "Points Share of Players Drafted in 1996")
+```
+
+Clearly most players do not generate any points share in their career. In fact, less than half of the players in our dataset ever played in an NHL game:
+
+```{r}
+all_data |> 
+  filter(gp > 0) |> 
+  nrow() / nrow(all_data)
+```
+
+We next create two empirical cdfs, one of games played (on the left) and one of points share (on the right). Note that we have to pivot the data and put it in long format first:
+
+```{r}
+all_data |> pivot_longer(cols = c(gp, ps),
+                         names_to = "metric", 
+                         values_to = "value") |> 
+  ggplot(aes(value)) + 
+  geom_histogram() + 
+  facet_wrap(~metric, scales = "free") + 
+  labs(title = "Distribution of Games Played and Points Share", 
+       subtitle = "Note the plots have different scales", 
+       x = "Value", y = "Number of Players") 
+```
+
+Clearly both of these are very right-skewed, meaning that a lot of players end up playing 0 games and thus accumulating 0 points share. We may also suspect that games played and points share are positively correlated, indeed:
+
+```{r}
+cor(all_data$ps, all_data$gp)
 ```

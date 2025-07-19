@@ -3,4 +3,4 @@ title: "Communicate"
 author: "Trevor S"
 ---
 
-This is a placeholder for Ch6 – Communicate.
+This is a placeholder for my communicate chapter.

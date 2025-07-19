@@ -5,6 +5,8 @@ author: "Trevor S"
 
 ## Setup
 
+We install and load the necessary packages, along with functions from prior chapters and `all_data`.
+
 ```{r,  message = FALSE, warning = FALSE}
 # install.packages("tidyverse")
 # install.packages("dplyr")

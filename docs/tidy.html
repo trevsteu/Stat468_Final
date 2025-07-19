@@ -208,6 +208,18 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./communicate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Communicate</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -258,6 +270,7 @@ window.Quarto = {
 
 <section id="setup" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">4.1</span> Setup</h2>
+<p>We install and load the necessary packages, along with functions from prior chapters.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -276,7 +289,7 @@ window.Quarto = {
 </section>
 <section id="introduction" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.2</span> Introduction</h2>
-<p>In the tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter <em>looking</em> fairly clean, further inspection reveals some issues:</p>
+<p>In the Tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter <em>looking</em> fairly clean, further inspection reveals some issues:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -366,7 +379,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(all_data) <span class="co"># confirm there are 5000-6000 rows and 6 columns</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5427    7</code></pre>
+<pre><code>[1] 5427    6</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -380,17 +393,17 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(all_data, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>    X year overall   to  pos   gp   ps
-1   1 1996       1 2015    D 1179 64.6
-2   2 1996       2 2008    D  496 25.8
-3   3 1996       3 2011   RW  822 56.6
-4   4 1996       4 2000    C    3  0.0
-5   5 1996       5 2007    D  231  8.8
-6   6 1996       6 2009    C  627 12.5
-7   7 1996       7 2007 LW/C  545  9.2
-8   8 1996       8 2004    D   44  0.0
-9   9 1996       9 2011    D  917 46.9
-10 10 1996      10 2004    D  209  2.7</code></pre>
+<pre><code>   year overall   to  pos   gp   ps
+1  1996       1 2015    D 1179 64.6
+2  1996       2 2008    D  496 25.8
+3  1996       3 2011   RW  822 56.6
+4  1996       4 2000    C    3  0.0
+5  1996       5 2007    D  231  8.8
+6  1996       6 2009    C  627 12.5
+7  1996       7 2007 LW/C  545  9.2
+8  1996       8 2004    D   44  0.0
+9  1996       9 2011    D  917 46.9
+10 1996      10 2004    D  209  2.7</code></pre>
 </div>
 </div>
 <p>These checks all returned what they should. Finally, recall that the <code>import_data</code> function (and thus the <code>tidy_draft</code> function both take quite a while to run, especially when importing data from a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.</p>
@@ -400,7 +413,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(all_data, <span class="st">"all_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>In future chapters, we will import data from this csv file to speed up the run and rendering times. Now we proceed to the Visualize step.</p>
+<p>In future chapters, we will import data from this csv file to speed up the run and rendering times (instead of importing it from Hockey Reference every time we simply load it from the csv). Now we proceed to the Visualize step.</p>
 
 
 </section>
