@@ -31,8 +31,4 @@ tidy_draft <- function(year){
   draft_year_table
 }
 
-all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
-                                  \(x) tidy_draft(x)))
-
-
 

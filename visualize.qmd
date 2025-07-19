@@ -5,7 +5,7 @@ author: "Trevor S"
 
 ## Setup
 
-```{r,  message = FALSE, warning = FALSE, cache = TRUE}
+```{r,  message = FALSE, warning = FALSE}
 # install.packages("tidyverse")
 # install.packages("dplyr")
 library(tidyverse)
@@ -13,4 +13,6 @@ library(dplyr)
 
 
 source("functions.R") # load functions defined in prior chapters
+
+all_data <- read.csv("all_data.csv")
 ```

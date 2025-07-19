@@ -5,13 +5,7 @@ author: "Trevor S"
 
 ## Setup
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-library(rvest)
-library(tidyverse)
-library(stringr)
-```
-
-```{r, message = FALSE, warning = FALSE, cache = TRUE}
+```{r, message = FALSE, warning = FALSE}
 # install.packages("rvest")
 # install.packages("tidyverse")
 library(rvest)
@@ -19,6 +13,9 @@ library(tidyverse)
 library(stringr)
 
 source("functions.R") # load functions defined in prior chapters
+
+start_year <- 1996
+end_year <- 2020
 ```
 
 ## Introduction
@@ -73,11 +70,18 @@ tidy_draft <- function(year){
 tidy_draft(1996)
 ```
 
-This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(10)` line, which is necessary to prevent us getting rate limited). Note that I sent `cache=TRUE` on this chunk to speed up the rendering time.
+This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in long format, since every row is one player selected. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(10)` line, which is necessary to prevent us getting rate limited). Note that I sent `cache=TRUE` on this chunk to speed up the rendering time.
 
-```{r, warning=FALSE, message=FALSE, cache = TRUE}
+```{r, warning=FALSE, message=FALSE, eval = FALSE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
                    \(x) tidy_draft(x)))
+```
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+all_data <- read.csv("all_data.csv")
+
+# running it with tidy_draft will take a long time to run and render, 
+#   so we cheat and do this 
 ```
 
 We can check that this data has loaded correctly, there should be between 5000 and 6000 rows (the number of picks in a draft has changed over the years, but is usually between 200 and 240, so 25 drafts will be between 5000 and 6000) and 6 columns:
@@ -90,4 +94,10 @@ length(unique(all_data$year)) # confirm all 25 years have been included
 head(all_data, 10)
 ```
 
-These checks all returned what they should, so we proceed to the Transform step.
+These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function both take quite a while to run, especially when importing data from a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
+
+```{r}
+write.csv(all_data, "all_data.csv")
+```
+
+In future chapters, we will import data from this csv file to speed up the run and rendering times. Now we proceed to the Visualize step.

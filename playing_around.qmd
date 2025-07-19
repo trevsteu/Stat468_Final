@@ -12,7 +12,7 @@ library(gt)
 
 ## Setup
 
-```{r,  message = FALSE, warning = FALSE, cache = TRUE}
+```{r,  message = FALSE, warning = FALSE}
 # install.packages("tidyverse")
 # install.packages("dplyr")
 library(tidyverse)
@@ -20,6 +20,8 @@ library(dplyr)
 
 
 source("functions.R") # load functions defined in prior chapters
+
+all_data <- read.csv("all_data.csv")
 ```
 
 Right now this is just a bunch of EDA that I think is interesting. I will condense it and give it a logical flow later.
