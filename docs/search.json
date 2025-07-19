@@ -94,7 +94,7 @@
     "href": "tidy.html",
     "title": "4  Tidy",
     "section": "",
-    "text": "4.1 Setup\nCode\n# install.packages(\"tidyverse\")\nlibrary(tidyverse)\nlibrary(stringr)\n\nsource(\"functions.R\") # load functions defined in prior chapters",
+    "text": "4.1 Setup\nCode\n# install.packages(\"rvest\")\n# install.packages(\"tidyverse\")\nlibrary(rvest)\nlibrary(tidyverse)\nlibrary(stringr)\n\nsource(\"functions.R\") # load functions defined in prior chapters",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tidy</span>"
     ]
@@ -120,33 +120,33 @@
     ]
   },
   {
+    "objectID": "visualize.html",
+    "href": "visualize.html",
+    "title": "5  Visualize",
+    "section": "",
+    "text": "5.1 Setup\nCode\n# install.packages(\"tidyverse\")\n# install.packages(\"dplyr\")\nlibrary(tidyverse)\nlibrary(dplyr)\n\n\nsource(\"functions.R\") # load functions defined in prior chapters",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Visualize</span>"
+    ]
+  },
+  {
     "objectID": "transform.html",
     "href": "transform.html",
-    "title": "5  Transform",
+    "title": "6  Transform",
     "section": "",
-    "text": "5.1 Setup\nCode\n# install.packages(\"tidyverse\")\n# install.packages(\"dplyr\")\nlibrary(tidyverse)\nlibrary(dplyr)\n\n\nsource(\"functions.R\") # load functions defined in prior chapters\nRight now this is just a bunch of EDA that I think is interesting. I will condense it and give it a logical flow later.",
+    "text": "6.1 Setup\nCode\n# install.packages(\"tidyverse\")\n# install.packages(\"dplyr\")\nlibrary(tidyverse)\nlibrary(dplyr)\n\n\nsource(\"functions.R\") # load functions defined in prior chapters",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Transform</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Transform</span>"
     ]
   },
   {
-    "objectID": "transform.html#introduction",
-    "href": "transform.html#introduction",
-    "title": "5  Transform",
-    "section": "5.2 Introduction",
-    "text": "5.2 Introduction\nNow that we have our data imported and cleaned, we need to transform the data before modelling and visualizing it. In particular, we wish to come up with a way of utilizing the ps and gp values in such a way that does not punish players who are still playing (and thus haven’t had as many seasons to increase their point share and games played.\n\n\nCode\npick_prop &lt;- all_data |&gt; \n  group_by(year) |&gt; \n  mutate(draft_gp = sum(gp), \n         draft_ps = sum(ps), \n         prop_gp = gp / draft_gp, \n         prop_ps = ps / draft_ps) |&gt; \n  group_by(overall) |&gt; \n  summarize(avg_prop_gp = mean(prop_gp), \n            avg_prop_ps = mean(prop_ps), \n            .groups = \"drop\") |&gt; \n  pivot_longer(cols = starts_with(\"avg\"))\n  \nggplot(pick_prop, aes(x = overall, y = value)) +\n  geom_point() + \n  geom_smooth(formula = y ~ log(x)) + \n  facet_wrap(~name)\n\n\n`geom_smooth()` using method = 'loess'\n\n\n\n\n\n\n\n\n\nLooking at these plots, there clearly appears to be an exponential pattern here. The games played and point share plots look quite similar, one noticeable difference is the point share one seems more spread out which makes sense since excellent players can have a significantly higher point share than good players, but they probably can’t have significantly more games played.",
+    "objectID": "transform.html#code",
+    "href": "transform.html#code",
+    "title": "6  Transform",
+    "section": "6.2 Code",
+    "text": "6.2 Code\n\n\nCode\npick_prop &lt;- all_data |&gt; \n  group_by(year) |&gt; \n  mutate(draft_gp = sum(gp), \n         draft_ps = sum(ps), \n         prop_gp = gp / draft_gp, \n         prop_ps = ps / draft_ps) |&gt; \n  group_by(overall) |&gt; \n  summarize(avg_prop_gp = mean(prop_gp), \n            avg_prop_ps = mean(prop_ps),\n            .groups = \"drop\")\n\nest_gp_prop &lt;- rep(0, times = nrow(pick_prop))\nest_ps_prop &lt;- rep(0, times = nrow(pick_prop))\n\nfor(i in 1:nrow(pick_prop)){\n  k &lt;- floor(sqrt(i))\n  nearest &lt;- which(abs(seq(1, nrow(pick_prop), 1) - i) &lt;= (k %/% 2)+1)\n  total_weight &lt;- sum(pmin(1/abs(i - nearest)^2, 1))\n  for(j in nearest){\n    weight &lt;- pmin(1/abs(i - j)^2, 1) / total_weight\n    est_gp_prop[i] &lt;- est_gp_prop[i] + weight * pick_prop$avg_prop_gp[j]\n    est_ps_prop[i] &lt;- est_ps_prop[i] + weight * pick_prop$avg_prop_ps[j]\n  }\n}\n\ngp_scale_fac &lt;- 1000 / est_gp_prop[[1]]\nps_scale_fac &lt;- 1000 / est_ps_prop[[1]]\n\nknn_model &lt;- data.frame(overall = seq(1, length(est_gp_prop), 1),\n                   value_gp = gp_scale_fac * est_gp_prop, \n                   value_ps = ps_scale_fac * est_ps_prop)\n\nggplot(knn_model, aes(x = overall, y = value_ps)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nCode\nnew_model &lt;- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), \n                 data = knn_model)\n\npred_data &lt;- data.frame(overall = seq(1, 224))\npredicted_vals &lt;- predict(new_model, pred_data)\n\npred_data &lt;- mutate(pred_data, value_ps = predicted_vals)\n\nggplot(pred_data, aes(x = overall, y = value_ps)) + \n  geom_line(lwd = 1.5, col = \"red\") + \n  geom_point(data = knn_model)\n\n\n\n\n\n\n\n\n\nCode\nvalue &lt;- function(overall){\n  coefs &lt;- coef(new_model)\n  coefs[[1]] / (1 + exp((coefs[[2]] - log(overall))/coefs[[3]]))\n}\n\nvalue(1) - 2*value(8) - value(23)\n\n\n[1] 0.6258647",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Transform</span>"
-    ]
-  },
-  {
-    "objectID": "transform.html#eda",
-    "href": "transform.html#eda",
-    "title": "5  Transform",
-    "section": "5.3 EDA",
-    "text": "5.3 EDA\nFirst, we perform some EDA to get a feel for what our data looks like. First, we want to see how many players never made the NHL (ie gp = 0), how many only played in a few games (we’ll arbitrarily say this is 50 games, just over half of an 82 game season), and how many played in over 500 games.\n\n\nCode\nplayer_games &lt;- all_data |&gt; \n  mutate(none = ifelse(gp == 0, 1, 0), \n         few = ifelse(gp &gt; 0 & gp &lt;= 50, 1, 0),\n         many = ifelse(gp &gt;= 500, 1, 0))\n\nrates &lt;- c(sum(player_games$none) / nrow(player_games),\n           sum(player_games$few) / nrow(player_games), \n           sum(player_games$many / nrow(player_games)))\n\nrates\n\n\n[1] 0.5188870 0.1538603 0.1201400\n\n\nWe can see that a significant portion of our dataset never played in an NHL game or only played in a few games. Let’s look at this by year:\n\n\nCode\nplayer_games &lt;- player_games |&gt; \n  group_by(year) |&gt; \n  summarize(across(none:many, sum))\n\n\nsee how many players we have that have played in at least 1 NHL game and are not retired. This is equivalent to gp &gt;= 1 and to == 2025 (recall when we noted in the first chapter that players who are still playing have a to value of 2025.\n\n\nCode\nall_data |&gt; \n  filter(gp &gt;= 1 & to == 2025) |&gt; \n  nrow()\n\n\n[1] 742\n\n\nThere are 742 such players (about 13% of our dataset) who meet this criteria, and who we will have to adjust the ps and gp values for. We can see in the plot below that (unsurprisingly) most of these players were drafted recently.\n\n\nCode\nplayer_adj &lt;- all_data |&gt; \n  filter(gp == 0) |&gt;\n  group_by(year) |&gt; \n  summarize(n = n())\n\nyear_stats &lt;- all_data |&gt; \n  group_by(year) |&gt; \n  summarize(total_gp = sum(gp), total_ps = sum(ps))\n\nggplot(player_adj, aes(x = year, y = n)) +\n  geom_point() + \n  labs(title = \"Number of Current Players Drafted by Year\", \n       x = \"Draft Year\", y = \"Number of Players\")\n\n\n\n\n\n\n\n\n\nCode\nggplot(year_stats, aes(x = year, y = total_gp)) + \n  geom_point()\n\n\n\n\n\n\n\n\n\nCode\nggplot(year_stats, aes(x = year, y = total_ps)) + \n  geom_point()",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Transform</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Transform</span>"
     ]
   },
   {
@@ -154,7 +154,7 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "ChatGPT Usage (will add link when done)\nValuation of NHL Draft Picks using Functional Data Analysis\nExamining the value of NHL Draft picks\nNHL draft: What does it cost to trade up?\nHockeyReference\n\n\n\nChatGPT Usage (will add link when done)\nValuation of NHL Draft Picks using Functional Data Analysis\nExamining the value of NHL Draft picks\nNHL draft: What does it cost to trade up?\nHockeyReference\nR for Data Science (2e)\nDevOps for Data Science\nHappy Git and GitHub for the useR\nMastering Shiny\n\nFor now this is just a list of links. Later I will formalize it.",
+    "text": "ChatGPT Usage (will add link when done)\nValuation of NHL Draft Picks using Functional Data Analysis\nExamining the value of NHL Draft picks\nNHL draft: What does it cost to trade up?\nHockeyReference\nR for Data Science (2e)\nDevOps for Data Science\nHappy Git and GitHub for the useR\nMastering Shiny\nNon-linear Regression in R\n\nFor now this is just a list of links. Later I will formalize it.",
     "crumbs": [
       "References"
     ]

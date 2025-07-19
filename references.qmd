@@ -1,17 +1,5 @@
 # References {.unnumbered}
 
-::: {#refs}
--   ChatGPT Usage (will add link when done)
-
--   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
-
--   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
-
--   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
-
--   [HockeyReference](https://www.hockey-reference.com/draft/)
-:::
-
 -   ChatGPT Usage (will add link when done)
 
 -   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
@@ -29,5 +17,7 @@
 -   [Happy Git and GitHub for the useR](https://happygitwithr.com/)
 
 -   [Mastering Shiny](https://mastering-shiny.org/index.html)
+
+-   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html)
 
 For now this is just a list of links. Later I will formalize it.

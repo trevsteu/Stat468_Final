@@ -3,4 +3,14 @@ title: "Visualize"
 author: "Trevor S"
 ---
 
-This is a placeholder for Ch4 – Visualize.
+## Setup
+
+```{r,  message = FALSE, warning = FALSE, cache = TRUE}
+# install.packages("tidyverse")
+# install.packages("dplyr")
+library(tidyverse)
+library(dplyr)
+
+
+source("functions.R") # load functions defined in prior chapters
+```

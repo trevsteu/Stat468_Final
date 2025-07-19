@@ -6,12 +6,15 @@ author: "Trevor S"
 ## Setup
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(rvest)
 library(tidyverse)
 library(stringr)
 ```
 
 ```{r, message = FALSE, warning = FALSE, cache = TRUE}
+# install.packages("rvest")
 # install.packages("tidyverse")
+library(rvest)
 library(tidyverse)
 library(stringr)
 

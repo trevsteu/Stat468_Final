@@ -5,7 +5,8 @@ author: "Trevor S"
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
-library(stringr)
+library(stringr) 
+library(gt)
 ```
 
 ## Setup
@@ -20,11 +21,7 @@ library(dplyr)
 source("functions.R") # load functions defined in prior chapters
 ```
 
-Right now this is just a bunch of EDA that I think is interesting. I will condense it and give it a logical flow later.
-
-## Introduction
-
-Now that we have our data imported and cleaned, we need to transform the data before modelling and visualizing it. In particular, we wish to come up with a way of utilizing the `ps` and `gp` values in such a way that does not punish players who are still playing (and thus haven't had as many seasons to increase their point share and games played.
+## Code
 
 ```{r}
 pick_prop <- all_data |> 
@@ -35,71 +32,50 @@ pick_prop <- all_data |>
          prop_ps = ps / draft_ps) |> 
   group_by(overall) |> 
   summarize(avg_prop_gp = mean(prop_gp), 
-            avg_prop_ps = mean(prop_ps), 
-            .groups = "drop") |> 
-  pivot_longer(cols = starts_with("avg"))
-  
-ggplot(pick_prop, aes(x = overall, y = value)) +
-  geom_point() + 
-  geom_smooth(formula = y ~ log(x)) + 
-  facet_wrap(~name)
-```
+            avg_prop_ps = mean(prop_ps),
+            .groups = "drop")
 
-Looking at these plots, there clearly appears to be an exponential pattern here. The games played and point share plots look quite similar, one noticeable difference is the point share one seems more spread out which makes sense since excellent players can have a significantly higher point share than good players, but they probably can't have significantly more games played.
+est_gp_prop <- rep(0, times = nrow(pick_prop))
+est_ps_prop <- rep(0, times = nrow(pick_prop))
 
-## EDA
+for(i in 1:nrow(pick_prop)){
+  k <- floor(sqrt(i))
+  nearest <- which(abs(seq(1, nrow(pick_prop), 1) - i) <= (k %/% 2)+1)
+  total_weight <- sum(pmin(1/abs(i - nearest)^2, 1))
+  for(j in nearest){
+    weight <- pmin(1/abs(i - j)^2, 1) / total_weight
+    est_gp_prop[i] <- est_gp_prop[i] + weight * pick_prop$avg_prop_gp[j]
+    est_ps_prop[i] <- est_ps_prop[i] + weight * pick_prop$avg_prop_ps[j]
+  }
+}
 
-First, we perform some EDA to get a feel for what our data looks like. First, we want to see how many players never made the NHL (ie `gp = 0`), how many only played in a few games (we'll arbitrarily say this is 50 games, just over half of an 82 game season), and how many played in over 500 games.
+gp_scale_fac <- 1000 / est_gp_prop[[1]]
+ps_scale_fac <- 1000 / est_ps_prop[[1]]
 
-```{r}
-player_games <- all_data |> 
-  mutate(none = ifelse(gp == 0, 1, 0), 
-         few = ifelse(gp > 0 & gp <= 50, 1, 0),
-         many = ifelse(gp >= 500, 1, 0))
+knn_model <- data.frame(overall = seq(1, length(est_gp_prop), 1),
+                   value_gp = gp_scale_fac * est_gp_prop, 
+                   value_ps = ps_scale_fac * est_ps_prop)
 
-rates <- c(sum(player_games$none) / nrow(player_games),
-           sum(player_games$few) / nrow(player_games), 
-           sum(player_games$many / nrow(player_games)))
-
-rates
-```
-
-We can see that a significant portion of our dataset never played in an NHL game or only played in a few games. Let's look at this by year:
-
-```{r}
-player_games <- player_games |> 
-  group_by(year) |> 
-  summarize(across(none:many, sum))
-
-```
-
-see how many players we have that have played in at least 1 NHL game and are not retired. This is equivalent to `gp >= 1` and `to == 2025` (recall when we noted in the first chapter that players who are still playing have a `to` value of `2025`.
-
-```{r}
-all_data |> 
-  filter(gp >= 1 & to == 2025) |> 
-  nrow()
-```
-
-There are 742 such players (about 13% of our dataset) who meet this criteria, and who we will have to adjust the `ps` and `gp` values for. We can see in the plot below that (unsurprisingly) most of these players were drafted recently.
-
-```{r}
-player_adj <- all_data |> 
-  filter(gp == 0) |>
-  group_by(year) |> 
-  summarize(n = n())
-
-year_stats <- all_data |> 
-  group_by(year) |> 
-  summarize(total_gp = sum(gp), total_ps = sum(ps))
-
-ggplot(player_adj, aes(x = year, y = n)) +
-  geom_point() + 
-  labs(title = "Number of Current Players Drafted by Year", 
-       x = "Draft Year", y = "Number of Players")
-
-ggplot(year_stats, aes(x = year, y = total_gp)) + 
+ggplot(knn_model, aes(x = overall, y = value_ps)) +
   geom_point()
-ggplot(year_stats, aes(x = year, y = total_ps)) + 
-  geom_point()
+
+
+new_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = knn_model)
+
+pred_data <- data.frame(overall = seq(1, 224))
+predicted_vals <- predict(new_model, pred_data)
+
+pred_data <- mutate(pred_data, value_ps = predicted_vals)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = knn_model)
+
+value <- function(overall){
+  coefs <- coef(new_model)
+  coefs[[1]] / (1 + exp((coefs[[2]] - log(overall))/coefs[[3]]))
+}
+
+value(1) - 2*value(8) - value(23)
 ```

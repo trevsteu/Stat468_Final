@@ -11,6 +11,7 @@ book:
     - question.qmd
     - import.qmd
     - tidy.qmd
+    - visualize.qmd
     - transform.qmd
     - references.qmd
 
