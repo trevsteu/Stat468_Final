@@ -8,15 +8,15 @@
 
 -   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
 
--   [HockeyReference](https://www.hockey-reference.com/draft/)
+-   [HockeyReference](https://www.hockey-reference.com/draft/) (for the data used in the report)
 
--   [R for Data Science (2e)](https://r4ds.hadley.nz/)
+-   [R for Data Science (2e)](https://r4ds.hadley.nz/) (throughout the report)
 
--   [DevOps for Data Science](https://do4ds.com/)
+-   [DevOps for Data Science](https://do4ds.com/) (throughout the report)
 
--   [Happy Git and GitHub for the useR](https://happygitwithr.com/)
+-   [Happy Git and GitHub for the useR](https://happygitwithr.com/) (throughout the report)
 
--   [Mastering Shiny](https://mastering-shiny.org/index.html)
+-   [Mastering Shiny](https://mastering-shiny.org/index.html) (for the RShiny app)
 
 -   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model Chapter)
 

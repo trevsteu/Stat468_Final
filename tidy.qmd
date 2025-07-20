@@ -22,7 +22,7 @@ end_year <- 2020
 
 ## Introduction
 
-In the Tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
+In the tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
 
 ```{r, warning = FALSE}
 import_draft(start_year)[23:30,]

@@ -3,4 +3,63 @@ title: "Model"
 author: "Trevor S"
 ---
 
-This is a placeholder for my model chapter.
+## Setup
+
+We install and load the necessary packages, along with functions from prior chapters and `all_data`.
+
+```{r,  message = FALSE, warning = FALSE}
+# install.packages("tidyverse")
+# install.packages("dplyr")
+library(tidyverse)
+library(dplyr)
+
+source("functions.R") # load functions defined in prior chapters
+
+all_data <- read.csv("all_data.csv")
+```
+
+## Introduction
+
+In the model step, we will develop a model for predicting the value of picks in the NHL Entry Draft based on historical data. We will first start with a linear model, then progress to a logarithmic model, and then conclude by finding a model via non-linear regression.
+
+## Code
+
+```{r}
+est_ps_prop <- rep(0, times = nrow(all_data_prop))
+
+for(i in 1:nrow(all_data_prop)){
+  k <- floor(sqrt(i))
+  nearest <- which(abs(seq(1, nrow(all_data_prop), 1) - i) <= (k %/% 2)+1)
+  total_weight <- sum(pmin(1/abs(i - nearest)^2, 1))
+  for(j in nearest){
+    weight <- pmin(1/abs(i - j)^2, 1) / total_weight
+    est_ps_prop[i] <- est_ps_prop[i] + weight * all_data_prop$avg_prop_ps[j]
+  }
+}
+
+ps_scale_fac <- 1000 / est_ps_prop[[1]]
+
+knn_model <- data.frame(overall = seq(1, length(est_ps_prop), 1),
+                        value_ps = ps_scale_fac * est_ps_prop)
+
+ggplot(knn_model, aes(x = overall, y = value_ps)) +
+  geom_point()
+
+
+new_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = knn_model)
+
+pred_data <- data.frame(overall = seq(1, 224))
+predicted_vals <- predict(new_model, pred_data)
+
+pred_data <- mutate(pred_data, value_ps = predicted_vals)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = knn_model)
+
+value <- function(overall){
+  coefs <- coef(new_model)
+  coefs[[1]] / (1 + exp((coefs[[2]] - log(overall))/coefs[[3]]))
+}
+```

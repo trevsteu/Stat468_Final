@@ -7,6 +7,7 @@ library(stringr)
 start_year <- 1996
 end_year <- 2020
 
+# ---------------------------------------------------------------------------------------
 
 import_draft <- function(year){
   url <- str_glue("https://www.hockey-reference.com/draft/NHL_{year}_entry.html")
@@ -20,6 +21,8 @@ import_draft <- function(year){
   draft_year_table
 }
 
+# ---------------------------------------------------------------------------------------
+
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
     filter(overall != "Overall" & overall != "" 
@@ -31,4 +34,15 @@ tidy_draft <- function(year){
   draft_year_table
 }
 
+# ---------------------------------------------------------------------------------------
 
+all_data <- read.csv("all_data.csv")
+
+# ---------------------------------------------------------------------------------------
+
+all_data_prop <- all_data |> 
+  group_by(year) |> 
+  mutate(prop_ps = ps/sum(ps)) |> 
+  group_by(overall) |>  
+  summarize(avg_prop_ps = mean(prop_ps),
+            .groups = "drop")

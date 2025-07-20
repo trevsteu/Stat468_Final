@@ -283,7 +283,7 @@ window.Quarto = {
 </section>
 <section id="introduction" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">5.2</span> Introduction</h2>
-<p>In the Visualize step, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a>.</p>
+<p>In the visualize step, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a>.</p>
 </section>
 <section id="code" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="code"><span class="header-section-number">5.3</span> Code</h2>
@@ -370,7 +370,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>This appears to be generally true, though there are some picks that stick out (for example, pick 205 has an average points share of 13.124, whereas pick 204 has an average point share of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having a career points share of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have a point share greater than 0.3), so two players with very successful careers skewing the data is not surprising. The lesson to take from this plot when creating a model is that it will be necessary to fit a smooth curve to the model and that the estimated value of pick <span class="math inline">\(n\)</span> should probably be influenced by the historical value of pick <span class="math inline">\(n\)</span> AND the picks “close” to <span class="math inline">\(n\)</span>.</p>
+<p>We can see that in general points share does tend to decrease later in drafts, and that pick value tends to level off around pick 75, though there are some picks that stick out (for example, pick 205 has an average points share of 13.124, whereas pick 204 has an average point share of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having a career points share of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have a point share greater than 0.3), so two players with very successful careers skewing the data is not surprising.</p>
+<p>The lessons to take from this plot when creating a model are that it will be necessary to fit a smooth curve to the model and that the estimated value of pick <span class="math inline">\(n\)</span> should probably be influenced by the historical value of pick <span class="math inline">\(n\)</span> AND the historical value of picks “close” to <span class="math inline">\(n\)</span>. With this in mind, we proceed to the Transform step.</p>
 
 
 </section>
