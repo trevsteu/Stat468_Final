@@ -39,9 +39,9 @@ all_data |>
   nrow() / nrow(all_data)
 ```
 
-We next create two empirical cdfs, one of games played (on the left) and one of points share (on the right). Note that we have to pivot the data and put it in long format first:
+We next create two histograms, one of games played (on the left) and one of points share (on the right). Note that we have to pivot the data and put it in long format first:
 
-```{r}
+```{r, message=FALSE}
 all_data |> pivot_longer(cols = c(gp, ps),
                          names_to = "metric", 
                          values_to = "value") |> 
@@ -53,8 +53,22 @@ all_data |> pivot_longer(cols = c(gp, ps),
        x = "Value", y = "Number of Players") 
 ```
 
-Clearly both of these are very right-skewed, meaning that a lot of players end up playing 0 games and thus accumulating 0 points share. We may also suspect that games played and points share are positively correlated, indeed:
+Clearly both of these are very right-skewed, meaning that a lot of players end up playing 0 games and thus accumulating 0 points share. We may also guess that games played and points share are positively correlated, since better players get to play in more games and thus accumulate more points share. Indeed:
 
 ```{r}
 cor(all_data$ps, all_data$gp)
 ```
+
+Because of this, we choose to only include `ps` in our model to avoid potential multicollinearity concerns. Finally, we wish to confirm that players selected later in the draft (ie a higher `overall`) tend to generate more points share in their careers. To check this, we create a plot of the average points shares by players selected at each pick number.
+
+```{r}
+all_data |> 
+  group_by(overall) |> 
+  summarize(mean_ps = mean(ps)) |> 
+  ggplot(aes(x = overall, y = mean_ps)) + 
+  geom_point() + 
+  labs(title = "Mean Points Share by Pick Number", 
+       x = "Pick Number", y = "Mean Points Share")
+```
+
+This appears to be generally true, though there are some picks that stick out (for example, pick 205 has an average points share of 13.124, whereas pick 204 has an average point share of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having a career points share of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have a point share greater than 0.3), so two players with very successful careers skewing the data is not surprising. The lesson to take from this plot when creating a model is that it will be necessary to fit a smooth curve to the model and that the estimated value of pick $n$ should probably be influenced by the historical value of pick $n$ AND the picks "close" to $n$.

@@ -95,7 +95,7 @@ length(unique(all_data$year)) # confirm all 25 years have been included
 head(all_data, 10)
 ```
 
-These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function both take quite a while to run, especially when importing data from a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
+These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
 
 ```{r, eval = FALSE}
 write.csv(all_data, "all_data.csv")
