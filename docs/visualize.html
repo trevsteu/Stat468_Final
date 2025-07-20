@@ -358,10 +358,21 @@ window.Quarto = {
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(overall) <span class="sc">|&gt;</span> </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ps =</span> <span class="fu">mean</span>(ps)) <span class="sc">|&gt;</span> </span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps)) <span class="sc">+</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Points Share by Pick Number"</span>, </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Points Share"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">205</span>, <span class="at">y =</span> <span class="fu">mean</span>(<span class="fu">filter</span>(all_data, overall<span class="sc">==</span><span class="dv">205</span>)<span class="sc">$</span>ps)), <span class="at">col =</span> <span class="st">"salmon"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Points Share by Pick Number"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Points Share"</span>) <span class="sc">+</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">175</span>, <span class="at">y =</span> <span class="fl">37.5</span>, <span class="at">xend =</span> <span class="dv">203</span>, <span class="at">yend =</span> <span class="dv">14</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"open"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.32</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>, <span class="at">x =</span> <span class="dv">140</span>, <span class="at">y =</span> <span class="dv">39</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"205th overall selection,</span><span class="sc">\n</span><span class="st"> (mean PS of 13.124)"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="st">"left"</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_point(aes(x = 205, y = mean(filter(all_data, overall == : All aesthetics have length 1, but the data has 224 rows.
+ℹ Please consider using `annotate()` or provide this layer with data containing
+  a single row.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -371,7 +382,7 @@ window.Quarto = {
 </div>
 </div>
 <p>We can see that in general points share does tend to decrease later in drafts, and that pick value tends to level off around pick 75, though there are some picks that stick out (for example, pick 205 has an average points share of 13.124, whereas pick 204 has an average point share of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having a career points share of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have a point share greater than 0.3), so two players with very successful careers skewing the data is not surprising.</p>
-<p>The lessons to take from this plot when creating a model are that it will be necessary to fit a smooth curve to the model and that the estimated value of pick <span class="math inline">\(n\)</span> should probably be influenced by the historical value of pick <span class="math inline">\(n\)</span> AND the historical value of picks “close” to <span class="math inline">\(n\)</span>. With this in mind, we proceed to the Transform step.</p>
+<p>The lessons to take from this plot when creating a model are that it will be necessary to fit a smooth curve to the model (so that <span class="math inline">\(v_i &gt; v_{i+c}\)</span> where <span class="math inline">\(c \in \mathbb Z^+\)</span>, and <span class="math inline">\(v_i\)</span> is the value of pick <span class="math inline">\(i\)</span>), and that the estimated value of pick <span class="math inline">\(n\)</span> should probably be influenced by the historical value of pick <span class="math inline">\(n\)</span> AND the historical value of picks “close” to <span class="math inline">\(n\)</span>. With this in mind, we proceed to the Transform step.</p>
 
 
 </section>

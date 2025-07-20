@@ -56,7 +56,7 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Remove any players selected after $224^{\text{th}}$ overall.
 
-Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks. Finally, we remove
+Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
 
 ```{r, warning = FALSE, message = FALSE}
 tidy_draft <- function(year){
@@ -72,7 +72,7 @@ tidy_draft <- function(year){
 tidy_draft(1996)
 ```
 
-This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in long format, since every row is one player selected. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(10)` line, which is necessary to prevent us getting rate limited). Note that I sent `cache=TRUE` on this chunk to speed up the rendering time.
+This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.
 
 ```{r, warning=FALSE, message=FALSE, eval = FALSE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
@@ -82,7 +82,8 @@ all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 all_data <- read.csv("all_data.csv")
 
-# I'm cheating here because tidy_draft will take a long time to run and render
+# I'm cheating here because I don't want to run the chunk above since 
+#   tidy_draft takes such a llong time to run and render
 ```
 
 We can check that this data has loaded correctly, there should be between 5000 and 6000 rows (the number of picks in a draft has changed over the years, but is usually between 200 and 240, so 25 drafts will be between 5000 and 6000) and 6 columns:
@@ -93,12 +94,14 @@ dim(all_data) # confirm there are 5000-6000 rows and 6 columns
 length(unique(all_data$year)) # confirm all 25 years have been included
 
 head(all_data, 10)
+
+all_data[23:30,]
 ```
 
 These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
 
-```{r, eval = FALSE}
-write.csv(all_data, "all_data.csv")
+```{r}
+write.csv(all_data, "all_data_test.csv", row.names = FALSE)
 ```
 
 In future chapters, we will import data from this csv file to speed up the run and rendering times (instead of importing it from Hockey Reference every time we simply load it from the csv). Now we proceed to the Visualize step.

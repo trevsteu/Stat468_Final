@@ -3,4 +3,6 @@ title: "Communicate"
 author: "Trevor S"
 ---
 
-This is a placeholder for my communicate chapter.
+This is a placeholder for my communicate chapter and will eventually have plots, tables, etc.
+
+In my RShiny app, I plan to allow users to enter potental trades, click "evaluate", and then see the point gain/loss. Additionally, I'd like to put the point difference into context "this is equivalent to team A giving up the 174th overall pick".
