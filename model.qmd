@@ -25,22 +25,7 @@ In the model step, we will develop a model for predicting the value of picks in 
 ## Code
 
 ```{r}
-est_ps_prop <- rep(0, times = nrow(all_data_prop))
 
-for(i in 1:nrow(all_data_prop)){
-  k <- floor(sqrt(i))
-  nearest <- which(abs(seq(1, nrow(all_data_prop), 1) - i) <= (k %/% 2)+1)
-  total_weight <- sum(pmin(1/abs(i - nearest)^2, 1))
-  for(j in nearest){
-    weight <- pmin(1/abs(i - j)^2, 1) / total_weight
-    est_ps_prop[i] <- est_ps_prop[i] + weight * all_data_prop$avg_prop_ps[j]
-  }
-}
-
-ps_scale_fac <- 1000 / est_ps_prop[[1]]
-
-knn_model <- data.frame(overall = seq(1, length(est_ps_prop), 1),
-                        value_ps = ps_scale_fac * est_ps_prop)
 
 ggplot(knn_model, aes(x = overall, y = value_ps)) +
   geom_point()
