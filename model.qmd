@@ -25,26 +25,29 @@ In the model step, we will develop a model for predicting the value of picks in 
 ## Code
 
 ```{r}
+prop_knn_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = knn_prop)
 
+pred_data_prop_knn <- data.frame(overall = seq(1, 224))
+pred_vals_prop_knn <- predict(prop_knn_model, pred_data_prop_knn)
 
-ggplot(knn_model, aes(x = overall, y = value_ps)) +
-  geom_point()
-
-
-new_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
-                 data = knn_model)
-
-pred_data <- data.frame(overall = seq(1, 224))
-predicted_vals <- predict(new_model, pred_data)
-
-pred_data <- mutate(pred_data, value_ps = predicted_vals)
+pred_data <- mutate(pred_data_prop_knn, value_ps = pred_vals_prop_knn)
 
 ggplot(pred_data, aes(x = overall, y = value_ps)) + 
   geom_line(lwd = 1.5, col = "red") + 
-  geom_point(data = knn_model)
+  geom_point(data = knn_prop)
 
-value <- function(overall){
-  coefs <- coef(new_model)
-  coefs[[1]] / (1 + exp((coefs[[2]] - log(overall))/coefs[[3]]))
-}
+
+
+raw_knn_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = knn_raw)
+
+pred_data_raw_knn <- data.frame(overall = seq(1, 224))
+pred_vals_raw_knn <- predict(raw_knn_model, pred_data_raw_knn)
+
+pred_data <- mutate(pred_data, value_ps = pred_vals_raw_knn)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = knn_raw)
 ```
