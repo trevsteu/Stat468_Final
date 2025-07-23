@@ -34,14 +34,12 @@ all_data |>
 
 Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren't worth very much anyway, but it is worth noting that several picks after #210 have a smaller sample size than picks 1-210.
 
-Before doing any further EDA, we will take the five number summary, mean, and stanard deviation of both the GP and PS values to get a sense of what they look like. Recall that the five number summary gives the minimum, 25% quantile, median, 75% quantile, and maximum of a dataset. Additionally, recall that PS stands for Point Share, and is a measure of a player's career contributions to points in the standings (ie the points you get from wins, not the one that is goals plus assists).
+Before doing any further EDA, we will take the five number summary, mean, and standard deviation of both the GP and PS values to get a sense of what they look like. Recall that the five number summary gives the minimum, 25% quantile, median, 75% quantile, and maximum of a dataset. Additionally, recall that PS stands for Point Share, and is a measure of a player's career contributions to points in the standings (ie the points you get from wins, not the one that is goals plus assists).
 
 ```{r}
-fivenum(all_data$gp)
-c(mean(all_data$gp), sd(all_data$gp))
+c(fivenum(all_data$gp), mean(all_data$gp), sd(all_data$gp))
 
-fivenum(all_data$ps)
-c(mean(all_data$ps), sd(all_data$ps))
+c(fivenum(all_data$ps), mean(all_data$ps), sd(all_data$ps))
 ```
 
 Clearly both the GP and PS values are right skewed. Note that the maximum of the GP data is around 6 standard deviations from the mean $(\frac{1779-142.7713}{274.0303} = 5.97)$ , whereas the maximum of the PS data is almost 10 standard deviations away $(\frac{217.8-8.249862}{21.172591} = 9.89)$.
@@ -126,7 +124,7 @@ Though this plot is still quite busy, it shows a strange trend that there seems 
 
 The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Typically for such skewed data the median would be preferred over the mean to improve resistance to outliers. However in this context we don't really want to be resistance to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.
 
-```{r}
+```{r, warning=FALSE}
 all_data |> 
   group_by(overall) |> 
   summarize(mean_ps = mean(ps)) |> 
