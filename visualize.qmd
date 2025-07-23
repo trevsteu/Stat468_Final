@@ -7,7 +7,7 @@ author: "Trevor S"
 
 We install and load the necessary packages, along with functions from prior chapters and `all_data`.
 
-```{r setup,  message = FALSE, warning = FALSE}
+```{r,  message = FALSE, warning = FALSE}
 # install.packages("gt")
 # install.packages("ggplot2")
 library(gt)
