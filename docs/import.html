@@ -103,6 +103,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
+
+<script src="site_libs/reactwidget-2.0.0/react-tools.js"></script>
+
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+
+<script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
+
 
 
 </head>
@@ -250,11 +266,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("janitor")</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("gt")</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("reactable")</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -294,23 +313,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(<span class="fu">import_draft</span>(start_year), <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="xvlafcotfm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xvlafcotfm table {
+<div id="ysxtsmbval" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ysxtsmbval table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xvlafcotfm thead, #xvlafcotfm tbody, #xvlafcotfm tfoot, #xvlafcotfm tr, #xvlafcotfm td, #xvlafcotfm th {
+#ysxtsmbval thead, #ysxtsmbval tbody, #ysxtsmbval tfoot, #ysxtsmbval tr, #ysxtsmbval td, #ysxtsmbval th {
   border-style: none;
 }
 
-#xvlafcotfm p {
+#ysxtsmbval p {
   margin: 0;
   padding: 0;
 }
 
-#xvlafcotfm .gt_table {
+#ysxtsmbval .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -336,12 +355,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_caption {
+#ysxtsmbval .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xvlafcotfm .gt_title {
+#ysxtsmbval .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -353,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#xvlafcotfm .gt_subtitle {
+#ysxtsmbval .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -365,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#xvlafcotfm .gt_heading {
+#ysxtsmbval .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -377,13 +396,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_bottom_border {
+#ysxtsmbval .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_col_headings {
+#ysxtsmbval .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -398,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_col_heading {
+#ysxtsmbval .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -418,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#xvlafcotfm .gt_column_spanner_outer {
+#ysxtsmbval .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -430,15 +449,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#xvlafcotfm .gt_column_spanner_outer:first-child {
+#ysxtsmbval .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xvlafcotfm .gt_column_spanner_outer:last-child {
+#ysxtsmbval .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xvlafcotfm .gt_column_spanner {
+#ysxtsmbval .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -450,11 +469,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#xvlafcotfm .gt_spanner_row {
+#ysxtsmbval .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xvlafcotfm .gt_group_heading {
+#ysxtsmbval .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -480,7 +499,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#xvlafcotfm .gt_empty_group_heading {
+#ysxtsmbval .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -495,15 +514,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#xvlafcotfm .gt_from_md > :first-child {
+#ysxtsmbval .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xvlafcotfm .gt_from_md > :last-child {
+#ysxtsmbval .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xvlafcotfm .gt_row {
+#ysxtsmbval .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -522,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#xvlafcotfm .gt_stub {
+#ysxtsmbval .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -535,7 +554,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#xvlafcotfm .gt_stub_row_group {
+#ysxtsmbval .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -549,15 +568,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#xvlafcotfm .gt_row_group_first td {
+#ysxtsmbval .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xvlafcotfm .gt_row_group_first th {
+#ysxtsmbval .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xvlafcotfm .gt_summary_row {
+#ysxtsmbval .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -567,16 +586,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#xvlafcotfm .gt_first_summary_row {
+#ysxtsmbval .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_first_summary_row.thick {
+#ysxtsmbval .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xvlafcotfm .gt_last_summary_row {
+#ysxtsmbval .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -586,7 +605,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_grand_summary_row {
+#ysxtsmbval .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -596,7 +615,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#xvlafcotfm .gt_first_grand_summary_row {
+#ysxtsmbval .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -606,7 +625,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_last_grand_summary_row_top {
+#ysxtsmbval .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -616,11 +635,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_striped {
+#ysxtsmbval .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xvlafcotfm .gt_table_body {
+#ysxtsmbval .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -629,7 +648,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_footnotes {
+#ysxtsmbval .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -643,7 +662,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_footnote {
+#ysxtsmbval .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -652,7 +671,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#xvlafcotfm .gt_sourcenotes {
+#ysxtsmbval .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -666,7 +685,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#xvlafcotfm .gt_sourcenote {
+#ysxtsmbval .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -674,72 +693,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#xvlafcotfm .gt_left {
+#ysxtsmbval .gt_left {
   text-align: left;
 }
 
-#xvlafcotfm .gt_center {
+#ysxtsmbval .gt_center {
   text-align: center;
 }
 
-#xvlafcotfm .gt_right {
+#ysxtsmbval .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xvlafcotfm .gt_font_normal {
+#ysxtsmbval .gt_font_normal {
   font-weight: normal;
 }
 
-#xvlafcotfm .gt_font_bold {
+#ysxtsmbval .gt_font_bold {
   font-weight: bold;
 }
 
-#xvlafcotfm .gt_font_italic {
+#ysxtsmbval .gt_font_italic {
   font-style: italic;
 }
 
-#xvlafcotfm .gt_super {
+#ysxtsmbval .gt_super {
   font-size: 65%;
 }
 
-#xvlafcotfm .gt_footnote_marks {
+#ysxtsmbval .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xvlafcotfm .gt_asterisk {
+#ysxtsmbval .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xvlafcotfm .gt_indent_1 {
+#ysxtsmbval .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xvlafcotfm .gt_indent_2 {
+#ysxtsmbval .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xvlafcotfm .gt_indent_3 {
+#ysxtsmbval .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xvlafcotfm .gt_indent_4 {
+#ysxtsmbval .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xvlafcotfm .gt_indent_5 {
+#ysxtsmbval .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xvlafcotfm .katex-display {
+#ysxtsmbval .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xvlafcotfm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ysxtsmbval div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1043,26 +1062,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gp_1997 =</span> <span class="fu">coalesce</span>(gp_1997, <span class="dv">0</span>), </span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">gp_1998 =</span> <span class="fu">coalesce</span>(gp_1998, <span class="dv">0</span>))</span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">arrange</span>(old_ps_players, player))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">arrange</span>(old_ps_players, player))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="drayytnvna" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#drayytnvna table {
+<div class="reactable html-widget html-fill-item" id="htmlwidget-b0a2fd56c13c89baa946" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b0a2fd56c13c89baa946">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"player":["Andreas Dackell","Andrei Zyuzin","Boyd Devereaux","Brad Larsen","Brett Clark","Chris Allen","Chris Phillips","Dainius Zubrus","Daniel Goneau","Derek Morris","Erik Andersson","Erik Rasmussen","Jan Bulis","Jeff Brown","Joe Thornton","Johan Lindbom","Kai Nurminen","Konstantin Shafranov","Magnus Arvedson","Marco Sturm","Matt Cullen","Matt Higgins","Olli Jokinen","Patrick Marleau","Pavel Kubina","Ronnie Sundin","Ruslan Salei","Sergei Samsonov","Travis Brigley"],"gp_1997":[79,0,0,0,0,0,0,68,41,0,0,0,0,1,0,0,67,5,0,0,0,0,0,0,0,0,30,0,0],"gp_1998":[82,56,38,1,41,1,72,69,11,82,12,21,48,60,55,38,0,0,61,74,61,1,8,74,10,1,66,81,2]},"columns":[{"id":"player","name":"player","type":"character"},{"id":"gp_1997","name":"gp_1997","type":"numeric"},{"id":"gp_1998","name":"gp_1998","type":"numeric"}],"dataKey":"5b73118f04cefb2704f38f15850ea112"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>I checked all of these manually and it turns out that Jeff Brown is a different Jeff Brown so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">!=</span> <span class="st">"Jeff Brown"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp_1997, gp_1998), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"gp"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_gp =</span> <span class="fu">sum</span>(gp), </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">length</span>(<span class="fu">which</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="qcwbjjgaqs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qcwbjjgaqs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#drayytnvna thead, #drayytnvna tbody, #drayytnvna tfoot, #drayytnvna tr, #drayytnvna td, #drayytnvna th {
+#qcwbjjgaqs thead, #qcwbjjgaqs tbody, #qcwbjjgaqs tfoot, #qcwbjjgaqs tr, #qcwbjjgaqs td, #qcwbjjgaqs th {
   border-style: none;
 }
 
-#drayytnvna p {
+#qcwbjjgaqs p {
   margin: 0;
   padding: 0;
 }
 
-#drayytnvna .gt_table {
+#qcwbjjgaqs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1088,12 +1126,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#drayytnvna .gt_caption {
+#qcwbjjgaqs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#drayytnvna .gt_title {
+#qcwbjjgaqs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1105,7 +1143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#drayytnvna .gt_subtitle {
+#qcwbjjgaqs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1117,7 +1155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#drayytnvna .gt_heading {
+#qcwbjjgaqs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1129,13 +1167,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#drayytnvna .gt_bottom_border {
+#qcwbjjgaqs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#drayytnvna .gt_col_headings {
+#qcwbjjgaqs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1150,7 +1188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#drayytnvna .gt_col_heading {
+#qcwbjjgaqs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1170,7 +1208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#drayytnvna .gt_column_spanner_outer {
+#qcwbjjgaqs .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1182,15 +1220,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#drayytnvna .gt_column_spanner_outer:first-child {
+#qcwbjjgaqs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#drayytnvna .gt_column_spanner_outer:last-child {
+#qcwbjjgaqs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#drayytnvna .gt_column_spanner {
+#qcwbjjgaqs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1202,11 +1240,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#drayytnvna .gt_spanner_row {
+#qcwbjjgaqs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#drayytnvna .gt_group_heading {
+#qcwbjjgaqs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1232,7 +1270,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#drayytnvna .gt_empty_group_heading {
+#qcwbjjgaqs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1247,15 +1285,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#drayytnvna .gt_from_md > :first-child {
+#qcwbjjgaqs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#drayytnvna .gt_from_md > :last-child {
+#qcwbjjgaqs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#drayytnvna .gt_row {
+#qcwbjjgaqs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1274,7 +1312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#drayytnvna .gt_stub {
+#qcwbjjgaqs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1287,7 +1325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#drayytnvna .gt_stub_row_group {
+#qcwbjjgaqs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1301,15 +1339,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#drayytnvna .gt_row_group_first td {
+#qcwbjjgaqs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#drayytnvna .gt_row_group_first th {
+#qcwbjjgaqs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#drayytnvna .gt_summary_row {
+#qcwbjjgaqs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1319,16 +1357,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#drayytnvna .gt_first_summary_row {
+#qcwbjjgaqs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#drayytnvna .gt_first_summary_row.thick {
+#qcwbjjgaqs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#drayytnvna .gt_last_summary_row {
+#qcwbjjgaqs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1338,7 +1376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#drayytnvna .gt_grand_summary_row {
+#qcwbjjgaqs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1348,7 +1386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#drayytnvna .gt_first_grand_summary_row {
+#qcwbjjgaqs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1358,7 +1396,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#drayytnvna .gt_last_grand_summary_row_top {
+#qcwbjjgaqs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1368,11 +1406,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#drayytnvna .gt_striped {
+#qcwbjjgaqs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#drayytnvna .gt_table_body {
+#qcwbjjgaqs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1381,7 +1419,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#drayytnvna .gt_footnotes {
+#qcwbjjgaqs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1395,7 +1433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#drayytnvna .gt_footnote {
+#qcwbjjgaqs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1404,7 +1442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#drayytnvna .gt_sourcenotes {
+#qcwbjjgaqs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1418,7 +1456,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#drayytnvna .gt_sourcenote {
+#qcwbjjgaqs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1426,72 +1464,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#drayytnvna .gt_left {
+#qcwbjjgaqs .gt_left {
   text-align: left;
 }
 
-#drayytnvna .gt_center {
+#qcwbjjgaqs .gt_center {
   text-align: center;
 }
 
-#drayytnvna .gt_right {
+#qcwbjjgaqs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#drayytnvna .gt_font_normal {
+#qcwbjjgaqs .gt_font_normal {
   font-weight: normal;
 }
 
-#drayytnvna .gt_font_bold {
+#qcwbjjgaqs .gt_font_bold {
   font-weight: bold;
 }
 
-#drayytnvna .gt_font_italic {
+#qcwbjjgaqs .gt_font_italic {
   font-style: italic;
 }
 
-#drayytnvna .gt_super {
+#qcwbjjgaqs .gt_super {
   font-size: 65%;
 }
 
-#drayytnvna .gt_footnote_marks {
+#qcwbjjgaqs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#drayytnvna .gt_asterisk {
+#qcwbjjgaqs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#drayytnvna .gt_indent_1 {
+#qcwbjjgaqs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#drayytnvna .gt_indent_2 {
+#qcwbjjgaqs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#drayytnvna .gt_indent_3 {
+#qcwbjjgaqs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#drayytnvna .gt_indent_4 {
+#qcwbjjgaqs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#drayytnvna .gt_indent_5 {
+#qcwbjjgaqs .gt_indent_5 {
   text-indent: 25px;
 }
 
-#drayytnvna .katex-display {
+#qcwbjjgaqs .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#drayytnvna div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qcwbjjgaqs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1499,182 +1537,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
-<th id="player" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">player</th>
-<th id="gp_1997" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp_1997</th>
-<th id="gp_1998" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp_1998</th>
+<th id="year" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">year</th>
+<th id="total_gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total_gp</th>
+<th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">n</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="player">Andreas Dackell</td>
-<td class="gt_row gt_right" headers="gp_1997">79</td>
-<td class="gt_row gt_right" headers="gp_1998">82</td>
+<td class="gt_row gt_left" headers="year">gp_1997</td>
+<td class="gt_row gt_right" headers="total_gp">290</td>
+<td class="gt_row gt_right" headers="n">6</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="player">Andrei Zyuzin</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">56</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Boyd Devereaux</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">38</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Brad Larsen</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">1</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Brett Clark</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">41</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Chris Allen</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">1</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Chris Phillips</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">72</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Dainius Zubrus</td>
-<td class="gt_row gt_right" headers="gp_1997">68</td>
-<td class="gt_row gt_right" headers="gp_1998">69</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Daniel Goneau</td>
-<td class="gt_row gt_right" headers="gp_1997">41</td>
-<td class="gt_row gt_right" headers="gp_1998">11</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Derek Morris</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">82</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Erik Andersson</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">12</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Erik Rasmussen</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">21</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Jan Bulis</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">48</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Jeff Brown</td>
-<td class="gt_row gt_right" headers="gp_1997">1</td>
-<td class="gt_row gt_right" headers="gp_1998">60</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Joe Thornton</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">55</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Johan Lindbom</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">38</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Kai Nurminen</td>
-<td class="gt_row gt_right" headers="gp_1997">67</td>
-<td class="gt_row gt_right" headers="gp_1998">0</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Konstantin Shafranov</td>
-<td class="gt_row gt_right" headers="gp_1997">5</td>
-<td class="gt_row gt_right" headers="gp_1998">0</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Magnus Arvedson</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">61</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Marco Sturm</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">74</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Matt Cullen</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">61</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Matt Higgins</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">1</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Olli Jokinen</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">8</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Patrick Marleau</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">74</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Pavel Kubina</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">10</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Ronnie Sundin</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">1</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Ruslan Salei</td>
-<td class="gt_row gt_right" headers="gp_1997">30</td>
-<td class="gt_row gt_right" headers="gp_1998">66</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="player">Sergei Samsonov</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">81</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="player">Travis Brigley</td>
-<td class="gt_row gt_right" headers="gp_1997">0</td>
-<td class="gt_row gt_right" headers="gp_1998">2</td>
+<td class="gt_row gt_left" headers="year">gp_1998</td>
+<td class="gt_row gt_right" headers="total_gp">1066</td>
+<td class="gt_row gt_right" headers="n">26</td>
 </tr>
 </tbody>
 </table>
 
 </div>
-</div>
-</div>
-<p>I checked all of these manually and it turns out that Jeff Brown is a different Jeff Brown so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">!=</span> <span class="st">"Jeff Brown"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp_1997, gp_1998), </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"gp"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_gp =</span> <span class="fu">sum</span>(gp), </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">length</span>(<span class="fu">which</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 3
-  year    total_gp     n
-  &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;
-1 gp_1997      290     6
-2 gp_1998     1066    26</code></pre>
 </div>
 </div>
 <p>We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results. We can now proceed to the Tidy step.</p>
