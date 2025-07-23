@@ -22,11 +22,23 @@ library(gt)
 
 ## Introduction
 
-In the import step we import the data required for this report. As mentioned before, we will be importing data from [Hockey Reference](https://www.hockey-reference.com/draft). Before we import any data, it's important to consider *which* and *how many* years we want to include in this analysis. Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. The primary concern with including data from too many years ago is that teams have likely changed their drafting approach over time. For example, teams may have become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft "steals" in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations because it would overestimate contributions by players who were drafted in the later rounds, since those players would potentially have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor estimator of draft pick value for drafts occurring in the 2020s. That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recently either. Ideally, we would wait until all players from a draft class have retired before including it in our analysis. Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004 and is still playing) which would force us to include older drafts to maintain the same sample size, which is also not ideal as explained above.
+In the import step we import the data required for this report. As mentioned before, we will be importing data from [Hockey Reference](https://www.hockey-reference.com/draft). Before we import any data, it's important to consider *which* and *how many* years we want to include in this analysis.
+
+Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. There are two primary concerns with including data from too many years ago. The first concern is that requirements for a player to be eligible to be drafted in the first place have changed since the first NHL Draft in 1963, and the second concern is that teams have likely changed their drafting approach and strategy over time.
+
+One example of the first concern is that in 1979 the NHL began allowing players who had already played professionally for non-NHL teams to enter the draft. This meant that players who played professionally in Europe or in the World Hockey Association, which folded in 1979. Thus the level of talent available to be drafted would generally be higher in drafts from 1979 onward (there were more players eligible to be picked). Thus if we included drafts prior to 1979 we would probably underestimate the value of later selections, because selections later in a draft would likely have more talent available. There have also been changes in regards to the ages of players who are eligible, [currently players need to be between 18-20 as of September 15th of the Draft's year](https://www.nhl.com/info/hockey-operations-guidelines).
+
+In regards to the second concern, teams may have become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft "steals" in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations, and we would likely overestimate the value of later picks, since the late round steals potentially may have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor predictor of draft pick value for drafts occurring in the 2020s.
+
+A clear example of the evolving draft strategies which could impact our conclusion is the fact that it is becoming increasingly rare for teams to draft older prospects, especially with high picks. For example, 9 of the first 10 picks in the 1980 NHL Entry Draft were 19 or 20 years old at the time of the draft. In contrast, the first 19 or 20 year old was not selected until the 49th pick of the 2025 NHL Entry Draft. Though the impact of this change is not clear, it demonstrates a clear shift in drafting strategy, and it would be expected that the evaluation of prospects has changed over time too, which would change the relative value of picks (teams being more efficient drafters means later picks would be less valuable). With both of these concerns in mind, we clearly need to be careful about including drafts from too long ago.
+
+That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recently either. Ideally, we would wait until all players from a draft class have retired before including it in our analysis. Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004 and is still playing) which would force us to include older drafts to maintain the same sample size, which is also not ideal as explained above.
 
 Another consideration is that the formula for calculating a skater's PS (point share; the metric we will use for predicting pick value) changed in either the 1997-1998 or 1998-1999 season. There is conflicting info on what year it changed; [this link](https://www.hockey-reference.com/about/point_shares.html) says it changed in 1998-1999 because time on ice data was not available until 1998-1999, however [the page of 1997-1998 data](https://www.hockey-reference.com/leagues/NHL_1998_skaters.html) has time on ice data. In the seasons where time on ice data was not available, games played was used instead. To maintain consistency, we would prefer to minimize the number of players in our dataset who played before the 1998-1999 season, since those seasons were definitely under the old PS formula. The PS formula for goalies has been the same since the 1983-1984 season, so it is not an issue.
 
-Taking these factors into consideration, we make the somewhat arbitrary decision to use the 25 drafts between and 1996 and 2020 (inclusive). We don't have the code to check this yet, but the table at the end of this chapter shows the number of skaters and total number of games played by players in our dataset under the old PS formula. We can see that it is minimal and thus unlikely to impact our conclusion. Also, we will see in the Visualize chapter that a significant portion of the players in our dataset are still active, so we may want to adjust for this, as will be discussed in the Transform chapter.
+Taking these factors into consideration, we make the somewhat arbitrary decision to use the 25 drafts between and 1996 and 2020 (inclusive). We don't have the code to check this yet, but at the end of this chapter we will find the number of games played by players in our dataset under the old PS formula. Less than 0.2% of games in our dataset were played under the old PS formula and thus these games are unlikely to meaningfully impact our conclusion. However, this percentage would get progressively worse if we were to include more from prior to the 1997-1998 season.
+
+One final note is that, as we will see in the Visualize chapter, a significant portion of the players in our dataset are still active, so we may want to adjust for this. This will be discussed further in the Transform chapter.
 
 ## Code
 
@@ -51,9 +63,11 @@ import_draft <- function(year){
 gt(head(import_draft(start_year), 10))
 ```
 
-We compare the first 10 rows of the 1996 draft table shown above with the table on [Hockey Reference](https://www.hockey-reference.com/draft/NHL_1996_entry.html), and it seems that the function we created does what we want it to do. We can now find the number of skaters who played under the old PS formula. As mentioned earlier, it is not clear whether the PS formula changed in the 1997-1998 or 1998-1999 season, so we will check both. Note that players drafted in 1998 or later cannot have played in NHL games in the 1996-1997 or 1997-1998 seasons, so we only need to check players drafted in 1996 and 1997.
+We compare the first 10 rows of the 1996 draft table shown above with the table on [Hockey Reference](https://www.hockey-reference.com/draft/NHL_1996_entry.html), and it seems that the function we created does what we want it to do.
 
-```{r, warning = FALSE}
+We can now find the number of skaters who played under the old PS formula. As mentioned earlier, it is not clear whether the PS formula changed in the 1997-1998 or 1998-1999 season, so we will check both. Note that players drafted in 1998 or later cannot have played in NHL games in the 1996-1997 or 1997-1998 seasons, so we only need to check players drafted in 1996 and 1997. Also, Hockey Reference URLs use the year the season ended in, so to get stats for the 1996-1997 season the year will be 1997. We also need to be careful when doing analysis with uncleaned data, but this will not be an issue for the short checks we are doing here.
+
+```{r, warning = FALSE, cache=TRUE}
 draft_1996_1997 <- rbind(import_draft(1996), import_draft(1997)) |> 
   filter(pos != "G") |> # the ps formula for goalies is the same for our entire dataset
   select("player") # we just want to compare names
@@ -67,6 +81,7 @@ player_stats <- function(year){
     html_table() |> 
     janitor::row_to_names(1) |> 
     janitor::clean_names() |> 
+    type.convert() |> 
     select(player, gp) |> 
     group_by(player) |> 
     # players who played for n > 1 teams get listed n+1 times; this fixes it 
@@ -74,15 +89,30 @@ player_stats <- function(year){
   stats_table 
 }
 
-player_stats_1996_1997 <- full_join(player_stats(1996), 
-                                    player_stats(1997), 
+player_stats_1996_1997 <- full_join(player_stats(1997), # year is end of season
+                                    player_stats(1998), # year is end of season
                                     by = join_by(player))
 
 old_ps_players <- player_stats_1996_1997 |> 
-  rename(gp_1996 = gp.x, gp_1997 = gp.y) |> 
-  filter(player %in% draft_1996_1997$player)
+  rename(gp_1997 = gp.x, gp_1998 = gp.y) |> 
+  filter(player %in% draft_1996_1997$player) |>
+  mutate(gp_1997 = coalesce(gp_1997, 0), 
+         gp_1998 = coalesce(gp_1998, 0))
 
-old_ps_players
+gt(arrange(old_ps_players, player))
 ```
 
-We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula, so the different PS formulas is not a major concern and is unlikely to meaningfully impact our results. We can now proceed to the Tidy step.
+I checked all of these manually and it turns out that Jeff Brown is a different Jeff Brown so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.
+
+```{r}
+old_ps_players |> 
+  filter(player != "Jeff Brown") |>
+  pivot_longer(cols = c(gp_1997, gp_1998), 
+               names_to = "year", 
+               values_to = "gp") |> 
+  group_by(year) |> 
+  summarize(total_gp = sum(gp), 
+            n = length(which(gp > 0)))
+```
+
+We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results. We can now proceed to the Tidy step.

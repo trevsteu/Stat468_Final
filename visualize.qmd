@@ -62,7 +62,8 @@ This tells us that just over half of our dataset never played in an NHL game and
 To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). Note that we have to pivot the data and put it in long format first:
 
 ```{r, message=FALSE}
-all_data |> pivot_longer(cols = c(gp, ps),
+all_data |> 
+  pivot_longer(cols = c(gp, ps),
                          names_to = "metric", 
                          values_to = "value") |> 
   ggplot(aes(value)) + 

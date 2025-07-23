@@ -260,9 +260,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="introduction" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.2</span> Introduction</h2>
-<p>In the import step we import the data required for this report. As mentioned before, we will be importing data from <a href="https://www.hockey-reference.com/draft">Hockey Reference</a>. Before we import any data, it’s important to consider <em>which</em> and <em>how many</em> years we want to include in this analysis. Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. The primary concern with including data from too many years ago is that teams have likely changed their drafting approach over time. For example, teams may have become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft “steals” in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations because it would overestimate contributions by players who were drafted in the later rounds, since those players would potentially have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor estimator of draft pick value for drafts occurring in the 2020s. That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recently either. Ideally, we would wait until all players from a draft class have retired before including it in our analysis. Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004 and is still playing) which would force us to include older drafts to maintain the same sample size, which is also not ideal as explained above.</p>
+<p>In the import step we import the data required for this report. As mentioned before, we will be importing data from <a href="https://www.hockey-reference.com/draft">Hockey Reference</a>. Before we import any data, it’s important to consider <em>which</em> and <em>how many</em> years we want to include in this analysis.</p>
+<p>Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. There are two primary concerns with including data from too many years ago. The first concern is that requirements for a player to be eligible to be drafted in the first place have changed since the first NHL Draft in 1963, and the second concern is that teams have likely changed their drafting approach and strategy over time.</p>
+<p>One example of the first concern is that in 1979 the NHL began allowing players who had already played professionally for non-NHL teams to enter the draft. This meant that players who played professionally in Europe or in the World Hockey Association, which folded in 1979. Thus the level of talent available to be drafted would generally be higher in drafts from 1979 onward (there were more players eligible to be picked). Thus if we included drafts prior to 1979 we would probably underestimate the value of later selections, because selections later in a draft would likely have more talent available. There have also been changes in regards to the ages of players who are eligible, <a href="https://www.nhl.com/info/hockey-operations-guidelines">currently players need to be between 18-20 as of September 15th of the Draft’s year</a>.</p>
+<p>In regards to the second concern, teams may have become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft “steals” in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations, and we would likely overestimate the value of later picks, since the late round steals potentially may have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor predictor of draft pick value for drafts occurring in the 2020s.</p>
+<p>A clear example of the evolving draft strategies which could impact our conclusion is the fact that it is becoming increasingly rare for teams to draft older prospects, especially with high picks. For example, 9 of the first 10 picks in the 1980 NHL Entry Draft were 19 or 20 years old at the time of the draft. In contrast, the first 19 or 20 year old was not selected until the 49th pick of the 2025 NHL Entry Draft. Though the impact of this change is not clear, it demonstrates a clear shift in drafting strategy, and it would be expected that the evaluation of prospects has changed over time too, which would change the relative value of picks (teams being more efficient drafters means later picks would be less valuable). With both of these concerns in mind, we clearly need to be careful about including drafts from too long ago.</p>
+<p>That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recently either. Ideally, we would wait until all players from a draft class have retired before including it in our analysis. Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004 and is still playing) which would force us to include older drafts to maintain the same sample size, which is also not ideal as explained above.</p>
 <p>Another consideration is that the formula for calculating a skater’s PS (point share; the metric we will use for predicting pick value) changed in either the 1997-1998 or 1998-1999 season. There is conflicting info on what year it changed; <a href="https://www.hockey-reference.com/about/point_shares.html">this link</a> says it changed in 1998-1999 because time on ice data was not available until 1998-1999, however <a href="https://www.hockey-reference.com/leagues/NHL_1998_skaters.html">the page of 1997-1998 data</a> has time on ice data. In the seasons where time on ice data was not available, games played was used instead. To maintain consistency, we would prefer to minimize the number of players in our dataset who played before the 1998-1999 season, since those seasons were definitely under the old PS formula. The PS formula for goalies has been the same since the 1983-1984 season, so it is not an issue.</p>
-<p>Taking these factors into consideration, we make the somewhat arbitrary decision to use the 25 drafts between and 1996 and 2020 (inclusive). We don’t have the code to check this yet, but the table at the end of this chapter shows the number of skaters and total number of games played by players in our dataset under the old PS formula. We can see that it is minimal and thus unlikely to impact our conclusion. Also, we will see in the Visualize chapter that a significant portion of the players in our dataset are still active, so we may want to adjust for this, as will be discussed in the Transform chapter.</p>
+<p>Taking these factors into consideration, we make the somewhat arbitrary decision to use the 25 drafts between and 1996 and 2020 (inclusive). We don’t have the code to check this yet, but at the end of this chapter we will find the number of games played by players in our dataset under the old PS formula. Less than 0.2% of games in our dataset were played under the old PS formula and thus these games are unlikely to meaningfully impact our conclusion. However, this percentage would get progressively worse if we were to include more from prior to the 1997-1998 season.</p>
+<p>One final note is that, as we will see in the Visualize chapter, a significant portion of the players in our dataset are still active, so we may want to adjust for this. This will be discussed further in the Transform chapter.</p>
 </section>
 <section id="code" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="code"><span class="header-section-number">3.3</span> Code</h2>
@@ -288,23 +294,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(<span class="fu">import_draft</span>(start_year), <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="tixprgizdi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tixprgizdi table {
+<div id="xvlafcotfm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xvlafcotfm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tixprgizdi thead, #tixprgizdi tbody, #tixprgizdi tfoot, #tixprgizdi tr, #tixprgizdi td, #tixprgizdi th {
+#xvlafcotfm thead, #xvlafcotfm tbody, #xvlafcotfm tfoot, #xvlafcotfm tr, #xvlafcotfm td, #xvlafcotfm th {
   border-style: none;
 }
 
-#tixprgizdi p {
+#xvlafcotfm p {
   margin: 0;
   padding: 0;
 }
 
-#tixprgizdi .gt_table {
+#xvlafcotfm .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -330,12 +336,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_caption {
+#xvlafcotfm .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tixprgizdi .gt_title {
+#xvlafcotfm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -347,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#tixprgizdi .gt_subtitle {
+#xvlafcotfm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -359,7 +365,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#tixprgizdi .gt_heading {
+#xvlafcotfm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -371,13 +377,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_bottom_border {
+#xvlafcotfm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_col_headings {
+#xvlafcotfm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -392,7 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_col_heading {
+#xvlafcotfm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -412,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#tixprgizdi .gt_column_spanner_outer {
+#xvlafcotfm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -424,15 +430,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#tixprgizdi .gt_column_spanner_outer:first-child {
+#xvlafcotfm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tixprgizdi .gt_column_spanner_outer:last-child {
+#xvlafcotfm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tixprgizdi .gt_column_spanner {
+#xvlafcotfm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -444,11 +450,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#tixprgizdi .gt_spanner_row {
+#xvlafcotfm .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tixprgizdi .gt_group_heading {
+#xvlafcotfm .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -474,7 +480,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#tixprgizdi .gt_empty_group_heading {
+#xvlafcotfm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -489,15 +495,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#tixprgizdi .gt_from_md > :first-child {
+#xvlafcotfm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tixprgizdi .gt_from_md > :last-child {
+#xvlafcotfm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tixprgizdi .gt_row {
+#xvlafcotfm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -516,7 +522,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#tixprgizdi .gt_stub {
+#xvlafcotfm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -529,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tixprgizdi .gt_stub_row_group {
+#xvlafcotfm .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -543,15 +549,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#tixprgizdi .gt_row_group_first td {
+#xvlafcotfm .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tixprgizdi .gt_row_group_first th {
+#xvlafcotfm .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tixprgizdi .gt_summary_row {
+#xvlafcotfm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -561,16 +567,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tixprgizdi .gt_first_summary_row {
+#xvlafcotfm .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_first_summary_row.thick {
+#xvlafcotfm .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tixprgizdi .gt_last_summary_row {
+#xvlafcotfm .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -580,7 +586,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_grand_summary_row {
+#xvlafcotfm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -590,7 +596,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tixprgizdi .gt_first_grand_summary_row {
+#xvlafcotfm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -600,7 +606,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_last_grand_summary_row_top {
+#xvlafcotfm .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -610,11 +616,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_striped {
+#xvlafcotfm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tixprgizdi .gt_table_body {
+#xvlafcotfm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -623,7 +629,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_footnotes {
+#xvlafcotfm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -637,7 +643,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_footnote {
+#xvlafcotfm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -646,7 +652,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tixprgizdi .gt_sourcenotes {
+#xvlafcotfm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -660,7 +666,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#tixprgizdi .gt_sourcenote {
+#xvlafcotfm .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -668,72 +674,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#tixprgizdi .gt_left {
+#xvlafcotfm .gt_left {
   text-align: left;
 }
 
-#tixprgizdi .gt_center {
+#xvlafcotfm .gt_center {
   text-align: center;
 }
 
-#tixprgizdi .gt_right {
+#xvlafcotfm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tixprgizdi .gt_font_normal {
+#xvlafcotfm .gt_font_normal {
   font-weight: normal;
 }
 
-#tixprgizdi .gt_font_bold {
+#xvlafcotfm .gt_font_bold {
   font-weight: bold;
 }
 
-#tixprgizdi .gt_font_italic {
+#xvlafcotfm .gt_font_italic {
   font-style: italic;
 }
 
-#tixprgizdi .gt_super {
+#xvlafcotfm .gt_super {
   font-size: 65%;
 }
 
-#tixprgizdi .gt_footnote_marks {
+#xvlafcotfm .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tixprgizdi .gt_asterisk {
+#xvlafcotfm .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tixprgizdi .gt_indent_1 {
+#xvlafcotfm .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tixprgizdi .gt_indent_2 {
+#xvlafcotfm .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tixprgizdi .gt_indent_3 {
+#xvlafcotfm .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tixprgizdi .gt_indent_4 {
+#xvlafcotfm .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tixprgizdi .gt_indent_5 {
+#xvlafcotfm .gt_indent_5 {
   text-indent: 25px;
 }
 
-#tixprgizdi .katex-display {
+#xvlafcotfm .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#tixprgizdi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xvlafcotfm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1001,7 +1007,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We compare the first 10 rows of the 1996 draft table shown above with the table on <a href="https://www.hockey-reference.com/draft/NHL_1996_entry.html">Hockey Reference</a>, and it seems that the function we created does what we want it to do. We can now find the number of skaters who played under the old PS formula. As mentioned earlier, it is not clear whether the PS formula changed in the 1997-1998 or 1998-1999 season, so we will check both. Note that players drafted in 1998 or later cannot have played in NHL games in the 1996-1997 or 1997-1998 seasons, so we only need to check players drafted in 1996 and 1997.</p>
+<p>We compare the first 10 rows of the 1996 draft table shown above with the table on <a href="https://www.hockey-reference.com/draft/NHL_1996_entry.html">Hockey Reference</a>, and it seems that the function we created does what we want it to do.</p>
+<p>We can now find the number of skaters who played under the old PS formula. As mentioned earlier, it is not clear whether the PS formula changed in the 1997-1998 or 1998-1999 season, so we will check both. Note that players drafted in 1998 or later cannot have played in NHL games in the 1996-1997 or 1997-1998 seasons, so we only need to check players drafted in 1996 and 1997. Also, Hockey Reference URLs use the year the season ended in, so to get stats for the 1996-1997 season the year will be 1997. We also need to be careful when doing analysis with uncleaned data, but this will not be an issue for the short checks we are doing here.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1018,37 +1025,659 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">row_to_names</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(player, gp) <span class="sc">|&gt;</span> </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span> </span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># players who played for n &gt; 1 teams get listed n+1 times; this fixes it </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">gp =</span> <span class="fu">max</span>(gp), <span class="at">.groups =</span> <span class="st">"drop"</span>)  </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  stats_table </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>player_stats_1996_1997 <span class="ot">&lt;-</span> <span class="fu">full_join</span>(<span class="fu">player_stats</span>(<span class="dv">1996</span>), </span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">player_stats</span>(<span class="dv">1997</span>), </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">by =</span> <span class="fu">join_by</span>(player))</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="ot">&lt;-</span> player_stats_1996_1997 <span class="sc">|&gt;</span> </span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">gp_1996 =</span> gp.x, <span class="at">gp_1997 =</span> gp.y) <span class="sc">|&gt;</span> </span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">%in%</span> draft_1996_1997<span class="sc">$</span>player)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>old_ps_players</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type.convert</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(player, gp) <span class="sc">|&gt;</span> </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span> </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># players who played for n &gt; 1 teams get listed n+1 times; this fixes it </span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">gp =</span> <span class="fu">max</span>(gp), <span class="at">.groups =</span> <span class="st">"drop"</span>)  </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  stats_table </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>player_stats_1996_1997 <span class="ot">&lt;-</span> <span class="fu">full_join</span>(<span class="fu">player_stats</span>(<span class="dv">1997</span>), <span class="co"># year is end of season</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">player_stats</span>(<span class="dv">1998</span>), <span class="co"># year is end of season</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">by =</span> <span class="fu">join_by</span>(player))</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="ot">&lt;-</span> player_stats_1996_1997 <span class="sc">|&gt;</span> </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">gp_1997 =</span> gp.x, <span class="at">gp_1998 =</span> gp.y) <span class="sc">|&gt;</span> </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">%in%</span> draft_1996_1997<span class="sc">$</span>player) <span class="sc">|&gt;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gp_1997 =</span> <span class="fu">coalesce</span>(gp_1997, <span class="dv">0</span>), </span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">gp_1998 =</span> <span class="fu">coalesce</span>(gp_1998, <span class="dv">0</span>))</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">arrange</span>(old_ps_players, player))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="drayytnvna" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#drayytnvna table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#drayytnvna thead, #drayytnvna tbody, #drayytnvna tfoot, #drayytnvna tr, #drayytnvna td, #drayytnvna th {
+  border-style: none;
+}
+
+#drayytnvna p {
+  margin: 0;
+  padding: 0;
+}
+
+#drayytnvna .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#drayytnvna .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#drayytnvna .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#drayytnvna .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#drayytnvna .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#drayytnvna .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drayytnvna .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#drayytnvna .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#drayytnvna .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#drayytnvna .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#drayytnvna .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#drayytnvna .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#drayytnvna .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#drayytnvna .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#drayytnvna .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#drayytnvna .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#drayytnvna .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#drayytnvna .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#drayytnvna .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drayytnvna .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#drayytnvna .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#drayytnvna .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#drayytnvna .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drayytnvna .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#drayytnvna .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#drayytnvna .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drayytnvna .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drayytnvna .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#drayytnvna .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drayytnvna .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#drayytnvna .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#drayytnvna .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#drayytnvna .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drayytnvna .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#drayytnvna .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#drayytnvna .gt_left {
+  text-align: left;
+}
+
+#drayytnvna .gt_center {
+  text-align: center;
+}
+
+#drayytnvna .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#drayytnvna .gt_font_normal {
+  font-weight: normal;
+}
+
+#drayytnvna .gt_font_bold {
+  font-weight: bold;
+}
+
+#drayytnvna .gt_font_italic {
+  font-style: italic;
+}
+
+#drayytnvna .gt_super {
+  font-size: 65%;
+}
+
+#drayytnvna .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#drayytnvna .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#drayytnvna .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#drayytnvna .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#drayytnvna .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#drayytnvna .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#drayytnvna .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#drayytnvna .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#drayytnvna div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="player" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">player</th>
+<th id="gp_1997" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp_1997</th>
+<th id="gp_1998" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp_1998</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Andreas Dackell</td>
+<td class="gt_row gt_right" headers="gp_1997">79</td>
+<td class="gt_row gt_right" headers="gp_1998">82</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Andrei Zyuzin</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">56</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Boyd Devereaux</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">38</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Brad Larsen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Brett Clark</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">41</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Chris Allen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Chris Phillips</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">72</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Dainius Zubrus</td>
+<td class="gt_row gt_right" headers="gp_1997">68</td>
+<td class="gt_row gt_right" headers="gp_1998">69</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Daniel Goneau</td>
+<td class="gt_row gt_right" headers="gp_1997">41</td>
+<td class="gt_row gt_right" headers="gp_1998">11</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Derek Morris</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">82</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Erik Andersson</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">12</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Erik Rasmussen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">21</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Jan Bulis</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">48</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Jeff Brown</td>
+<td class="gt_row gt_right" headers="gp_1997">1</td>
+<td class="gt_row gt_right" headers="gp_1998">60</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Joe Thornton</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">55</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Johan Lindbom</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">38</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Kai Nurminen</td>
+<td class="gt_row gt_right" headers="gp_1997">67</td>
+<td class="gt_row gt_right" headers="gp_1998">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Konstantin Shafranov</td>
+<td class="gt_row gt_right" headers="gp_1997">5</td>
+<td class="gt_row gt_right" headers="gp_1998">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Magnus Arvedson</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">61</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Marco Sturm</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">74</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Matt Cullen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">61</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Matt Higgins</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Olli Jokinen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Patrick Marleau</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">74</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Pavel Kubina</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">10</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Ronnie Sundin</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Ruslan Salei</td>
+<td class="gt_row gt_right" headers="gp_1997">30</td>
+<td class="gt_row gt_right" headers="gp_1998">66</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Sergei Samsonov</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">81</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Travis Brigley</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>I checked all of these manually and it turns out that Jeff Brown is a different Jeff Brown so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">!=</span> <span class="st">"Jeff Brown"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp_1997, gp_1998), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"gp"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_gp =</span> <span class="fu">sum</span>(gp), </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">length</span>(<span class="fu">which</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 7 × 3
-  player               gp_1996 gp_1997
-  &lt;chr&gt;                &lt;chr&gt;   &lt;chr&gt;  
-1 Jeff Brown           76      1      
-2 Andreas Dackell      &lt;NA&gt;    79     
-3 Dainius Zubrus       &lt;NA&gt;    68     
-4 Daniel Goneau        &lt;NA&gt;    41     
-5 Kai Nurminen         &lt;NA&gt;    67     
-6 Konstantin Shafranov &lt;NA&gt;    5      
-7 Ruslan Salei         &lt;NA&gt;    30     </code></pre>
+<pre><code># A tibble: 2 × 3
+  year    total_gp     n
+  &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;
+1 gp_1997      290     6
+2 gp_1998     1066    26</code></pre>
 </div>
 </div>
-<p>We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula, so the different PS formulas is not a major concern and is unlikely to meaningfully impact our results. We can now proceed to the Tidy step.</p>
+<p>We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results. We can now proceed to the Tidy step.</p>
 
 
 </section>
