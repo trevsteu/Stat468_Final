@@ -20,4 +20,8 @@
 
 -   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model Chapter)
 
+-   [NHL Draft Eligibility](https://www.nhl.com/info/hockey-operations-guidelines) (in the Import chapter)
+
+-   [Calculating Point Shares](https://www.hockey-reference.com/about/point_shares.html) (throughout the report)
+
 For now this is just a list of links. Later I will formalize it.

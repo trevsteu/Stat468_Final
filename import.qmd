@@ -13,11 +13,14 @@ We install and load the necessary packages.
 # install.packages("tidyverse")
 # install.packages("janitor")
 # install.packages("gt")
+# install.packages("reactable")
+
 library(rvest)
 library(stringr)
 library(tidyverse)
 library(janitor)
 library(gt)
+library(reactable)
 ```
 
 ## Introduction
@@ -99,7 +102,7 @@ old_ps_players <- player_stats_1996_1997 |>
   mutate(gp_1997 = coalesce(gp_1997, 0), 
          gp_1998 = coalesce(gp_1998, 0))
 
-gt(arrange(old_ps_players, player))
+reactable(arrange(old_ps_players, player))
 ```
 
 I checked all of these manually and it turns out that Jeff Brown is a different Jeff Brown so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.
@@ -112,7 +115,8 @@ old_ps_players |>
                values_to = "gp") |> 
   group_by(year) |> 
   summarize(total_gp = sum(gp), 
-            n = length(which(gp > 0)))
+            n = length(which(gp > 0))) |> 
+  gt()
 ```
 
 We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results. We can now proceed to the Tidy step.

@@ -11,10 +11,13 @@ We install and load the necessary packages, along with functions from prior chap
 # install.packages("rvest")
 # install.packages("tidyverse")
 # install.packages("gt")
+# install.packages("reactable")
+
 library(rvest)
 library(tidyverse)
 library(stringr)
 library(gt)
+library(reactable)
 
 source("functions.R") # load functions defined in prior chapters
 
@@ -79,7 +82,7 @@ tidy_draft <- function(year){
   draft_year_table
 }
 
-gt(tidy_draft(1996))
+reactable(tidy_draft(1996))
 ```
 
 This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.

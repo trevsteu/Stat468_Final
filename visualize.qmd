@@ -5,11 +5,14 @@ author: "Trevor S"
 
 ## Setup
 
+ADD STUFF ABOUT PLAYERS DRAFTED AROUND PICK 25
+
 We install and load the necessary packages, along with functions from prior chapters and `all_data`.
 
 ```{r,  message = FALSE, warning = FALSE}
 # install.packages("gt")
 # install.packages("ggplot2")
+
 library(gt)
 library(ggplot2)
 source("functions.R") # load functions defined in prior chapters
@@ -110,7 +113,7 @@ all_data |>
   ggplot(aes(x = overall, y = ps)) + 
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of PS",
-       subtitle = "Players with at ≥ 1 game only; note the plots have different scales", 
+       subtitle = "Players with ≥ 1 game only; note the plots have different scales", 
        x = "PS", y = "Number of Players") 
 ```
 
@@ -124,7 +127,7 @@ all_data |>
   ggplot(aes(x = overall, y = ps)) + 
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of PS for 5 Drafts",
-       subtitle = "Players with at ≥ 1 game only; note the plots have different scales", 
+       subtitle = "Players with ≥ 1 game only; note the plots have different scales", 
        x = "PS", y = "Number of Players")
 ```
 

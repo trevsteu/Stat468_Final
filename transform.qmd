@@ -11,6 +11,7 @@ We install and load the necessary packages, along with functions from prior chap
 # install.packages("tidyverse")
 # install.packages("dplyr")
 # install.packages("gt")
+
 library(tidyverse)
 library(dplyr)
 library(gt)
