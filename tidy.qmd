@@ -30,13 +30,17 @@ In the tidy step, we put the data into tidy form and clean it, which will make t
 gt(import_draft(start_year)[23:30,])
 ```
 
-Three problems that immediately come up are:
+Some problems that immediately come up are:
 
 -   Two rows get inserted at the end of every round to indicate the round changed.
 
 -   Though not visible beacuse of the usage of `gt`, numbers are being coded as strings (`overall`, `age`, `to`, etc).
 
 -   (At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.
+
+-   The `+/-` column got renamed to `x`
+
+-   There were two `gp` columns, one got automatically renamed to `gp2` when we used `janitor::clean_names()`
 
 By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. The number of picks in the draft has also changed over the years, we will ignore any player drafted after selection 224 (the number of picks in the 2025 NHL Entry Draft). Finally, it would be helpful to remove the columns we don't care about.
 
@@ -58,7 +62,11 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Remove any players selected after 224$^{\text{th}}$ overall.
 
-Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
+-   We don't care about `+/-`, so we can ignore the column being renamed since we won't be using it anyway.
+
+-   It also turns out that for skaters `gp2` is empty and for goalies `gp` and `gp2` will have the same value, so this issue can be resolved by simply selecting `gp`.
+
+Note that we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
 
 ```{r, warning = FALSE, message = FALSE}
 tidy_draft <- function(year){

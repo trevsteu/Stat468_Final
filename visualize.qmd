@@ -29,7 +29,8 @@ Recall that over the years the NHL has changed how many picks there are in each 
 all_data |> 
   group_by(year) |> 
   summarize(num_picks = n()) |> 
-  gt()
+  ggplot(aes(x = year, y = num_picks)) + # takes less space than gt()
+  geom_point()
 ```
 
 Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren't worth very much anyway, but it is worth noting that several picks after #210 have a smaller sample size than picks 1-210.
@@ -78,7 +79,13 @@ Indeed, both of these are very right-skewed, and clearly a lot of players end up
 cor(all_data$ps, all_data$gp)
 ```
 
-Because of this, we choose to only include one of GP and PS in our model to avoid potential multicollinearity concerns. We choose PS over GP for a few reasons. First, PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team. Second, though both metrics are right skewed I would argue that in this context we would prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain timeframe, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distingushing metric. The final reason we will use PS is that the formula for PS does include time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
+Because of this, we choose to only include one of GP and PS in our model to avoid potential multicollinearity concerns. We choose PS over GP for a few reasons.
+
+-   PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team.
+
+-   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain timeframe, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distingushing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed earlier.
+
+-   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
 
 Finally, we wish to confirm that players selected earlier in a draft (ie a lower `overall`) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.
 
