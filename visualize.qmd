@@ -5,9 +5,7 @@ author: "Trevor S"
 
 ## Setup
 
-ADD STUFF ABOUT PLAYERS DRAFTED AROUND PICK 25
-
-We install and load the necessary packages, along with functions from prior chapters and `all_data`.
+We install and load the necessary packages, along with functions from prior chapters.
 
 ```{r,  message = FALSE, warning = FALSE}
 # install.packages("gt")
@@ -15,9 +13,8 @@ We install and load the necessary packages, along with functions from prior chap
 
 library(gt)
 library(ggplot2)
-source("functions.R") # load functions defined in prior chapters
 
-all_data <- read.csv("all_data.csv")
+source("functions.R") # load functions defined in prior chapters
 ```
 
 ## Introduction
@@ -36,14 +33,14 @@ all_data |>
   geom_point()
 ```
 
-Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren't worth very much anyway, but it is worth noting that several picks after #210 have a smaller sample size than picks 1-210.
+Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren't worth very much anyway, but it is worth noting that several picks from #211 onward have a smaller sample size than picks 1-210.
 
 Before doing any further EDA, we will take the five number summary, mean, and standard deviation of both the GP and PS values to get a sense of what they look like. Recall that the five number summary gives the minimum, 25% quantile, median, 75% quantile, and maximum of a dataset. Additionally, recall that PS stands for Point Share, and is a measure of a player's career contributions to points in the standings (ie the points you get from wins, not the one that is goals plus assists).
 
 ```{r}
-c(fivenum(all_data$gp), mean(all_data$gp), sd(all_data$gp))
+c("five num" = fivenum(all_data$gp), "mean" = mean(all_data$gp), "sd" = sd(all_data$gp))
 
-c(fivenum(all_data$ps), mean(all_data$ps), sd(all_data$ps))
+c("five_num" = fivenum(all_data$ps), "mean" = mean(all_data$ps), "sd" = sd(all_data$ps))
 ```
 
 Clearly both the GP and PS values are right skewed. Note that the maximum of the GP data is around 6 standard deviations from the mean $(\frac{1779-142.7713}{274.0303} = 5.97)$ , whereas the maximum of the PS data is almost 10 standard deviations away $(\frac{217.8-8.249862}{21.172591} = 9.89)$.
@@ -60,7 +57,7 @@ all_data |>
   nrow() / nrow(all_data)
 ```
 
-This tells us that just over half of our dataset never played in an NHL game and almost three quarters generated less than 2 PS in their career.
+This tells us that just over half of our dataset never played in an NHL game and almost three quarters made minimal on-ice contributions in their career.
 
 To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). Note that we have to pivot the data and put it in long format first:
 
@@ -91,7 +88,7 @@ Because of this, we choose to only include one of GP and PS in our model to avoi
 
 -   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
 
-Finally, we wish to confirm that players selected earlier in a draft (ie a lower `overall`) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.
+We also wish to confirm that players selected earlier in a draft (ie a lower `overall`) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.
 
 ```{r}
 set.seed(468) # for reproducibility
@@ -105,7 +102,7 @@ all_data |>
        title = str_glue("PS of Players Drafted in {rand_year}"))
 ```
 
-Since clearly so many players never play in the NHL, we will create the plot without the players that played in 0 NHL games to make the plot easier to read.
+Since clearly so many players generate 0 PS (likely because they played in 0 NHL games), we will create the plot without the players that played in 0 NHL games to make the plot easier to read.
 
 ```{r}
 all_data |> 
@@ -133,7 +130,7 @@ all_data |>
 
 Though this plot is still quite busy, it shows a strange trend that there seems to be a lot of players drafted around 200 overall that end up having successful careers. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.
 
-The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Typically for such skewed data the median would be preferred over the mean to improve resistance to outliers. However in this context we don't really want to be resistance to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.
+The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Given how skewed our data is, typically the median would be preferred over the mean to improve resistance to outliers. However in this context we don't really want to be resistant to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.
 
 ```{r, warning=FALSE}
 all_data |> 
@@ -142,7 +139,7 @@ all_data |>
   ggplot(aes(x = overall, y = mean_ps)) + 
   geom_point() +
   geom_point(aes(x = 205, y = mean(filter(all_data, overall==205)$ps)), col = "salmon") +
-  labs(title = "Mean Points Share by Pick Number",
+  labs(title = "Mean PS by Pick Number",
        x = "Pick Number", y = "Mean Points Share") + 
   annotate(geom = "segment", x = 175, y = 37.5, xend = 203, yend = 14, colour = "salmon",
     arrow = arrow(type = "open", length = unit(0.32, "cm"))) +

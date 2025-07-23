@@ -270,8 +270,7 @@ window.Quarto = {
 
 <section id="setup" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">5.1</span> Setup</h2>
-<p>ADD STUFF ABOUT PLAYERS DRAFTED AROUND PICK 25</p>
-<p>We install and load the necessary packages, along with functions from prior chapters and <code>all_data</code>.</p>
+<p>We install and load the necessary packages, along with functions from prior chapters.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -280,9 +279,8 @@ window.Quarto = {
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"all_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -310,22 +308,24 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren’t worth very much anyway, but it is worth noting that several picks after #210 have a smaller sample size than picks 1-210.</p>
+<p>Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren’t worth very much anyway, but it is worth noting that several picks from #211 onward have a smaller sample size than picks 1-210.</p>
 <p>Before doing any further EDA, we will take the five number summary, mean, and standard deviation of both the GP and PS values to get a sense of what they look like. Recall that the five number summary gives the minimum, 25% quantile, median, 75% quantile, and maximum of a dataset. Additionally, recall that PS stands for Point Share, and is a measure of a player’s career contributions to points in the standings (ie the points you get from wins, not the one that is goals plus assists).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">fivenum</span>(all_data<span class="sc">$</span>gp), <span class="fu">mean</span>(all_data<span class="sc">$</span>gp), <span class="fu">sd</span>(all_data<span class="sc">$</span>gp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="st">"five num"</span> <span class="ot">=</span> <span class="fu">fivenum</span>(all_data<span class="sc">$</span>gp), <span class="st">"mean"</span> <span class="ot">=</span> <span class="fu">mean</span>(all_data<span class="sc">$</span>gp), <span class="st">"sd"</span> <span class="ot">=</span> <span class="fu">sd</span>(all_data<span class="sc">$</span>gp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]    0.0000    0.0000    0.0000  145.0000 1779.0000  142.7713  274.0303</code></pre>
+<pre><code>five num1 five num2 five num3 five num4 five num5      mean        sd 
+   0.0000    0.0000    0.0000  145.0000 1779.0000  142.7713  274.0303 </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">fivenum</span>(all_data<span class="sc">$</span>ps), <span class="fu">mean</span>(all_data<span class="sc">$</span>ps), <span class="fu">sd</span>(all_data<span class="sc">$</span>ps))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="st">"five_num"</span> <span class="ot">=</span> <span class="fu">fivenum</span>(all_data<span class="sc">$</span>ps), <span class="st">"mean"</span> <span class="ot">=</span> <span class="fu">mean</span>(all_data<span class="sc">$</span>ps), <span class="st">"sd"</span> <span class="ot">=</span> <span class="fu">sd</span>(all_data<span class="sc">$</span>ps))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]   0.000000   0.000000   0.000000   3.000000 217.800000   8.249862  21.182591</code></pre>
+<pre><code> five_num1  five_num2  five_num3  five_num4  five_num5       mean         sd 
+  0.000000   0.000000   0.000000   3.000000 217.800000   8.249862  21.182591 </code></pre>
 </div>
 </div>
 <p>Clearly both the GP and PS values are right skewed. Note that the maximum of the GP data is around 6 standard deviations from the mean <span class="math inline">\((\frac{1779-142.7713}{274.0303} = 5.97)\)</span> , whereas the maximum of the PS data is almost 10 standard deviations away <span class="math inline">\((\frac{217.8-8.249862}{21.172591} = 9.89)\)</span>.</p>
@@ -350,7 +350,7 @@ window.Quarto = {
 <pre><code>[1] 0.7280265</code></pre>
 </div>
 </div>
-<p>This tells us that just over half of our dataset never played in an NHL game and almost three quarters generated less than 2 PS in their career.</p>
+<p>This tells us that just over half of our dataset never played in an NHL game and almost three quarters made minimal on-ice contributions in their career.</p>
 <p>To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). Note that we have to pivot the data and put it in long format first:</p>
 <div class="cell">
 <details class="code-fold">
@@ -390,7 +390,7 @@ window.Quarto = {
 <li><p>While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain timeframe, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distingushing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed earlier.</p></li>
 <li><p>The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.</p></li>
 </ul>
-<p>Finally, we wish to confirm that players selected earlier in a draft (ie a lower <code>overall</code>) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.</p>
+<p>We also wish to confirm that players selected earlier in a draft (ie a lower <code>overall</code>) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -412,7 +412,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Since clearly so many players never play in the NHL, we will create the plot without the players that played in 0 NHL games to make the plot easier to read.</p>
+<p>Since clearly so many players generate 0 PS (likely because they played in 0 NHL games), we will create the plot without the players that played in 0 NHL games to make the plot easier to read.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -455,7 +455,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Though this plot is still quite busy, it shows a strange trend that there seems to be a lot of players drafted around 200 overall that end up having successful careers. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.</p>
-<p>The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Typically for such skewed data the median would be preferred over the mean to improve resistance to outliers. However in this context we don’t really want to be resistance to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.</p>
+<p>The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Given how skewed our data is, typically the median would be preferred over the mean to improve resistance to outliers. However in this context we don’t really want to be resistant to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -465,7 +465,7 @@ window.Quarto = {
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps)) <span class="sc">+</span> </span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">205</span>, <span class="at">y =</span> <span class="fu">mean</span>(<span class="fu">filter</span>(all_data, overall<span class="sc">==</span><span class="dv">205</span>)<span class="sc">$</span>ps)), <span class="at">col =</span> <span class="st">"salmon"</span>) <span class="sc">+</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Points Share by Pick Number"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean PS by Pick Number"</span>,</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Points Share"</span>) <span class="sc">+</span> </span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">175</span>, <span class="at">y =</span> <span class="fl">37.5</span>, <span class="at">xend =</span> <span class="dv">203</span>, <span class="at">yend =</span> <span class="dv">14</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>,</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"open"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.32</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>

@@ -20,9 +20,6 @@ library(gt)
 library(reactable)
 
 source("functions.R") # load functions defined in prior chapters
-
-start_year <- 1996
-end_year <- 2020
 ```
 
 ## Introduction
@@ -99,10 +96,10 @@ all_data <- read.csv("all_data.csv")
 #   tidy_draft takes such a llong time to run and render
 ```
 
-We can check that this data has loaded correctly, there should be between 5000 and 6000 rows (the number of picks in a draft has changed over the years, but is usually between 200 and 240, so 25 drafts will be between 5000 and 6000) and 6 columns:
+We can check that this data has loaded correctly, there should be between 5250 and 5600 rows (the number of picks in a draft has changed over the years in our dataset as we will see, but is always between 210 and 224 so 25 drafts will be between ) and 6 columns:
 
 ```{r}
-dim(all_data) # confirm there are 5000-6000 rows and 6 columns
+dim(all_data) # confirm there are 5250-5600 rows and 6 columns
 
 length(unique(all_data$year)) # confirm all 25 years have been included
 

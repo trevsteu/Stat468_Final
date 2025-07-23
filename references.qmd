@@ -18,10 +18,12 @@
 
 -   [Mastering Shiny](https://mastering-shiny.org/index.html) (for the RShiny app)
 
--   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model Chapter)
+-   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model chapter)
 
 -   [NHL Draft Eligibility](https://www.nhl.com/info/hockey-operations-guidelines) (in the Import chapter)
 
 -   [Calculating Point Shares](https://www.hockey-reference.com/about/point_shares.html) (throughout the report)
+
+-   [Row-wise Operations](https://dplyr.tidyverse.org/articles/rowwise.html) (in the Transform chapter)
 
 For now this is just a list of links. Later I will formalize it.

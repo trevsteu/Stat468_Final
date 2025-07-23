@@ -270,7 +270,7 @@ window.Quarto = {
 
 <section id="setup" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">6.1</span> Setup</h2>
-<p>We install and load the necessary packages, along with functions from prior chapters and <code>all_data</code>.</p>
+<p>We install and load the necessary packages, along with functions from prior chapters.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -282,22 +282,20 @@ window.Quarto = {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"all_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 <section id="introduction" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.2</span> Introduction</h2>
-<p>In the transform step, we will transform our data to better include the careers of players who are still playing. In the previous chapter, we estimated the value of pick <span class="math inline">\(n\)</span> by taking the average points share of all players in out dataset drafted at pick <span class="math inline">\(n\)</span>. One problem with this approach is that players drafted more recently will have had fewer years to generate points share. Indeed, the average points share is quite a bit lower for the drafts between 2016 and 2020:</p>
+<p>In the transform step, we will transform our data to better include the careers of players who are still playing. In the previous chapter, we estimated the value of pick <span class="math inline">\(n\)</span> by taking the average PS of all players in out dataset drafted at pick <span class="math inline">\(n\)</span>. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. We can see in the plot below that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_ps =</span> <span class="fu">mean</span>(ps)) <span class="sc">|&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_ps)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_ps =</span> <span class="fu">sum</span>(ps)) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> total_ps)) <span class="sc">+</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
@@ -308,48 +306,56 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>This will result in older drafts receiving more weight when we take the average, which is unideal because we’d like all drafts to be equally weighted to prevent outliers from receiving more weight than they should. To adjust this, we will change our metric <em>slightly</em>, and will instead use <span class="math inline">\(p_{ij} = \frac{ps_{ij}}{\sum_i ps_{ij}}\)</span>, where <span class="math inline">\(ps_{ij}\)</span> is the points share of the player picked at selection <span class="math inline">\(i\)</span> in year <span class="math inline">\(j\)</span>. In other words, we define <span class="math inline">\(p_{ij}\)</span> to be the <em>percentage</em> of the total points share generated by players drafted in year <span class="math inline">\(j\)</span> that the player selected at pick <span class="math inline">\(i\)</span> generated.</p>
-<p>The other transformation we will apply to our dataset before the modelling step addresses one of points we mentioned at the very end of the EDA we performed in the Visualize chapter. Specifically, we will apply a weighted <span class="math inline">\(k\)</span>-nearest neighbour algorithm so that the value of pick <span class="math inline">\(n\)</span> will be more directly influenced by the historical outcomes of picks “close” to pick <span class="math inline">\(n\)</span>. Note that I learned how to inplemment a weighted <span class="math inline">\(k\)</span>-nearest neighbour algorithm in STAT341.</p>
+<p>A similar issue is that there are quite a few current players who can still generate additional PS in our dataset. This issue is related because it is probably reasonable to expect that the discrepency between the 2016-2020 PS totals and the other years is due to there being so many active players from those seasons.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(to <span class="sc">==</span> <span class="dv">2025</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">current_players =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> current_players)) <span class="sc">+</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="transform_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see that there are still quite a few players who are currently playing, so the full value of their career cannot be fully known. It is interesting that PS is so high for the drafts between 2007 and 2015 even though there are still so many active players from those drafts, I did some research but I could not find anything about it. One of my theories is that elite players might be skewing things, but Connor McDavid was drafted in 2015 but even he “only” has about 125 PS which is not nearly enough to skew the data on its own. I guess it is possible there were just really strong drafts, but it seems odd that there would be 8 strong drafts in a row.</p>
+<p>Estimating the remaining value of a player’s career could be an entire project all on its own, so we have 3 options:</p>
+<ul>
+<li><p>Only include drafts from before 2003 (there are no active NHL players who were drafted in 2002 or earlier).</p></li>
+<li><p>Ignore this issue altogether (as if every active player in our dataset retired right now).</p></li>
+<li><p>Make some sort of adjustment to the PS values of active players to account for the remainder of their career.</p></li>
+</ul>
+<p>Neither of the first two options are particularly appealing. The first is unideal because of sample size concerns and the changes that have taken place in terms of draft eligibility and strategy since the 1980s (which we would need to include to maintain a sample size of 25). Additionally, the second option is arguably worse because it will severely underestimate the quality of star players drafted in the last few years (elite players can play for 15-20 seasons, so we could be missing three quarters of a player’s career if he was drafted in 2020). Thus the only remaining option is to attempt to estimate the remaining value of a players career.</p>
+<p>Estimating the remaining value of a player’s career could be an entire project all on its own, but we will make an adjustment that will reduce the impact of this issue (while acknowledging that we will not completely fix it). Let <span class="math inline">\(gp_{ps}\)</span> and <span class="math inline">\(ps_{ij}\)</span> be the GP and PS of the player drafted at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span>. If that player has not retired, we will set <span class="math inline">\(ps^{mod}_{ij} = ps_{ij} + \frac{ps_{ij}}{gp_{ij}} \times \hat{yr_j}\)</span>, where <span class="math inline">\(\hat {yr_j}\)</span> is our <u><strong>estimate</strong></u> of the number of years left in the career of players drafted in year <span class="math inline">\(j\)</span>. We will estimate <span class="math inline">\(yr_j\)</span> later using data from 1996-2004. When we actually code this adjustment later in this chapter we will verify that the PS values these drafts end up looking similar to drafts where everyone is retired. Note that we only make this adjustment for active players, there is no reason to adjust the PS of retired players.</p>
 </section>
 <section id="code" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="code"><span class="header-section-number">6.3</span> Code</h2>
+<p>Let <span class="math inline">\(yr_j\)</span> be the nunber of years players drafted in draft <span class="math inline">\(j\)</span> have remaining in their career, given they were drafted <span class="math inline">\(k\)</span> years ago. We aim to estimate this value, and will do so by setting <span class="math inline">\(\hat{yr_j}\)</span> to be the median career length of players who retired at <span class="math inline">\(k\)</span> years after being drafted and were drafted between 1996 and 2004. We calculate it for <span class="math inline">\(1 \le k \le 22\)</span> to make the indexing more intuitive, even though we will only be using the values <span class="math inline">\(k \ge 5\)</span>, since no active player drafted in 2020 or earlier can have played for less than 4 seasons..</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>all_data_prop <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop_ps =</span> ps<span class="sc">/</span><span class="fu">sum</span>(ps)) </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>all_data_prop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5,427 × 7
-# Groups:   year [25]
-    year overall    to pos      gp    ps prop_ps
-   &lt;int&gt;   &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
- 1  1996       1  2015 D      1179  64.6 0.0407 
- 2  1996       2  2008 D       496  25.8 0.0163 
- 3  1996       3  2011 RW      822  56.6 0.0357 
- 4  1996       4  2000 C         3   0   0      
- 5  1996       5  2007 D       231   8.8 0.00555
- 6  1996       6  2009 C       627  12.5 0.00788
- 7  1996       7  2007 LW/C    545   9.2 0.00580
- 8  1996       8  2004 D        44   0   0      
- 9  1996       9  2011 D       917  46.9 0.0296 
-10  1996      10  2004 D       209   2.7 0.00170
-# ℹ 5,417 more rows</code></pre>
-</div>
-</div>
-<p>Note that usually it is not advisable to take the mean of a bunch of ratios because it gives each ratio an equal weight. However, here it is appropriate because we want to give each draft an equal weight. We will recreate the same plot, but note that the only variation will come from the number of selections in a draft (since what we are plotting is literally <span class="math inline">\(\frac{1}{\text{number of picks in draft}}\)</span>). Additionally, the scale on the <span class="math inline">\(y\)</span>-axis shows that these values are basically all the same.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_data_prop <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_ps =</span> <span class="fu">mean</span>(prop_ps)) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_ps)) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>get_length <span class="ot">&lt;-</span> <span class="cf">function</span>(len){ </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  all_data <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">rem_career_len =</span> to <span class="sc">-</span> year <span class="sc">-</span> len) <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="dv">1996</span><span class="sc">:</span><span class="dv">2004</span> <span class="sc">&amp;</span> rem_career_len <span class="sc">&gt;=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">med =</span> <span class="fu">median</span>(rem_career_len)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(med)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>est_yr <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">k =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">22</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yr =</span> <span class="fu">get_length</span>(k)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(est_yr, <span class="fu">aes</span>(<span class="at">x =</span> k, <span class="at">y =</span> yr)) <span class="sc">+</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -359,167 +365,44 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>In case this approach is not appropriate, we will still fit a model using the raw <code>ps</code> values in the Model step, it turns out the models will be quite similar.</p>
+<p>The interpretation for this is a player who was drafted 1 year ago has an estimated 9 years left in their career, a player who was drafted 5 years ago has an estimated 6 years left in their career, and a player who was drafted 10 years ago has an estimated 4 years remaining in their career. We can now make our adjustments:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all_data_prop <span class="ot">&lt;-</span> all_data_prop <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(overall) <span class="sc">|&gt;</span>  </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_prop_ps =</span> <span class="fu">mean</span>(prop_ps),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>all_data_prop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_data_mod <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(to <span class="sc">==</span> <span class="dv">2025</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">career_len =</span> to <span class="sc">-</span> year) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mod_ps =</span> ps <span class="sc">+</span> ps <span class="sc">/</span> gp <span class="sc">*</span> <span class="dv">82</span> <span class="sc">*</span> <span class="fu">get_length</span>(career_len)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year<span class="sc">:</span>ps, mod_ps)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>inactive_players <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(to <span class="sc">!=</span> <span class="dv">2025</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mod_ps =</span> ps)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>all_data_mod <span class="ot">&lt;-</span> <span class="fu">rbind</span>(all_data_mod, inactive_players)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>all_data_mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 224 × 2
-   overall avg_prop_ps
-     &lt;int&gt;       &lt;dbl&gt;
- 1       1      0.0544
- 2       2      0.0427
- 3       3      0.0332
- 4       4      0.0312
- 5       5      0.0247
- 6       6      0.0199
- 7       7      0.0228
- 8       8      0.0135
- 9       9      0.0185
-10      10      0.0119
-# ℹ 214 more rows</code></pre>
+<pre><code># A tibble: 5,427 × 7
+    year overall    to pos      gp    ps mod_ps
+   &lt;int&gt;   &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1  2003       1  2025 G      1051 183.   183. 
+ 2  2003       7  2025 D      1526 132.   132. 
+ 3  2003      20  2025 RW     1497 156.   156. 
+ 4  2003      28  2025 RW     1392 111.   111. 
+ 5  2004       1  2025 LW     1491 214.   226. 
+ 6  2004       2  2025 C      1213 155.   166. 
+ 7  2005       1  2025 C      1352 200.   212. 
+ 8  2005       3  2025 D      1228  58.7   62.6
+ 9  2005      11  2025 C      1454 139.   146. 
+10  2005      35  2025 D      1323  84.6   89.8
+# ℹ 5,417 more rows</code></pre>
 </div>
 </div>
-<p>Finally, we utilize a weighted <span class="math inline">\(k\)</span>-nearest neighbour algorithm which will help smoothen out the plot from the end of the visualization chapter. As a reminder, here is that plot:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>all_data_raw <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(overall) <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ps =</span> <span class="fu">mean</span>(ps)) </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(all_data_raw, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 2
-   overall mean_ps
-     &lt;int&gt;   &lt;dbl&gt;
- 1       1    96.2
- 2       2    77.3
- 3       3    54.3
- 4       4    50.3
- 5       5    45.1
- 6       6    33.9
- 7       7    39.2
- 8       8    23.0
- 9       9    32.7
-10      10    17.6</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_data_raw, <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps)) <span class="sc">+</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">205</span>, <span class="at">y =</span> <span class="fu">mean</span>(<span class="fu">filter</span>(all_data, overall<span class="sc">==</span><span class="dv">205</span>)<span class="sc">$</span>ps)), <span class="at">col =</span> <span class="st">"salmon"</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Points Share by Pick Number"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Points Share"</span>) <span class="sc">+</span> </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">175</span>, <span class="at">y =</span> <span class="fl">37.5</span>, <span class="at">xend =</span> <span class="dv">203</span>, <span class="at">yend =</span> <span class="dv">14</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"open"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.32</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>, <span class="at">x =</span> <span class="dv">140</span>, <span class="at">y =</span> <span class="dv">39</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"205th overall selection,</span><span class="sc">\n</span><span class="st">(mean PS of 13.124)"</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="st">"left"</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="transform_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>First, we will recreate this plot using the <code>avg_prop_ps</code> values we just defined:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>all_data_prop <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> avg_prop_ps)) <span class="sc">+</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">205</span>, <span class="at">y =</span> <span class="fu">mean</span>(<span class="fu">filter</span>(all_data_prop, overall<span class="sc">==</span><span class="dv">205</span>)<span class="sc">$</span>avg_prop_ps)), </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> <span class="st">"salmon"</span>) <span class="sc">+</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Proportion of Points Share by Pick Number"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Proportion of Points Share"</span>) <span class="sc">+</span> </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">175</span>, <span class="at">y =</span> <span class="fl">0.015</span>, <span class="at">xend =</span> <span class="dv">203</span>, <span class="at">yend =</span> <span class="fl">0.0065</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>,</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"open"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.32</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>, <span class="at">x =</span> <span class="dv">140</span>, <span class="at">y =</span> <span class="fl">0.018</span>,</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"205th overall selection, (mean</span><span class="sc">\n</span><span class="st">0.609% of the draft's ps)"</span>,</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="st">"left"</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="transform_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The shapes of the two graphs are quite similar, but the outliers in the second one seem slighly less egregious. We now apply the weighted <span class="math inline">\(k\)</span>-nearest neighbour algorithm, first on <code>all_data</code>, and then on <code>all_data_prop</code>. Note that we will choose <span class="math inline">\(k\)</span> to be a function of <span class="math inline">\(n\)</span>, specifically we will include any pick which is within <span class="math inline">\(\lfloor \frac{\sqrt n}{2}\rfloor +1\)</span> of <span class="math inline">\(n\)</span> which means that our estimate of <span class="math inline">\(v_1\)</span> depends on the historical values of just pick 1 and 2, whereas the estimated value of pick 200 depends on the historical values of picks 192-208 (ie any pick <span class="math inline">\(i\)</span> such that <span class="math inline">\(| i - 200 | \le \lfloor \frac{\sqrt {200}}{2}\rfloor +1 = 8\)</span>). We also need to choose a weight function, we choose to give each pick satisfying the equation above weight <span class="math inline">\(y_i = \frac{w_i}{\sum w_i}\)</span>, where <span class="math inline">\(w_i = \min(\frac{1}{(n - i)^2}, 1)\)</span>. Note that <span class="math inline">\(w_i = 1\)</span> if and only if <span class="math inline">\(n = i\)</span>, and that <span class="math inline">\(\sum y_i  =1\)</span>. Finally, we scale all the values so that the first pick is worth (roughly) 1000 points to allow for an easier comparison between models (this is also in line with how most NHL draft pick value models are structured).</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>est_ps <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(all_data_raw))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(all_data_raw)){</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(i)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  nearest <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">abs</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(all_data_raw), <span class="dv">1</span>) <span class="sc">-</span> i) <span class="sc">&lt;=</span> (k <span class="sc">%/%</span> <span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  total_weight <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span>(i <span class="sc">-</span> nearest)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> nearest){</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    weight <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">abs</span>(i <span class="sc">-</span> j)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>) <span class="sc">/</span> total_weight</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    est_ps[i] <span class="ot">&lt;-</span> est_ps[i] <span class="sc">+</span> weight <span class="sc">*</span> all_data_raw<span class="sc">$</span>mean_ps[j]</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ps_scale_fac <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="sc">/</span> est_ps[[<span class="dv">1</span>]]</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>knn_raw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(est_ps), <span class="dv">1</span>),</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value_ps =</span> ps_scale_fac <span class="sc">*</span> est_ps)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>est_ps_prop <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(all_data_prop))</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(all_data_prop)){</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(i)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  nearest <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">abs</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(all_data_prop), <span class="dv">1</span>) <span class="sc">-</span> i) <span class="sc">&lt;=</span> (k <span class="sc">%/%</span> <span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  total_weight <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">abs</span>(i <span class="sc">-</span> nearest)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> nearest){</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    weight <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span>(i <span class="sc">-</span> j)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>) <span class="sc">/</span> total_weight</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    est_ps_prop[i] <span class="ot">&lt;-</span> est_ps_prop[i] <span class="sc">+</span> weight <span class="sc">*</span> all_data_prop<span class="sc">$</span>avg_prop_ps[j]</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>ps_prop_scale_fac <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="sc">/</span> est_ps_prop[[<span class="dv">1</span>]]</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>knn_prop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(est_ps_prop), <span class="dv">1</span>),</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value_ps =</span> ps_prop_scale_fac <span class="sc">*</span> est_ps_prop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Now that both the raw average method and average proportion method are on the same scale, we can plot them on top of each other. Indeed, they are similar before around pick 20 and nearly identical after that:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">mutate</span>(knn_raw, <span class="at">mod =</span> <span class="st">"Raw PS"</span>), </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">mutate</span>(knn_prop, <span class="at">mod =</span> <span class="st">"Proportional"</span>))</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_data, <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> value_ps, <span class="at">col =</span> mod)) <span class="sc">+</span> </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span> </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Historical Value of Draft Picks by Overall"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Values smoothened using a weighted k-nearest-neigbour algorithm"</span>, </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Value of Pick"</span>, <span class="at">col =</span> <span class="st">"Model Used"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="transform_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Though not perfect, this curve is much smoother than the previous one, so we will use this when fitting a curve.</p>
+<p>Note that the modified PS values for players who are expected to retire soon may not have changed at all. To say it again, this estimation is not perfect, but it is better than the alternatives (using older data or ignoring the issue). In particular, this method assumes all players will continue to generate PS at the same rate as they have to this point in their career, and that every player will play in a set number of additional years which only depend on how many years ago they were drafted.</p>
 
 
 </section>
