@@ -274,63 +274,664 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"all_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("gt")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("ggplot2")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"all_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 <section id="introduction" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">5.2</span> Introduction</h2>
-<p>In the visualize step, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the <a href="https://trevsteu.github.io/Stat468_Final/model.html">Model chapter</a>.</p>
+<p>In the visualize step, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the Model chapter.</p>
 </section>
 <section id="code" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="code"><span class="header-section-number">5.3</span> Code</h2>
-<p>We start out by looking at the point share values of one draft. Recall that points share is a measure of how many points a player contributed to their team in the standings (ie not the points that is goals plus assists).</p>
+<p>Recall that over the years the NHL has changed how many picks there are in each round as franchises have been added. A consequence of this is that the number of rounds has also changed, and the number of total picks in a draft has changed several times throughout our dataset. Recall that we removed all picks after #224, but there could be drafts with <em>fewer</em> than 224 total selections. We check for this:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">1996</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> ps)) <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Points Share"</span>, </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Points Share of Players Drafted in 1996"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">num_picks =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="visualize_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div id="qlfmsehiel" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qlfmsehiel table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qlfmsehiel thead, #qlfmsehiel tbody, #qlfmsehiel tfoot, #qlfmsehiel tr, #qlfmsehiel td, #qlfmsehiel th {
+  border-style: none;
+}
+
+#qlfmsehiel p {
+  margin: 0;
+  padding: 0;
+}
+
+#qlfmsehiel .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qlfmsehiel .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qlfmsehiel .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qlfmsehiel .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qlfmsehiel .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qlfmsehiel .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qlfmsehiel .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qlfmsehiel .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qlfmsehiel .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qlfmsehiel .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qlfmsehiel .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qlfmsehiel .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qlfmsehiel .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qlfmsehiel .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qlfmsehiel .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlfmsehiel .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qlfmsehiel .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qlfmsehiel .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qlfmsehiel .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlfmsehiel .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qlfmsehiel .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlfmsehiel .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qlfmsehiel .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlfmsehiel .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qlfmsehiel .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qlfmsehiel .gt_left {
+  text-align: left;
+}
+
+#qlfmsehiel .gt_center {
+  text-align: center;
+}
+
+#qlfmsehiel .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qlfmsehiel .gt_font_normal {
+  font-weight: normal;
+}
+
+#qlfmsehiel .gt_font_bold {
+  font-weight: bold;
+}
+
+#qlfmsehiel .gt_font_italic {
+  font-style: italic;
+}
+
+#qlfmsehiel .gt_super {
+  font-size: 65%;
+}
+
+#qlfmsehiel .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qlfmsehiel .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qlfmsehiel .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qlfmsehiel .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qlfmsehiel .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qlfmsehiel .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qlfmsehiel .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qlfmsehiel .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qlfmsehiel div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">year</th>
+<th id="num_picks" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">num_picks</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1997</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1998</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1999</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2000</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2001</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2002</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2003</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2004</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2005</td>
+<td class="gt_row gt_right" headers="num_picks">224</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2006</td>
+<td class="gt_row gt_right" headers="num_picks">213</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2007</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2008</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2009</td>
+<td class="gt_row gt_right" headers="num_picks">210</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2010</td>
+<td class="gt_row gt_right" headers="num_picks">210</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2011</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2012</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2013</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2014</td>
+<td class="gt_row gt_right" headers="num_picks">210</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2015</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2016</td>
+<td class="gt_row gt_right" headers="num_picks">211</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2017</td>
+<td class="gt_row gt_right" headers="num_picks">217</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2018</td>
+<td class="gt_row gt_right" headers="num_picks">217</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">2019</td>
+<td class="gt_row gt_right" headers="num_picks">217</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">2020</td>
+<td class="gt_row gt_right" headers="num_picks">216</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
 </div>
-<p>Clearly most players do not generate any points share in their career. In fact, less than half of the players in our dataset ever played in an NHL game:</p>
+<p>Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren’t worth very much anyway, but it is worth noting that several picks after #210 have a smaller sample size than picks 1-210.</p>
+<p>Before doing any further EDA, we will take the five number summary, mean, and stanard deviation of both the GP and PS values to get a sense of what they look like. Recall that the five number summary gives the minimum, 25% quantile, median, 75% quantile, and maximum of a dataset. Additionally, recall that PS stands for Point Share, and is a measure of a player’s career contributions to points in the standings (ie the points you get from wins, not the one that is goals plus assists).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="sc">/</span> <span class="fu">nrow</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fivenum</span>(all_data<span class="sc">$</span>gp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]    0    0    0  145 1779</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">mean</span>(all_data<span class="sc">$</span>gp), <span class="fu">sd</span>(all_data<span class="sc">$</span>gp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 142.7713 274.0303</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fivenum</span>(all_data<span class="sc">$</span>ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]   0.0   0.0   0.0   3.0 217.8</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">mean</span>(all_data<span class="sc">$</span>ps), <span class="fu">sd</span>(all_data<span class="sc">$</span>ps))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  8.249862 21.182591</code></pre>
+</div>
+</div>
+<p>Clearly both the GP and PS values are right skewed. Note that the maximum of the GP data is around 6 standard deviations from the mean <span class="math inline">\((\frac{1779-142.7713}{274.0303} = 5.97)\)</span> , whereas the maximum of the PS data is almost 10 standard deviations away <span class="math inline">\((\frac{217.8-8.249862}{21.172591} = 9.89)\)</span>.</p>
+<p>We next check what proportion of our dataset ever played in an NHL game and what proportion generated less than 2 PS in their career, which is the value of exactly one win in the NHL.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="sc">/</span> <span class="fu">nrow</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.481113</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ps <span class="sc">&lt;</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="sc">/</span> <span class="fu">nrow</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7280265</code></pre>
 </div>
-<p>We next create two histograms, one of games played (on the left) and one of points share (on the right). Note that we have to pivot the data and put it in long format first:</p>
+</div>
+<p>This tells us that just over half of our dataset never played in an NHL game and almost three quarters generated less than 2 PS in their career.</p>
+<p>To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). Note that we have to pivot the data and put it in long format first:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp, ps),</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">names_to =</span> <span class="st">"metric"</span>, </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value)) <span class="sc">+</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>metric, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Games Played and Points Share"</span>, </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Note the plots have different scales"</span>, </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp, ps),</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">names_to =</span> <span class="st">"metric"</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value)) <span class="sc">+</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>metric, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of GP and PS"</span>, </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Note the plots have different scales"</span>, </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -340,33 +941,99 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Clearly both of these are very right-skewed, meaning that a lot of players end up playing 0 games and thus accumulating 0 points share. We may also guess that games played and points share are positively correlated, since better players get to play in more games and thus accumulate more points share. Indeed:</p>
+<p>Indeed, both of these are very right-skewed, and clearly a lot of players end up playing a small number of games and are thus not generating able to generate much PS. We may also guess that GP and PS are positively correlated, since better players get to play in more games and thus accumulate more PS. Indeed:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(all_data<span class="sc">$</span>ps, all_data<span class="sc">$</span>gp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(all_data<span class="sc">$</span>ps, all_data<span class="sc">$</span>gp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8558384</code></pre>
 </div>
 </div>
-<p>Because of this, we choose to only include <code>ps</code> in our model to avoid potential multicollinearity concerns. Finally, we wish to confirm that players selected later in the draft (ie a higher <code>overall</code>) tend to generate more points share in their careers. To check this, we create a plot of the average points shares by players selected at each pick number.</p>
+<p>Because of this, we choose to only include one of GP and PS in our model to avoid potential multicollinearity concerns. We choose PS over GP for a few reasons. First, PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team. Second, though both metrics are right skewed I would argue that in this context we would prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain timeframe, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distingushing metric. The final reason we will use PS is that the formula for PS does include time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.</p>
+<p>Finally, we wish to confirm that players selected earlier in a draft (ie a lower <code>overall</code>) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(overall) <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ps =</span> <span class="fu">mean</span>(ps)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps)) <span class="sc">+</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">205</span>, <span class="at">y =</span> <span class="fu">mean</span>(<span class="fu">filter</span>(all_data, overall<span class="sc">==</span><span class="dv">205</span>)<span class="sc">$</span>ps)), <span class="at">col =</span> <span class="st">"salmon"</span>) <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Points Share by Pick Number"</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Points Share"</span>) <span class="sc">+</span> </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">175</span>, <span class="at">y =</span> <span class="fl">37.5</span>, <span class="at">xend =</span> <span class="dv">203</span>, <span class="at">yend =</span> <span class="dv">14</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"open"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.32</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>, <span class="at">x =</span> <span class="dv">140</span>, <span class="at">y =</span> <span class="dv">39</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"205th overall selection,</span><span class="sc">\n</span><span class="st"> (mean PS of 13.124)"</span>,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="st">"left"</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">468</span>) <span class="co"># for reproducibility</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>rand_year <span class="ot">&lt;-</span> <span class="fu">sample</span>(start_year<span class="sc">:</span>end_year, <span class="dv">1</span>) <span class="co"># year is 2015</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> rand_year) <span class="sc">|&gt;</span> </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> ps)) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"PS"</span>, </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="fu">str_glue</span>(<span class="st">"PS of Players Drafted in {rand_year}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="visualize_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Since clearly so many players never play in the NHL, we will create the plot without the players that played in 0 NHL games to make the plot easier to read.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> ps)) <span class="sc">+</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of PS"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Players with at ≥ 1 game only; note the plots have different scales"</span>, </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"PS"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="visualize_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot is quite dense and difficult to interpret, but there isn’t really any point in jittering the data because it’ll still overlap, so we re plot it with a random 5 year sample of our dataset.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">sample</span>(start_year<span class="sc">:</span>end_year, <span class="dv">5</span>) <span class="co"># years are 2018, 1996, 1999, 2010, 2004</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> year <span class="sc">%in%</span> years) <span class="sc">|&gt;</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> ps)) <span class="sc">+</span> </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of PS for 5 Drafts"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Players with at ≥ 1 game only; note the plots have different scales"</span>, </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"PS"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="visualize_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Though this plot is still quite busy, it shows a strange trend that there seems to be a lot of players drafted around 200 overall that end up having successful careers. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.</p>
+<p>The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Typically for such skewed data the median would be preferred over the mean to improve resistance to outliers. However in this context we don’t really want to be resistance to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(overall) <span class="sc">|&gt;</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ps =</span> <span class="fu">mean</span>(ps)) <span class="sc">|&gt;</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps)) <span class="sc">+</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">205</span>, <span class="at">y =</span> <span class="fu">mean</span>(<span class="fu">filter</span>(all_data, overall<span class="sc">==</span><span class="dv">205</span>)<span class="sc">$</span>ps)), <span class="at">col =</span> <span class="st">"salmon"</span>) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean Points Share by Pick Number"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Mean Points Share"</span>) <span class="sc">+</span> </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">175</span>, <span class="at">y =</span> <span class="fl">37.5</span>, <span class="at">xend =</span> <span class="dv">203</span>, <span class="at">yend =</span> <span class="dv">14</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"open"</span>, <span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.32</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"label"</span>, <span class="at">x =</span> <span class="dv">140</span>, <span class="at">y =</span> <span class="dv">39</span>,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"205th overall selection,</span><span class="sc">\n</span><span class="st"> (mean PS of 13.124)"</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="st">"left"</span>, <span class="at">colour =</span> <span class="st">"salmon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in geom_point(aes(x = 205, y = mean(filter(all_data, overall == : All aesthetics have length 1, but the data has 224 rows.
@@ -376,13 +1043,13 @@ window.Quarto = {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="visualize_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="visualize_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>We can see that in general points share does tend to decrease later in drafts, and that pick value tends to level off around pick 75, though there are some picks that stick out (for example, pick 205 has an average points share of 13.124, whereas pick 204 has an average point share of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having a career points share of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have a point share greater than 0.3), so two players with very successful careers skewing the data is not surprising.</p>
-<p>The lessons to take from this plot when creating a model are that it will be necessary to fit a smooth curve to the model (so that <span class="math inline">\(v_i &gt; v_{i+c}\)</span> where <span class="math inline">\(c \in \mathbb Z^+\)</span>, and <span class="math inline">\(v_i\)</span> is the value of pick <span class="math inline">\(i\)</span>), and that the estimated value of pick <span class="math inline">\(n\)</span> should probably be influenced by the historical value of pick <span class="math inline">\(n\)</span> AND the historical value of picks “close” to <span class="math inline">\(n\)</span>. With this in mind, we proceed to the Transform step.</p>
+<p>We can see that in general PS does tend to decrease later in drafts, and that pick value tends to level off around pick 75, though there are some picks that stick out (for example, pick 205 has an average PS of 13.124, whereas pick 204 has an average PS of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having career PSs of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have more than 0.3 PS), so two players with very successful careers skewing the data is not surprising.</p>
+<p>The lessons to take from this plot when creating a model are that it will be necessary to fit a smooth curve to the model (so that <span class="math inline">\(v_i &gt; v_{i+c}\)</span> where <span class="math inline">\(c \in \mathbb Z^+\)</span>), and that the estimated value of pick <span class="math inline">\(n\)</span> should probably be influenced by the historical value of pick <span class="math inline">\(n\)</span> AND the historical value of picks “close” to <span class="math inline">\(n\)</span>. With this in mind, we proceed to the Transform step.</p>
 
 
 </section>

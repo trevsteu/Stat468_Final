@@ -276,14 +276,16 @@ window.Quarto = {
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("rvest")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("gt")</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>start_year <span class="ot">&lt;-</span> <span class="dv">1996</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>end_year <span class="ot">&lt;-</span> <span class="dv">2020</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>start_year <span class="ot">&lt;-</span> <span class="dv">1996</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>end_year <span class="ot">&lt;-</span> <span class="dv">2020</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -293,28 +295,680 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">import_draft</span>(start_year)[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">import_draft</span>(start_year)[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 21
-  overall   team   player nat   pos   age   to    amateur_team gp    g     a    
-  &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-1 "23"      Pitts… Craig… "CA"  "G"   ""    ""    "Ottawa 67'… ""    ""    ""   
-2 "24"      Phoen… Danie… "CA"  "C"   "18"  "201… "Drummondvi… "973" "307" "389"
-3 "25"      Color… Peter… "US"  "D"   "19"  "200… "Shattuck-S… "32"  "1"   "1"  
-4 "26"      Detro… Jesse… "CA"  "D"   "18"  "200… "Red Deer R… "49"  "0"   "2"  
-5 ""        Round… Round… ""    ""    ""    ""    ""           "NHL… "NHL… "NHL…
-6 "Overall" Team   Player "Nat… "Pos" "Age" "To"  "Amateur Te… "GP"  "G"   "A"  
-7 "27"      Buffa… Cory … "CA"  "D"   "18"  "201… "Saskatoon … "969" "21"  "137"
-8 "28"      Pitts… Pavel… "CZ"  "D"   "18"  "200… "HC Kladno … "12"  "0"   "0"  
-# ℹ 10 more variables: pts &lt;chr&gt;, x &lt;chr&gt;, pim &lt;chr&gt;, gp_2 &lt;chr&gt;, w &lt;chr&gt;,
-#   l &lt;chr&gt;, t_o &lt;chr&gt;, sv_percent &lt;chr&gt;, gaa &lt;chr&gt;, ps &lt;chr&gt;</code></pre>
+<div class="cell-output-display">
+<div id="gjzrkhmdil" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gjzrkhmdil table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#gjzrkhmdil thead, #gjzrkhmdil tbody, #gjzrkhmdil tfoot, #gjzrkhmdil tr, #gjzrkhmdil td, #gjzrkhmdil th {
+  border-style: none;
+}
+
+#gjzrkhmdil p {
+  margin: 0;
+  padding: 0;
+}
+
+#gjzrkhmdil .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#gjzrkhmdil .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#gjzrkhmdil .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#gjzrkhmdil .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#gjzrkhmdil .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#gjzrkhmdil .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#gjzrkhmdil .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#gjzrkhmdil .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#gjzrkhmdil .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#gjzrkhmdil .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#gjzrkhmdil .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#gjzrkhmdil .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#gjzrkhmdil .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#gjzrkhmdil .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#gjzrkhmdil .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gjzrkhmdil .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#gjzrkhmdil .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#gjzrkhmdil .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#gjzrkhmdil .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gjzrkhmdil .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#gjzrkhmdil .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gjzrkhmdil .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#gjzrkhmdil .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gjzrkhmdil .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#gjzrkhmdil .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gjzrkhmdil .gt_left {
+  text-align: left;
+}
+
+#gjzrkhmdil .gt_center {
+  text-align: center;
+}
+
+#gjzrkhmdil .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#gjzrkhmdil .gt_font_normal {
+  font-weight: normal;
+}
+
+#gjzrkhmdil .gt_font_bold {
+  font-weight: bold;
+}
+
+#gjzrkhmdil .gt_font_italic {
+  font-style: italic;
+}
+
+#gjzrkhmdil .gt_super {
+  font-size: 65%;
+}
+
+#gjzrkhmdil .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#gjzrkhmdil .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#gjzrkhmdil .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#gjzrkhmdil .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#gjzrkhmdil .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#gjzrkhmdil .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#gjzrkhmdil .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#gjzrkhmdil .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#gjzrkhmdil div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="overall" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">overall</th>
+<th id="team" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">team</th>
+<th id="player" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">player</th>
+<th id="nat" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">nat</th>
+<th id="pos" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pos</th>
+<th id="age" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">age</th>
+<th id="to" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">to</th>
+<th id="amateur_team" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">amateur_team</th>
+<th id="gp" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gp</th>
+<th id="g" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">g</th>
+<th id="a" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">a</th>
+<th id="pts" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pts</th>
+<th id="x" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">x</th>
+<th id="pim" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pim</th>
+<th id="gp_2" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gp_2</th>
+<th id="w" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">w</th>
+<th id="l" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">l</th>
+<th id="t_o" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">t_o</th>
+<th id="sv_percent" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">sv_percent</th>
+<th id="gaa" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gaa</th>
+<th id="ps" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="overall">23</td>
+<td class="gt_row gt_left" headers="team">Pittsburgh Penguins</td>
+<td class="gt_row gt_left" headers="player">Craig Hillier</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_left" headers="age"></td>
+<td class="gt_row gt_left" headers="to"></td>
+<td class="gt_row gt_left" headers="amateur_team">Ottawa 67's (OHL)</td>
+<td class="gt_row gt_left" headers="gp"></td>
+<td class="gt_row gt_left" headers="g"></td>
+<td class="gt_row gt_left" headers="a"></td>
+<td class="gt_row gt_left" headers="pts"></td>
+<td class="gt_row gt_left" headers="x"></td>
+<td class="gt_row gt_left" headers="pim"></td>
+<td class="gt_row gt_left" headers="gp_2"></td>
+<td class="gt_row gt_left" headers="w"></td>
+<td class="gt_row gt_left" headers="l"></td>
+<td class="gt_row gt_left" headers="t_o"></td>
+<td class="gt_row gt_left" headers="sv_percent"></td>
+<td class="gt_row gt_left" headers="gaa"></td>
+<td class="gt_row gt_left" headers="ps"></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="overall">24</td>
+<td class="gt_row gt_left" headers="team">Phoenix Coyotes</td>
+<td class="gt_row gt_left" headers="player">Daniel Briere</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_left" headers="age">18</td>
+<td class="gt_row gt_left" headers="to">2015</td>
+<td class="gt_row gt_left" headers="amateur_team">Drummondville Voltigeurs (QMJHL)</td>
+<td class="gt_row gt_left" headers="gp">973</td>
+<td class="gt_row gt_left" headers="g">307</td>
+<td class="gt_row gt_left" headers="a">389</td>
+<td class="gt_row gt_left" headers="pts">696</td>
+<td class="gt_row gt_left" headers="x">-24</td>
+<td class="gt_row gt_left" headers="pim">744</td>
+<td class="gt_row gt_left" headers="gp_2"></td>
+<td class="gt_row gt_left" headers="w"></td>
+<td class="gt_row gt_left" headers="l"></td>
+<td class="gt_row gt_left" headers="t_o"></td>
+<td class="gt_row gt_left" headers="sv_percent"></td>
+<td class="gt_row gt_left" headers="gaa"></td>
+<td class="gt_row gt_left" headers="ps">78.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="overall">25</td>
+<td class="gt_row gt_left" headers="team">Colorado Avalanche</td>
+<td class="gt_row gt_left" headers="player">Peter Ratchuk</td>
+<td class="gt_row gt_left" headers="nat">US</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_left" headers="age">19</td>
+<td class="gt_row gt_left" headers="to">2001</td>
+<td class="gt_row gt_left" headers="amateur_team">Shattuck-St. Mary's School (High-MN)</td>
+<td class="gt_row gt_left" headers="gp">32</td>
+<td class="gt_row gt_left" headers="g">1</td>
+<td class="gt_row gt_left" headers="a">1</td>
+<td class="gt_row gt_left" headers="pts">2</td>
+<td class="gt_row gt_left" headers="x">-2</td>
+<td class="gt_row gt_left" headers="pim">10</td>
+<td class="gt_row gt_left" headers="gp_2"></td>
+<td class="gt_row gt_left" headers="w"></td>
+<td class="gt_row gt_left" headers="l"></td>
+<td class="gt_row gt_left" headers="t_o"></td>
+<td class="gt_row gt_left" headers="sv_percent"></td>
+<td class="gt_row gt_left" headers="gaa"></td>
+<td class="gt_row gt_left" headers="ps">0.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="overall">26</td>
+<td class="gt_row gt_left" headers="team">Detroit Red Wings</td>
+<td class="gt_row gt_left" headers="player">Jesse Wallin</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_left" headers="age">18</td>
+<td class="gt_row gt_left" headers="to">2003</td>
+<td class="gt_row gt_left" headers="amateur_team">Red Deer Rebels (WHL)</td>
+<td class="gt_row gt_left" headers="gp">49</td>
+<td class="gt_row gt_left" headers="g">0</td>
+<td class="gt_row gt_left" headers="a">2</td>
+<td class="gt_row gt_left" headers="pts">2</td>
+<td class="gt_row gt_left" headers="x">-5</td>
+<td class="gt_row gt_left" headers="pim">34</td>
+<td class="gt_row gt_left" headers="gp_2"></td>
+<td class="gt_row gt_left" headers="w"></td>
+<td class="gt_row gt_left" headers="l"></td>
+<td class="gt_row gt_left" headers="t_o"></td>
+<td class="gt_row gt_left" headers="sv_percent"></td>
+<td class="gt_row gt_left" headers="gaa"></td>
+<td class="gt_row gt_left" headers="ps">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="overall"></td>
+<td class="gt_row gt_left" headers="team">Round 2</td>
+<td class="gt_row gt_left" headers="player">Round 2</td>
+<td class="gt_row gt_left" headers="nat"></td>
+<td class="gt_row gt_left" headers="pos"></td>
+<td class="gt_row gt_left" headers="age"></td>
+<td class="gt_row gt_left" headers="to"></td>
+<td class="gt_row gt_left" headers="amateur_team"></td>
+<td class="gt_row gt_left" headers="gp">NHL Scoring Stats</td>
+<td class="gt_row gt_left" headers="g">NHL Scoring Stats</td>
+<td class="gt_row gt_left" headers="a">NHL Scoring Stats</td>
+<td class="gt_row gt_left" headers="pts">NHL Scoring Stats</td>
+<td class="gt_row gt_left" headers="x">NHL Scoring Stats</td>
+<td class="gt_row gt_left" headers="pim">NHL Scoring Stats</td>
+<td class="gt_row gt_left" headers="gp_2">NHL Goalie Stats</td>
+<td class="gt_row gt_left" headers="w">NHL Goalie Stats</td>
+<td class="gt_row gt_left" headers="l">NHL Goalie Stats</td>
+<td class="gt_row gt_left" headers="t_o">NHL Goalie Stats</td>
+<td class="gt_row gt_left" headers="sv_percent">NHL Goalie Stats</td>
+<td class="gt_row gt_left" headers="gaa">NHL Goalie Stats</td>
+<td class="gt_row gt_left" headers="ps"></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="overall">Overall</td>
+<td class="gt_row gt_left" headers="team">Team</td>
+<td class="gt_row gt_left" headers="player">Player</td>
+<td class="gt_row gt_left" headers="nat">Nat.</td>
+<td class="gt_row gt_left" headers="pos">Pos</td>
+<td class="gt_row gt_left" headers="age">Age</td>
+<td class="gt_row gt_left" headers="to">To</td>
+<td class="gt_row gt_left" headers="amateur_team">Amateur Team</td>
+<td class="gt_row gt_left" headers="gp">GP</td>
+<td class="gt_row gt_left" headers="g">G</td>
+<td class="gt_row gt_left" headers="a">A</td>
+<td class="gt_row gt_left" headers="pts">PTS</td>
+<td class="gt_row gt_left" headers="x">+/-</td>
+<td class="gt_row gt_left" headers="pim">PIM</td>
+<td class="gt_row gt_left" headers="gp_2">GP</td>
+<td class="gt_row gt_left" headers="w">W</td>
+<td class="gt_row gt_left" headers="l">L</td>
+<td class="gt_row gt_left" headers="t_o">T/O</td>
+<td class="gt_row gt_left" headers="sv_percent">SV%</td>
+<td class="gt_row gt_left" headers="gaa">GAA</td>
+<td class="gt_row gt_left" headers="ps">PS</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="overall">27</td>
+<td class="gt_row gt_left" headers="team">Buffalo Sabres</td>
+<td class="gt_row gt_left" headers="player">Cory Sarich</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_left" headers="age">18</td>
+<td class="gt_row gt_left" headers="to">2014</td>
+<td class="gt_row gt_left" headers="amateur_team">Saskatoon Blades (WHL)</td>
+<td class="gt_row gt_left" headers="gp">969</td>
+<td class="gt_row gt_left" headers="g">21</td>
+<td class="gt_row gt_left" headers="a">137</td>
+<td class="gt_row gt_left" headers="pts">158</td>
+<td class="gt_row gt_left" headers="x">-9</td>
+<td class="gt_row gt_left" headers="pim">1089</td>
+<td class="gt_row gt_left" headers="gp_2"></td>
+<td class="gt_row gt_left" headers="w"></td>
+<td class="gt_row gt_left" headers="l"></td>
+<td class="gt_row gt_left" headers="t_o"></td>
+<td class="gt_row gt_left" headers="sv_percent"></td>
+<td class="gt_row gt_left" headers="gaa"></td>
+<td class="gt_row gt_left" headers="ps">36.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="overall">28</td>
+<td class="gt_row gt_left" headers="team">Pittsburgh Penguins</td>
+<td class="gt_row gt_left" headers="player">Pavel Skrbek</td>
+<td class="gt_row gt_left" headers="nat">CZ</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_left" headers="age">18</td>
+<td class="gt_row gt_left" headers="to">2002</td>
+<td class="gt_row gt_left" headers="amateur_team">HC Kladno (Czech)</td>
+<td class="gt_row gt_left" headers="gp">12</td>
+<td class="gt_row gt_left" headers="g">0</td>
+<td class="gt_row gt_left" headers="a">0</td>
+<td class="gt_row gt_left" headers="pts">0</td>
+<td class="gt_row gt_left" headers="x">1</td>
+<td class="gt_row gt_left" headers="pim">8</td>
+<td class="gt_row gt_left" headers="gp_2"></td>
+<td class="gt_row gt_left" headers="w"></td>
+<td class="gt_row gt_left" headers="l"></td>
+<td class="gt_row gt_left" headers="t_o"></td>
+<td class="gt_row gt_left" headers="sv_percent"></td>
+<td class="gt_row gt_left" headers="gaa"></td>
+<td class="gt_row gt_left" headers="ps">0.2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <p>Three problems that immediately come up are:</p>
 <ul>
 <li><p>Two rows get inserted at the end of every round to indicate the round changed.</p></li>
-<li><p>Numbers are being coded as strings (<code>overall</code>, <code>age</code>, <code>to</code>, etc).</p></li>
+<li><p>Though not visible beacuse of the usage of <code>gt</code>, numbers are being coded as strings (<code>overall</code>, <code>age</code>, <code>to</code>, etc).</p></li>
 <li><p>(At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.</p></li>
 </ul>
 <p>By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player’s ages in the 2001 draft, but we aren’t going to use ages for our analysis so we won’t bother coming up for a remedy for the players drafted between 1996 and 2000. The number of picks in the draft has also changed over the years, we will ignore any player drafted after selection 224 (the number of picks in the 2025 NHL Entry Draft). Finally, it would be helpful to remove the columns we don’t care about.</p>
@@ -329,103 +983,3403 @@ window.Quarto = {
 <li><p>If <code>is.na(to)</code>, then the player never played in the NHL, so set it to the draft year.</p></li>
 <li><p>Add a <code>year</code> column so we can adjust the stats of players drafted more recently.</p></li>
 <li><p>Select the columns we care about (<code>year</code>, <code>overall</code>, <code>pos</code>, <code>to</code>, <code>gp</code>, and <code>ps</code>) in that order.</p></li>
-<li><p>Remove any players selected after <span class="math inline">\(224^{\text{th}}\)</span> overall.</p></li>
+<li><p>Remove any players selected after 224<span class="math inline">\(^{\text{th}}\)</span> overall.</p></li>
 </ul>
 <p>Note that there were originally two <code>gp</code> columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used <code>janitor::clean_names()</code> it changed them to <code>gp</code> and <code>gp_2</code>. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tidy_draft <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> <span class="fu">import_draft</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span> <span class="fu">as.numeric</span>(overall) <span class="sc">&lt;</span> <span class="dv">225</span>) <span class="sc">|&gt;</span> <span class="co"># remove extra rows and players after pick 224</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type_convert</span>() <span class="sc">|&gt;</span> <span class="co"># fix types </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="st">"year"</span> <span class="ot">=</span> year, <span class="st">"ps"</span> <span class="ot">=</span> <span class="fu">pmax</span>(<span class="fu">coalesce</span>(ps, <span class="dv">0</span>), <span class="dv">0</span>), </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">"gp"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(gp, <span class="dv">0</span>), <span class="st">"to"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(to, year)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, overall, to, pos, gp, ps) <span class="co"># columns we care about</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy_draft</span>(<span class="dv">1996</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tidy_draft <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> <span class="fu">import_draft</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span> <span class="fu">as.numeric</span>(overall) <span class="sc">&lt;</span> <span class="dv">225</span>) <span class="sc">|&gt;</span> <span class="co"># remove extra rows and players after pick 224</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type_convert</span>() <span class="sc">|&gt;</span> <span class="co"># fix types </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="st">"year"</span> <span class="ot">=</span> year, <span class="st">"ps"</span> <span class="ot">=</span> <span class="fu">pmax</span>(<span class="fu">coalesce</span>(ps, <span class="dv">0</span>), <span class="dv">0</span>), </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">"gp"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(gp, <span class="dv">0</span>), <span class="st">"to"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(to, year)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, overall, to, pos, gp, ps) <span class="co"># columns we care about</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">tidy_draft</span>(<span class="dv">1996</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 224 × 6
-    year overall    to pos      gp    ps
-   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1  1996       1  2015 D      1179  64.6
- 2  1996       2  2008 D       496  25.8
- 3  1996       3  2011 RW      822  56.6
- 4  1996       4  2000 C         3   0  
- 5  1996       5  2007 D       231   8.8
- 6  1996       6  2009 C       627  12.5
- 7  1996       7  2007 LW/C    545   9.2
- 8  1996       8  2004 D        44   0  
- 9  1996       9  2011 D       917  46.9
-10  1996      10  2004 D       209   2.7
-# ℹ 214 more rows</code></pre>
+<div class="cell-output-display">
+<div id="tvfsomkzuk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tvfsomkzuk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tvfsomkzuk thead, #tvfsomkzuk tbody, #tvfsomkzuk tfoot, #tvfsomkzuk tr, #tvfsomkzuk td, #tvfsomkzuk th {
+  border-style: none;
+}
+
+#tvfsomkzuk p {
+  margin: 0;
+  padding: 0;
+}
+
+#tvfsomkzuk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tvfsomkzuk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tvfsomkzuk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tvfsomkzuk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tvfsomkzuk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tvfsomkzuk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tvfsomkzuk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tvfsomkzuk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tvfsomkzuk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tvfsomkzuk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tvfsomkzuk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tvfsomkzuk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tvfsomkzuk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tvfsomkzuk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tvfsomkzuk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tvfsomkzuk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tvfsomkzuk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tvfsomkzuk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tvfsomkzuk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tvfsomkzuk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tvfsomkzuk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tvfsomkzuk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tvfsomkzuk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tvfsomkzuk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tvfsomkzuk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tvfsomkzuk .gt_left {
+  text-align: left;
+}
+
+#tvfsomkzuk .gt_center {
+  text-align: center;
+}
+
+#tvfsomkzuk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tvfsomkzuk .gt_font_normal {
+  font-weight: normal;
+}
+
+#tvfsomkzuk .gt_font_bold {
+  font-weight: bold;
+}
+
+#tvfsomkzuk .gt_font_italic {
+  font-style: italic;
+}
+
+#tvfsomkzuk .gt_super {
+  font-size: 65%;
+}
+
+#tvfsomkzuk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tvfsomkzuk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tvfsomkzuk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tvfsomkzuk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tvfsomkzuk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tvfsomkzuk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tvfsomkzuk .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tvfsomkzuk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tvfsomkzuk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">year</th>
+<th id="overall" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">overall</th>
+<th id="to" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">to</th>
+<th id="pos" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pos</th>
+<th id="gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp</th>
+<th id="ps" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">1</td>
+<td class="gt_row gt_right" headers="to">2015</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">1179</td>
+<td class="gt_row gt_right" headers="ps">64.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">2</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">496</td>
+<td class="gt_row gt_right" headers="ps">25.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">3</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">822</td>
+<td class="gt_row gt_right" headers="ps">56.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">4</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">3</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">5</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">231</td>
+<td class="gt_row gt_right" headers="ps">8.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">6</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">627</td>
+<td class="gt_row gt_right" headers="ps">12.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">7</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">LW/C</td>
+<td class="gt_row gt_right" headers="gp">545</td>
+<td class="gt_row gt_right" headers="ps">9.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">8</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">44</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">9</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">917</td>
+<td class="gt_row gt_right" headers="ps">46.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">10</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">209</td>
+<td class="gt_row gt_right" headers="ps">2.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">11</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">82</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">12</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">60</td>
+<td class="gt_row gt_right" headers="ps">0.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">13</td>
+<td class="gt_row gt_right" headers="to">2014</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">1107</td>
+<td class="gt_row gt_right" headers="ps">74.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">14</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">798</td>
+<td class="gt_row gt_right" headers="ps">17.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">15</td>
+<td class="gt_row gt_right" headers="to">2016</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">1293</td>
+<td class="gt_row gt_right" headers="ps">52.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">16</td>
+<td class="gt_row gt_right" headers="to">1999</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">5</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">17</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">113</td>
+<td class="gt_row gt_right" headers="ps">3.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">18</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">57</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">19</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">5</td>
+<td class="gt_row gt_right" headers="ps">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">20</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">521</td>
+<td class="gt_row gt_right" headers="ps">12.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">21</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">938</td>
+<td class="gt_row gt_right" headers="ps">54.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">22</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">23</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">24</td>
+<td class="gt_row gt_right" headers="to">2015</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">973</td>
+<td class="gt_row gt_right" headers="ps">78.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">25</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">32</td>
+<td class="gt_row gt_right" headers="ps">0.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">26</td>
+<td class="gt_row gt_right" headers="to">2003</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">49</td>
+<td class="gt_row gt_right" headers="ps">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">27</td>
+<td class="gt_row gt_right" headers="to">2014</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">969</td>
+<td class="gt_row gt_right" headers="ps">36.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">28</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">12</td>
+<td class="gt_row gt_right" headers="ps">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">29</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">337</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">30</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">341</td>
+<td class="gt_row gt_right" headers="ps">5.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">31</td>
+<td class="gt_row gt_right" headers="to">1999</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">18</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">32</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">6</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">33</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">34</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">35</td>
+<td class="gt_row gt_right" headers="to">2019</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">1516</td>
+<td class="gt_row gt_right" headers="ps">66.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">36</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">19</td>
+<td class="gt_row gt_right" headers="ps">0.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">37</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">73</td>
+<td class="gt_row gt_right" headers="ps">2.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">38</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">39</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">55</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">40</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">524</td>
+<td class="gt_row gt_right" headers="ps">6.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">41</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">42</td>
+<td class="gt_row gt_right" headers="to">2003</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">2</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">43</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">552</td>
+<td class="gt_row gt_right" headers="ps">22.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">44</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">341</td>
+<td class="gt_row gt_right" headers="ps">49.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">45</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">46</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">47</td>
+<td class="gt_row gt_right" headers="to">2006</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">142</td>
+<td class="gt_row gt_right" headers="ps">7.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">48</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">53</td>
+<td class="gt_row gt_right" headers="ps">0.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">49</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">797</td>
+<td class="gt_row gt_right" headers="ps">42.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">50</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">51</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">3</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">52</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">53</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">54</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">55</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">56</td>
+<td class="gt_row gt_right" headers="to">2022</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">1680</td>
+<td class="gt_row gt_right" headers="ps">155.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">57</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">58</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">59</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">824</td>
+<td class="gt_row gt_right" headers="ps">58.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">60</td>
+<td class="gt_row gt_right" headers="to">1999</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">2</td>
+<td class="gt_row gt_right" headers="ps">0.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">61</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">62</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">63</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">308</td>
+<td class="gt_row gt_right" headers="ps">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">64</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">65</td>
+<td class="gt_row gt_right" headers="to">2006</td>
+<td class="gt_row gt_left" headers="pos">LW/C</td>
+<td class="gt_row gt_right" headers="gp">493</td>
+<td class="gt_row gt_right" headers="ps">19.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">66</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">67</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">108</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">68</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">69</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">70</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">469</td>
+<td class="gt_row gt_right" headers="ps">11.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">71</td>
+<td class="gt_row gt_right" headers="to">2014</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">789</td>
+<td class="gt_row gt_right" headers="ps">16.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">72</td>
+<td class="gt_row gt_right" headers="to">2010</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">31</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">73</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">74</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">75</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">21</td>
+<td class="gt_row gt_right" headers="ps">0.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">76</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">77</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">78</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">79</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">722</td>
+<td class="gt_row gt_right" headers="ps">42.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">80</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">81</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">29</td>
+<td class="gt_row gt_right" headers="ps">0.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">82</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">73</td>
+<td class="gt_row gt_right" headers="ps">0.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">83</td>
+<td class="gt_row gt_right" headers="to">1999</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">3</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">84</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">85</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">86</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">87</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">88</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">233</td>
+<td class="gt_row gt_right" headers="ps">0.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">89</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">847</td>
+<td class="gt_row gt_right" headers="ps">51.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">90</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">91</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">47</td>
+<td class="gt_row gt_right" headers="ps">0.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">92</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">93</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">94</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">95</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">96</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">820</td>
+<td class="gt_row gt_right" headers="ps">28.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">97</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">98</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">99</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">100</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">194</td>
+<td class="gt_row gt_right" headers="ps">0.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">101</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">102</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">675</td>
+<td class="gt_row gt_right" headers="ps">8.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">103</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">104</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">105</td>
+<td class="gt_row gt_right" headers="to">2017</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">963</td>
+<td class="gt_row gt_right" headers="ps">68.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">106</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">107</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">108</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">109</td>
+<td class="gt_row gt_right" headers="to">2003</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">37</td>
+<td class="gt_row gt_right" headers="ps">1.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">110</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">111</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">112</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">7</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">113</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">114</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">115</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">30</td>
+<td class="gt_row gt_right" headers="ps">0.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">116</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">117</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">118</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">119</td>
+<td class="gt_row gt_right" headers="to">2003</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">112</td>
+<td class="gt_row gt_right" headers="ps">3.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">120</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">121</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">122</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">123</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">124</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">125</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">126</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">127</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">128</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">129</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">130</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">131</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">132</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">133</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">172</td>
+<td class="gt_row gt_right" headers="ps">0.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">134</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">135</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">136</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">613</td>
+<td class="gt_row gt_right" headers="ps">19.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">137</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">3</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">138</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">139</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">186</td>
+<td class="gt_row gt_right" headers="ps">24.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">140</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">2</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">141</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">142</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">143</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">144</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">145</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">146</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">381</td>
+<td class="gt_row gt_right" headers="ps">5.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">147</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">148</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">149</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">150</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">151</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">152</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">153</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">154</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">689</td>
+<td class="gt_row gt_right" headers="ps">31.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">155</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">156</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">157</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">16</td>
+<td class="gt_row gt_right" headers="ps">0.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">158</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">159</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">160</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">161</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">162</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">163</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">164</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">165</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">166</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">167</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">503</td>
+<td class="gt_row gt_right" headers="ps">3.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">168</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">169</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">77</td>
+<td class="gt_row gt_right" headers="ps">2.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">170</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">171</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">1</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">172</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">173</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">174</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">616</td>
+<td class="gt_row gt_right" headers="ps">14.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">175</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">176</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">798</td>
+<td class="gt_row gt_right" headers="ps">4.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">177</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">256</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">178</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">179</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">970</td>
+<td class="gt_row gt_right" headers="ps">64.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">180</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">181</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">182</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">183</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">184</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">185</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">186</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">74</td>
+<td class="gt_row gt_right" headers="ps">0.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">187</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">188</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">189</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">190</td>
+<td class="gt_row gt_right" headers="to">2010</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">46</td>
+<td class="gt_row gt_right" headers="ps">6.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">191</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">192</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">42</td>
+<td class="gt_row gt_right" headers="ps">0.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">193</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">69</td>
+<td class="gt_row gt_right" headers="ps">2.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">194</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">282</td>
+<td class="gt_row gt_right" headers="ps">8.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">195</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">462</td>
+<td class="gt_row gt_right" headers="ps">15.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">196</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">8</td>
+<td class="gt_row gt_right" headers="ps">0.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">197</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">198</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">199</td>
+<td class="gt_row gt_right" headers="to">2016</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">907</td>
+<td class="gt_row gt_right" headers="ps">58.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">200</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">201</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">202</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">203</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">204</td>
+<td class="gt_row gt_right" headers="to">2013</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">984</td>
+<td class="gt_row gt_right" headers="ps">87.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">205</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">206</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">207</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">F</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">208</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">209</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">210</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">211</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">212</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">1</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">213</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">214</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">215</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">216</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">89</td>
+<td class="gt_row gt_right" headers="ps">2.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">217</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">218</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">219</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">220</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">221</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">222</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">223</td>
+<td class="gt_row gt_right" headers="to">2015</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">951</td>
+<td class="gt_row gt_right" headers="ps">1.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">224</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <p>This is the form we will use for analysis later. We now load in all of the data and use <code>rbind()</code> to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the <code>year</code> and <code>overall</code> columns are formatted like they are in long format but the <code>to</code>, <code>pos</code>, <code>gp</code>, and <code>ps</code> columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the <code>Sys.sleep(5)</code> line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don’t have to run this function any more than we have to.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq</span>(start_year, end_year, <span class="dv">1</span>),</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                   \(x) <span class="fu">tidy_draft</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq</span>(start_year, end_year, <span class="dv">1</span>),</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   \(x) <span class="fu">tidy_draft</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>We can check that this data has loaded correctly, there should be between 5000 and 6000 rows (the number of picks in a draft has changed over the years, but is usually between 200 and 240, so 25 drafts will be between 5000 and 6000) and 6 columns:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(all_data) <span class="co"># confirm there are 5000-6000 rows and 6 columns</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(all_data) <span class="co"># confirm there are 5000-6000 rows and 6 columns</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5427    6</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(all_data<span class="sc">$</span>year)) <span class="co"># confirm all 25 years have been included</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(all_data<span class="sc">$</span>year)) <span class="co"># confirm all 25 years have been included</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 25</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(all_data, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(all_data, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>   year overall   to  pos   gp   ps
-1  1996       1 2015    D 1179 64.6
-2  1996       2 2008    D  496 25.8
-3  1996       3 2011   RW  822 56.6
-4  1996       4 2000    C    3  0.0
-5  1996       5 2007    D  231  8.8
-6  1996       6 2009    C  627 12.5
-7  1996       7 2007 LW/C  545  9.2
-8  1996       8 2004    D   44  0.0
-9  1996       9 2011    D  917 46.9
-10 1996      10 2004    D  209  2.7</code></pre>
+<div class="cell-output-display">
+<div id="airfohdatp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#airfohdatp table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#airfohdatp thead, #airfohdatp tbody, #airfohdatp tfoot, #airfohdatp tr, #airfohdatp td, #airfohdatp th {
+  border-style: none;
+}
+
+#airfohdatp p {
+  margin: 0;
+  padding: 0;
+}
+
+#airfohdatp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#airfohdatp .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#airfohdatp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#airfohdatp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#airfohdatp .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#airfohdatp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#airfohdatp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#airfohdatp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#airfohdatp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#airfohdatp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#airfohdatp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#airfohdatp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#airfohdatp .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#airfohdatp .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#airfohdatp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#airfohdatp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#airfohdatp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#airfohdatp .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#airfohdatp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#airfohdatp .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#airfohdatp .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#airfohdatp .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#airfohdatp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#airfohdatp .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#airfohdatp .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#airfohdatp .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#airfohdatp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#airfohdatp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#airfohdatp .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#airfohdatp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#airfohdatp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#airfohdatp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#airfohdatp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#airfohdatp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#airfohdatp .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#airfohdatp .gt_left {
+  text-align: left;
+}
+
+#airfohdatp .gt_center {
+  text-align: center;
+}
+
+#airfohdatp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#airfohdatp .gt_font_normal {
+  font-weight: normal;
+}
+
+#airfohdatp .gt_font_bold {
+  font-weight: bold;
+}
+
+#airfohdatp .gt_font_italic {
+  font-style: italic;
+}
+
+#airfohdatp .gt_super {
+  font-size: 65%;
+}
+
+#airfohdatp .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#airfohdatp .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#airfohdatp .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#airfohdatp .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#airfohdatp .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#airfohdatp .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#airfohdatp .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#airfohdatp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#airfohdatp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">year</th>
+<th id="overall" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">overall</th>
+<th id="to" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">to</th>
+<th id="pos" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pos</th>
+<th id="gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp</th>
+<th id="ps" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">1</td>
+<td class="gt_row gt_right" headers="to">2015</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">1179</td>
+<td class="gt_row gt_right" headers="ps">64.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">2</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">496</td>
+<td class="gt_row gt_right" headers="ps">25.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">3</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="gp">822</td>
+<td class="gt_row gt_right" headers="ps">56.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">4</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">3</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">5</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">231</td>
+<td class="gt_row gt_right" headers="ps">8.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">6</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">627</td>
+<td class="gt_row gt_right" headers="ps">12.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">7</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="pos">LW/C</td>
+<td class="gt_row gt_right" headers="gp">545</td>
+<td class="gt_row gt_right" headers="ps">9.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">8</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">44</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">9</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">917</td>
+<td class="gt_row gt_right" headers="ps">46.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">10</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">209</td>
+<td class="gt_row gt_right" headers="ps">2.7</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>all_data[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(all_data[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>   year overall   to pos  gp   ps
-23 1996      23 1996   G   0  0.0
-24 1996      24 2015   C 973 78.5
-25 1996      25 2001   D  32  0.6
-26 1996      26 2003   D  49  0.2
-27 1996      27 2014   D 969 36.0
-28 1996      28 2002   D  12  0.2
-29 1996      29 2009  LW 337  0.0
-30 1996      30 2012  LW 341  5.1</code></pre>
+<div class="cell-output-display">
+<div id="nzndkiqyis" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nzndkiqyis table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nzndkiqyis thead, #nzndkiqyis tbody, #nzndkiqyis tfoot, #nzndkiqyis tr, #nzndkiqyis td, #nzndkiqyis th {
+  border-style: none;
+}
+
+#nzndkiqyis p {
+  margin: 0;
+  padding: 0;
+}
+
+#nzndkiqyis .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nzndkiqyis .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nzndkiqyis .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nzndkiqyis .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nzndkiqyis .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nzndkiqyis .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nzndkiqyis .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nzndkiqyis .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nzndkiqyis .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nzndkiqyis .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nzndkiqyis .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nzndkiqyis .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nzndkiqyis .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nzndkiqyis .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nzndkiqyis .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nzndkiqyis .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nzndkiqyis .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nzndkiqyis .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nzndkiqyis .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nzndkiqyis .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nzndkiqyis .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nzndkiqyis .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nzndkiqyis .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nzndkiqyis .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nzndkiqyis .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nzndkiqyis .gt_left {
+  text-align: left;
+}
+
+#nzndkiqyis .gt_center {
+  text-align: center;
+}
+
+#nzndkiqyis .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nzndkiqyis .gt_font_normal {
+  font-weight: normal;
+}
+
+#nzndkiqyis .gt_font_bold {
+  font-weight: bold;
+}
+
+#nzndkiqyis .gt_font_italic {
+  font-style: italic;
+}
+
+#nzndkiqyis .gt_super {
+  font-size: 65%;
+}
+
+#nzndkiqyis .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nzndkiqyis .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nzndkiqyis .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nzndkiqyis .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nzndkiqyis .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nzndkiqyis .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nzndkiqyis .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#nzndkiqyis .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#nzndkiqyis div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">year</th>
+<th id="overall" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">overall</th>
+<th id="to" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">to</th>
+<th id="pos" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pos</th>
+<th id="gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp</th>
+<th id="ps" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">23</td>
+<td class="gt_row gt_right" headers="to">1996</td>
+<td class="gt_row gt_left" headers="pos">G</td>
+<td class="gt_row gt_right" headers="gp">0</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">24</td>
+<td class="gt_row gt_right" headers="to">2015</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="gp">973</td>
+<td class="gt_row gt_right" headers="ps">78.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">25</td>
+<td class="gt_row gt_right" headers="to">2001</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">32</td>
+<td class="gt_row gt_right" headers="ps">0.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">26</td>
+<td class="gt_row gt_right" headers="to">2003</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">49</td>
+<td class="gt_row gt_right" headers="ps">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">27</td>
+<td class="gt_row gt_right" headers="to">2014</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">969</td>
+<td class="gt_row gt_right" headers="ps">36.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">28</td>
+<td class="gt_row gt_right" headers="to">2002</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="gp">12</td>
+<td class="gt_row gt_right" headers="ps">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">29</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">337</td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="year">1996</td>
+<td class="gt_row gt_right" headers="overall">30</td>
+<td class="gt_row gt_right" headers="to">2012</td>
+<td class="gt_row gt_left" headers="pos">LW</td>
+<td class="gt_row gt_right" headers="gp">341</td>
+<td class="gt_row gt_right" headers="ps">5.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <p>These checks all returned what they should. Finally, recall that the <code>import_data</code> function (and thus the <code>tidy_draft</code> function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(all_data, <span class="st">"all_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(all_data, <span class="st">"all_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>In future chapters, we will import data from this csv file to speed up the run and rendering times (instead of importing it from Hockey Reference every time we simply load it from the csv). Now we proceed to the Visualize step.</p>

@@ -10,8 +10,10 @@ We install and load the necessary packages, along with functions from prior chap
 ```{r,  message = FALSE, warning = FALSE}
 # install.packages("tidyverse")
 # install.packages("dplyr")
+# install.packages("gt")
 library(tidyverse)
 library(dplyr)
+library(gt)
 
 source("functions.R") # load functions defined in prior chapters
 
@@ -50,4 +52,22 @@ pred_data <- mutate(pred_data, value_ps = pred_vals_raw_knn)
 ggplot(pred_data, aes(x = overall, y = value_ps)) + 
   geom_line(lwd = 1.5, col = "red") + 
   geom_point(data = knn_raw)
+```
+
+```{r}
+mean_data <- all_data |> 
+  group_by(overall) |> 
+  summarize(mean_ps = mean(ps))
+
+raw_model <- nls(mean_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = mean_data)
+
+pred_data_raw <- data.frame(overall = seq(1, 224))
+pred_vals_raw <- predict(raw_model, pred_data_raw)
+
+pred_data_raw <- mutate(pred_data_raw, value_ps = pred_vals_raw)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = pred_data_raw)
 ```

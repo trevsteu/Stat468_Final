@@ -249,10 +249,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("stringr")</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("janitor")</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("gt")</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -282,24 +284,720 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">import_draft</span>(start_year), <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(<span class="fu">import_draft</span>(start_year), <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 21
-   overall team    player nat   pos   age   to    amateur_team gp    g     a    
-   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
- 1 1       Ottawa… Chris… CA    D     18    2015  Prince Albe… 1179  71    217  
- 2 2       San Jo… Andre… RU    D     18    2008  Salavat Yul… 496   38    82   
- 3 3       New Yo… J.P. … CA    RW    18    2011  Val-d'Or Fo… 822   214   309  
- 4 4       Washin… Alexa… RU    C     18    2000  Barrie Colt… 3     0     0    
- 5 5       Dallas… Ric J… CA    D     18    2007  Soo Greyhou… 231   19    58   
- 6 6       Edmont… Boyd … CA    C     18    2009  Kitchener R… 627   67    112  
- 7 7       Buffal… Erik … US    LW/C  19    2007  Minnesota (… 545   52    76   
- 8 8       Boston… Johna… CA    D     18    2004  Medicine Ha… 44    0     1    
- 9 9       Anahei… Rusla… BY    D     21    2011  Las Vegas T… 917   45    159  
-10 10      New Je… Lance… CA    D     18    2004  Red Deer Re… 209   4     12   
-# ℹ 10 more variables: pts &lt;chr&gt;, x &lt;chr&gt;, pim &lt;chr&gt;, gp_2 &lt;chr&gt;, w &lt;chr&gt;,
-#   l &lt;chr&gt;, t_o &lt;chr&gt;, sv_percent &lt;chr&gt;, gaa &lt;chr&gt;, ps &lt;chr&gt;</code></pre>
+<div class="cell-output-display">
+<div id="bmsvvqkcue" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bmsvvqkcue table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bmsvvqkcue thead, #bmsvvqkcue tbody, #bmsvvqkcue tfoot, #bmsvvqkcue tr, #bmsvvqkcue td, #bmsvvqkcue th {
+  border-style: none;
+}
+
+#bmsvvqkcue p {
+  margin: 0;
+  padding: 0;
+}
+
+#bmsvvqkcue .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bmsvvqkcue .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bmsvvqkcue .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bmsvvqkcue .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bmsvvqkcue .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bmsvvqkcue .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bmsvvqkcue .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bmsvvqkcue .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bmsvvqkcue .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bmsvvqkcue .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bmsvvqkcue .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bmsvvqkcue .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bmsvvqkcue .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bmsvvqkcue .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bmsvvqkcue .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bmsvvqkcue .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bmsvvqkcue .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bmsvvqkcue .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bmsvvqkcue .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bmsvvqkcue .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bmsvvqkcue .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bmsvvqkcue .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bmsvvqkcue .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bmsvvqkcue .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bmsvvqkcue .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bmsvvqkcue .gt_left {
+  text-align: left;
+}
+
+#bmsvvqkcue .gt_center {
+  text-align: center;
+}
+
+#bmsvvqkcue .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bmsvvqkcue .gt_font_normal {
+  font-weight: normal;
+}
+
+#bmsvvqkcue .gt_font_bold {
+  font-weight: bold;
+}
+
+#bmsvvqkcue .gt_font_italic {
+  font-style: italic;
+}
+
+#bmsvvqkcue .gt_super {
+  font-size: 65%;
+}
+
+#bmsvvqkcue .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bmsvvqkcue .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bmsvvqkcue .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bmsvvqkcue .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bmsvvqkcue .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bmsvvqkcue .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bmsvvqkcue .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#bmsvvqkcue .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#bmsvvqkcue div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="overall" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">overall</th>
+<th id="team" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">team</th>
+<th id="player" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">player</th>
+<th id="nat" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">nat</th>
+<th id="pos" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">pos</th>
+<th id="age" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">age</th>
+<th id="to" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">to</th>
+<th id="amateur_team" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">amateur_team</th>
+<th id="gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp</th>
+<th id="g" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">g</th>
+<th id="a" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">a</th>
+<th id="pts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pts</th>
+<th id="x" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">x</th>
+<th id="pim" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pim</th>
+<th id="gp_2" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gp_2</th>
+<th id="w" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">w</th>
+<th id="l" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">l</th>
+<th id="t_o" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">t_o</th>
+<th id="sv_percent" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">sv_percent</th>
+<th id="gaa" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">gaa</th>
+<th id="ps" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="overall">1</td>
+<td class="gt_row gt_left" headers="team">Ottawa Senators</td>
+<td class="gt_row gt_left" headers="player">Chris Phillips</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2015</td>
+<td class="gt_row gt_left" headers="amateur_team">Prince Albert Raiders (WHL)</td>
+<td class="gt_row gt_right" headers="gp">1179</td>
+<td class="gt_row gt_right" headers="g">71</td>
+<td class="gt_row gt_right" headers="a">217</td>
+<td class="gt_row gt_right" headers="pts">288</td>
+<td class="gt_row gt_right" headers="x">68</td>
+<td class="gt_row gt_right" headers="pim">756</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">64.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="overall">2</td>
+<td class="gt_row gt_left" headers="team">San Jose Sharks</td>
+<td class="gt_row gt_left" headers="player">Andrei Zyuzin</td>
+<td class="gt_row gt_left" headers="nat">RU</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2008</td>
+<td class="gt_row gt_left" headers="amateur_team">Salavat Yulaev Ufa (Russia)</td>
+<td class="gt_row gt_right" headers="gp">496</td>
+<td class="gt_row gt_right" headers="g">38</td>
+<td class="gt_row gt_right" headers="a">82</td>
+<td class="gt_row gt_right" headers="pts">120</td>
+<td class="gt_row gt_right" headers="x">-40</td>
+<td class="gt_row gt_right" headers="pim">446</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">25.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="overall">3</td>
+<td class="gt_row gt_left" headers="team">New York Islanders</td>
+<td class="gt_row gt_left" headers="player">J.P. Dumont</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">RW</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="amateur_team">Val-d'Or Foreurs (QMJHL)</td>
+<td class="gt_row gt_right" headers="gp">822</td>
+<td class="gt_row gt_right" headers="g">214</td>
+<td class="gt_row gt_right" headers="a">309</td>
+<td class="gt_row gt_right" headers="pts">523</td>
+<td class="gt_row gt_right" headers="x">-2</td>
+<td class="gt_row gt_right" headers="pim">364</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">56.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="overall">4</td>
+<td class="gt_row gt_left" headers="team">Washington Capitals</td>
+<td class="gt_row gt_left" headers="player">Alexandre Volchkov</td>
+<td class="gt_row gt_left" headers="nat">RU</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2000</td>
+<td class="gt_row gt_left" headers="amateur_team">Barrie Colts (OHL)</td>
+<td class="gt_row gt_right" headers="gp">3</td>
+<td class="gt_row gt_right" headers="g">0</td>
+<td class="gt_row gt_right" headers="a">0</td>
+<td class="gt_row gt_right" headers="pts">0</td>
+<td class="gt_row gt_right" headers="x">-2</td>
+<td class="gt_row gt_right" headers="pim">0</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">-0.1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="overall">5</td>
+<td class="gt_row gt_left" headers="team">Dallas Stars</td>
+<td class="gt_row gt_left" headers="player">Ric Jackman</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="amateur_team">Soo Greyhounds (OHL)</td>
+<td class="gt_row gt_right" headers="gp">231</td>
+<td class="gt_row gt_right" headers="g">19</td>
+<td class="gt_row gt_right" headers="a">58</td>
+<td class="gt_row gt_right" headers="pts">77</td>
+<td class="gt_row gt_right" headers="x">-54</td>
+<td class="gt_row gt_right" headers="pim">166</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">8.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="overall">6</td>
+<td class="gt_row gt_left" headers="team">Edmonton Oilers</td>
+<td class="gt_row gt_left" headers="player">Boyd Devereaux</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">C</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2009</td>
+<td class="gt_row gt_left" headers="amateur_team">Kitchener Rangers (OHL)</td>
+<td class="gt_row gt_right" headers="gp">627</td>
+<td class="gt_row gt_right" headers="g">67</td>
+<td class="gt_row gt_right" headers="a">112</td>
+<td class="gt_row gt_right" headers="pts">179</td>
+<td class="gt_row gt_right" headers="x">5</td>
+<td class="gt_row gt_right" headers="pim">205</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">12.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="overall">7</td>
+<td class="gt_row gt_left" headers="team">Buffalo Sabres</td>
+<td class="gt_row gt_left" headers="player">Erik Rasmussen</td>
+<td class="gt_row gt_left" headers="nat">US</td>
+<td class="gt_row gt_left" headers="pos">LW/C</td>
+<td class="gt_row gt_right" headers="age">19</td>
+<td class="gt_row gt_right" headers="to">2007</td>
+<td class="gt_row gt_left" headers="amateur_team">Minnesota (WCHA)</td>
+<td class="gt_row gt_right" headers="gp">545</td>
+<td class="gt_row gt_right" headers="g">52</td>
+<td class="gt_row gt_right" headers="a">76</td>
+<td class="gt_row gt_right" headers="pts">128</td>
+<td class="gt_row gt_right" headers="x">5</td>
+<td class="gt_row gt_right" headers="pim">305</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">9.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="overall">8</td>
+<td class="gt_row gt_left" headers="team">Boston Bruins</td>
+<td class="gt_row gt_left" headers="player">Johnathan Aitken</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="amateur_team">Medicine Hat Tigers (WHL)</td>
+<td class="gt_row gt_right" headers="gp">44</td>
+<td class="gt_row gt_right" headers="g">0</td>
+<td class="gt_row gt_right" headers="a">1</td>
+<td class="gt_row gt_right" headers="pts">1</td>
+<td class="gt_row gt_right" headers="x">-12</td>
+<td class="gt_row gt_right" headers="pim">70</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">0.0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="overall">9</td>
+<td class="gt_row gt_left" headers="team">Anaheim Ducks</td>
+<td class="gt_row gt_left" headers="player">Ruslan Salei</td>
+<td class="gt_row gt_left" headers="nat">BY</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="age">21</td>
+<td class="gt_row gt_right" headers="to">2011</td>
+<td class="gt_row gt_left" headers="amateur_team">Las Vegas Thunder (IHL)</td>
+<td class="gt_row gt_right" headers="gp">917</td>
+<td class="gt_row gt_right" headers="g">45</td>
+<td class="gt_row gt_right" headers="a">159</td>
+<td class="gt_row gt_right" headers="pts">204</td>
+<td class="gt_row gt_right" headers="x">-25</td>
+<td class="gt_row gt_right" headers="pim">1065</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">46.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="overall">10</td>
+<td class="gt_row gt_left" headers="team">New Jersey Devils</td>
+<td class="gt_row gt_left" headers="player">Lance Ward</td>
+<td class="gt_row gt_left" headers="nat">CA</td>
+<td class="gt_row gt_left" headers="pos">D</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="to">2004</td>
+<td class="gt_row gt_left" headers="amateur_team">Red Deer Rebels (WHL)</td>
+<td class="gt_row gt_right" headers="gp">209</td>
+<td class="gt_row gt_right" headers="g">4</td>
+<td class="gt_row gt_right" headers="a">12</td>
+<td class="gt_row gt_right" headers="pts">16</td>
+<td class="gt_row gt_right" headers="x">-30</td>
+<td class="gt_row gt_right" headers="pim">391</td>
+<td class="gt_row gt_right" headers="gp_2"></td>
+<td class="gt_row gt_right" headers="w"></td>
+<td class="gt_row gt_right" headers="l"></td>
+<td class="gt_row gt_right" headers="t_o"></td>
+<td class="gt_row gt_right" headers="sv_percent"></td>
+<td class="gt_row gt_right" headers="gaa"></td>
+<td class="gt_row gt_right" headers="ps">2.7</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 <p>We compare the first 10 rows of the 1996 draft table shown above with the table on <a href="https://www.hockey-reference.com/draft/NHL_1996_entry.html">Hockey Reference</a>, and it seems that the function we created does what we want it to do. We can now proceed to the Tidy step.</p>

@@ -10,8 +10,10 @@ We install and load the necessary packages, along with functions from prior chap
 ```{r,  message = FALSE, warning = FALSE}
 # install.packages("tidyverse")
 # install.packages("dplyr")
+# install.packages("gt")
 library(tidyverse)
 library(dplyr)
+library(gt)
 
 source("functions.R") # load functions defined in prior chapters
 

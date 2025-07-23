@@ -12,10 +12,12 @@ We install and load the necessary packages.
 # install.packages("stringr")
 # install.packages("tidyverse")
 # install.packages("janitor")
+# install.packages("gt")
 library(rvest)
 library(stringr)
 library(tidyverse)
 library(janitor)
+library(gt)
 ```
 
 ## Introduction
@@ -44,7 +46,7 @@ import_draft <- function(year){
   draft_year_table
 }
 
-head(import_draft(start_year), 10)
+gt(head(import_draft(start_year), 10))
 ```
 
 We compare the first 10 rows of the 1996 draft table shown above with the table on [Hockey Reference](https://www.hockey-reference.com/draft/NHL_1996_entry.html), and it seems that the function we created does what we want it to do. We can now proceed to the Tidy step.

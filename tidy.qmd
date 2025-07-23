@@ -10,9 +10,11 @@ We install and load the necessary packages, along with functions from prior chap
 ```{r, message = FALSE, warning = FALSE}
 # install.packages("rvest")
 # install.packages("tidyverse")
+# install.packages("gt")
 library(rvest)
 library(tidyverse)
 library(stringr)
+library(gt)
 
 source("functions.R") # load functions defined in prior chapters
 
@@ -25,14 +27,14 @@ end_year <- 2020
 In the tidy step, we put the data into tidy form and clean it, which will make the data easier to analyze in the later steps. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues:
 
 ```{r, warning = FALSE}
-import_draft(start_year)[23:30,]
+gt(import_draft(start_year)[23:30,])
 ```
 
 Three problems that immediately come up are:
 
 -   Two rows get inserted at the end of every round to indicate the round changed.
 
--   Numbers are being coded as strings (`overall`, `age`, `to`, etc).
+-   Though not visible beacuse of the usage of `gt`, numbers are being coded as strings (`overall`, `age`, `to`, etc).
 
 -   (At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.
 
@@ -54,7 +56,7 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Select the columns we care about (`year`, `overall`, `pos`, `to`, `gp`, and `ps`) in that order.
 
--   Remove any players selected after $224^{\text{th}}$ overall.
+-   Remove any players selected after 224$^{\text{th}}$ overall.
 
 Note that there were originally two `gp` columns (one for games played and one for games played as a goalie, goalies have the same number in both), but when we used `janitor::clean_names()` it changed them to `gp` and `gp_2`. Additionally, we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
 
@@ -69,7 +71,7 @@ tidy_draft <- function(year){
   draft_year_table
 }
 
-tidy_draft(1996)
+gt(tidy_draft(1996))
 ```
 
 This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.
@@ -93,9 +95,9 @@ dim(all_data) # confirm there are 5000-6000 rows and 6 columns
 
 length(unique(all_data$year)) # confirm all 25 years have been included
 
-head(all_data, 10)
+gt(head(all_data, 10))
 
-all_data[23:30,]
+gt(all_data[23:30,])
 ```
 
 These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
