@@ -8,22 +8,26 @@ author: "Trevor S"
 We install and load the necessary packages, along with functions from prior chapters.
 
 ```{r,  message = FALSE, warning = FALSE}
-# install.packages("tidyverse")
-# install.packages("dplyr")
-# install.packages("gt")
-# install.packages("reactable")
+# renv::install("tidyverse")
+# renv::install("dplyr")
+# renv::install("gt")
+# renv::install("reactable")
+# renv::install("patchwork")
 
 library(tidyverse)
 library(dplyr)
 library(gt)
 library(reactable)
+library(patchwork)
 
 source("functions.R") # load functions defined in prior chapters
 ```
 
 ## Introduction
 
-In the transform step, we will transform our data to better include the careers of players who are still playing. In the previous chapter, we estimated the value of pick $n$ by taking the average PS of all players in out dataset drafted at pick $n$. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. We can see in the plot below that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:
+At the end of the Visualize step we looked at the mean GP and mean PS of players selected at pick $i$. These are the first two of the four metrics that will be used to fit a model in the Model chapter. In the Transform chapter, we will create the other two metrics. First, we will implement the method taken by Luo (2024) which is to define a draft pick to be a "success" if that prospect becomes an NHL regular, which is defined to be playing in $\ge$ 200 NHL games for skaters. We will then look at the success rate of each pick number for the drafts in our dataset. That is, we will set $p_i = \frac{\text{number of successfull picks at pick $i$}}{\text{number of $i^{th}$ overall picks}}$ . Recall in our EDA section we mentioned that some drafts had fewer than 224 selections, which is why we divide by the number of $i^{th}$ overall picks instead of always dividing by 25. Note that Luo was using this method for *slightly* different analysis (he was evaluating prospect quality to better evaluate prospects, not value draft picks), but the general idea is very similar.
+
+The other transformation we will make in this step is to adjust our PS to better represent the careers of actve players (ie those who have not retired yet). Recall that in the Visualize chapter we looked at the average PS of all players in out dataset drafted at pick $i$. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. We can see in the plot below that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:
 
 ```{r}
 all_data |> 
@@ -33,10 +37,90 @@ all_data |>
   geom_point()
 ```
 
+Considering this, it makes sense to make an adjustment to active players based on an estimate of the PS they will generate in the remainder of their career. We will discuss this in much greater detail later in this chapter.
+
+## Transforming GP
+
+### Introduction 
+
+In this chapter we will add a column our dataset indicating whether the player became or is on track to become an NHL regular. We will adopt Luo's definition of an NHL regular being a skater who plays in or is on track to play in 200 games. This is straightforward a player is retired or has already played in enough games, but is more complex if the player is active and has not yet reached the required number of games. For these players, we will take an almost identical approach as Luo (2024), which changes the GP threshold depending on when a player was drafted. The modified threshold for skaters is given below, where $j$ is the year the player was drafted in $t_j$ is the threshold for players drafted in year $j$.
+
+$$t_j = \begin{cases}200 \text{,                if $j \le 2017$}\\
+\frac{82\times(2025-j)}{3} \text{,    if $j \in \{ 2018, 2019, 2020 \}$}\\
+\end{cases}$$
+
+Luo did not consider goalies at all in his paper, so one of the changes we will make from Luo's equation is that the threshold for goalies will be $\frac{t_j}{2}$ because goalies take longer to develop and even the best goalies only play in approximately 75% of their teams' games. Thus 100 games for a goalie is around 2.5 seasons' worth, which is roughly equivalent to 200 games for a skater.
+
+The only other difference between our threshold is Luo's is that the years are different, since Luo's work is from a year ago and used data from slightly different years. Additionally, Luo did some checks to make sure this estimate is appropriate, it turned out to be quite a good predictor of whether a player will play in 200 games. Here is a plot of the skater threshold for games played based on the skater's draft year.
+
+### Adding the Indicator
+
+```{r}
+get_threshold <- function(year){
+  ifelse(year <= 2017, 200, 82/3*(2025-year))
+}
+
+thresholds <- data.frame(year = seq(2015,2020)) |> 
+  mutate(t = get_threshold(year))
+
+ggplot(thresholds, aes(x = year, y = t)) + 
+  geom_point() +
+  scale_x_discrete(limits = seq(2015, 2020))
+```
+
+We make this transformation in R, first for retired players, then for active players, and then use `rbind` ro combine them.
+
+```{r}
+all_data_ret <- all_data |> 
+  filter(to != 2025) |> 
+  mutate(thresh = ifelse(pos == "G", 100, 200), 
+         reg = gp >= thresh) |> 
+  select(-thresh)
+
+all_data_act <- all_data |> 
+  filter(to == 2025) |> 
+  mutate(thresh = ifelse(pos == "G", get_threshold(year) / 2, 
+                         get_threshold(year)),
+         reg = gp >= thresh) |> 
+  select(-thresh)
+
+all_data_adj <- rbind(all_data_ret, all_data_act)
+```
+
+We have now added the column necessary to create a model based on whether an NHL player became an NHL regular.
+
+### Aggregating
+
+We aggregate this data to get the success rate of every pick number and then plot it.
+
+```{r}
+all_data_adj |> 
+  group_by(overall) |> 
+  summarize(rate = mean(reg)) |> 
+  ggplot(aes(x = overall, y = rate)) + 
+  geom_point()
+```
+
+This plot has a similar shape to the plots at the end of the Visualize step. This is the third of the four metrics we will use in the Model chapter.
+
+## Transforming PS
+
+### Introduction
+
+Recall the chart from the Introduction which showed that the total PS generated by players drafted between 2016 and 2020 is quite a bit lower than older drafts:
+
+```{r}
+all_data_adj |> 
+  group_by(year) |> 
+  summarize(total_ps = sum(ps)) |>
+  ggplot(aes(x = year, y = total_ps)) +
+  geom_point()
+```
+
 A similar issue is that there are quite a few current players who can still generate additional PS in our dataset. This issue is related because it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is due to there being so many active players from those seasons.
 
 ```{r}
-all_data |> 
+all_data_adj |> 
   filter(to == 2025) |> 
   group_by(year) |> 
   summarize(current_players = n()) |>
@@ -44,7 +128,7 @@ all_data |>
   geom_point()
 ```
 
-We can see that there are still quite a few players who are currently playing, so the full value of their career cannot be fully known. It is interesting that PS is so high for the drafts between 2007 and 2015 even though there are still so many active players from those drafts, I did some research but I could not find anything about it. One of my theories is that elite players might be skewing things, but Connor McDavid was drafted in 2015 but even he "only" has about 125 PS which is not nearly enough to skew the data on its own. I guess it is possible there were just really strong drafts, but it seems odd that there would be 8 strong drafts in a row.
+We can see that our dataset has quite a few active players, and the full value of these players' careers cannot be fully known. As an aside, it is interesting that PS is so high for the drafts between 2010 and 2015 even though there are still so many active players from those drafts, I did some research but I could not find anything about it. One of my personal theories is that elite players might be skewing things, but Connor McDavid was drafted in 2015 and even he "only" has about 125 PS which is not nearly enough to skew the data on its own. I guess it is possible there were just really strong drafts, but it seems odd that there would be 6 strong drafts in a row.
 
 Estimating the remaining value of a player's career could be an entire project all on its own, so we have 3 options:
 
@@ -58,15 +142,13 @@ Neither of the first two options are particularly appealing. The first is unidea
 
 Estimating the remaining value of a player's career could be an entire project all on its own, but we will make an adjustment that will reduce the impact of this issue (while acknowledging that we will not completely fix it). Let $gp_{ps}$ and $ps_{ij}$ be the GP and PS of the player drafted at pick $i$ of draft $j$. If that player has not retired, we will set $ps^{adj}_{ij} = ps_{ij} + \frac{ps_{ij}}{gp_{ij}} \times \hat{gr_j}$, where $\hat {gr_j}$ is our [**estimate**]{.underline} of the number of games left in the career of players drafted in year $j$. We will set $\hat{gr_j} = \frac{gp_{ij}}{years_{ij}} \cdot \hat{yr_j}$, where $years_{ij}$ is the number of years since player $ij$ was drafted and $\hat{yr_j}$ is the estimated number of years left in their career. Thus the estimated number of games remaining in a player's career is their average number of games per season times the estimated number of years remaining. Simplifying, we have $ps_{ij}^{adj} = ps_{ij} + \frac{ps_{ij}}{years_{ij}} \cdot\hat{yr_{ij}}$. We will estimate $yr_j$ later using data from 1996-2004. When we actually code this adjustment later in this chapter we will verify that the PS values these drafts end up looking similar to drafts where everyone is retired. Note that we only make this adjustment for active players, there is no reason to adjust the PS of retired players.
 
-## Transforming PS
-
-### Estimating Remaining Career Length 
+### Estimating Remaining Career Length
 
 Let $yr_j$ be the number of years players drafted in draft $j$ have remaining in their career, given they were drafted $k$ years ago. We aim to estimate this value, and will do so by setting $\hat{yr_j}$ to be the mean career length of players who retired at $k$ years after being drafted and were drafted between 1996 and 2004. We calculate it for $1 \le k \le 22$ to make the indexing more intuitive, even though we will only be using the values $k \ge 5$, since no active player drafted in 2020 or earlier can have played for less than 4 seasons..
 
 ```{r}
 get_length <- function(len){ 
-  all_data |> 
+  all_data_adj |> 
     mutate(rem_career_len = to - year - len) |> 
     filter(year %in% 1996:2004 & rem_career_len >= 0) |> 
     summarize(mean = mean(rem_career_len)) |> 
@@ -89,20 +171,20 @@ The interpretation for this is that a current NHL player who was drafted 1 year 
 Now that we have estimated the remaining number of years for each active NHL player, we can estimate the total PS for their career. Recall that in the introduction of this chapter we said $ps_{ij}^{adj} = ps_{ij} + \frac{ps_{ij}}{years_{ij}} \cdot\hat{yr_{ij}}$.
 
 ```{r}
-all_data_adj <- all_data |> 
+active_players <- all_data_adj |> 
   filter(to == 2025) |> 
   mutate(career_len = to - year) |> 
   rowwise() |> 
   mutate(adj_ps = ps + round(ps / career_len * get_length(career_len), 2)) |> 
   ungroup() |> 
-  select(year:ps, adj_ps)
+  select(-career_len)
 
-inactive_players <- all_data |> 
+inactive_players <- all_data_adj |> 
   filter(to != 2025) |> 
   mutate(adj_ps = ps)
 
 
-all_data_adj <- rbind(all_data_adj, inactive_players)
+all_data_adj <- rbind(active_players, inactive_players)
 reactable(all_data_adj)
 ```
 
@@ -145,7 +227,7 @@ all_data_adj |>
   coord_cartesian(xlim = c(8.5, 100))
 ```
 
-There seem to be a similar number of observations in each bin, so it seems like our estimations are reasonable. Note again that we are clear restrictions and potential sources of error with this approach, and in the model step we will fit a model using both the raw PS values and the adjusted PS values. Before moving on to the model step, we create a plot of the average PS and adjusted PS values, which is the same as the last plot in the visualize step except we will be including the adjusted PS values.
+There seem to be a similar number of observations in each bin, so it seems like our estimations are reasonable. Note again that we are clear restrictions and potential sources of error with this approach, and in the model step we will fit a model using both the raw PS values and the adjusted PS values. Before moving on to the model step, we create a plot of the mean PS and adjusted PS values, which is the same as the last plot from the Visualize chapter, except we will be including the adjusted PS values.
 
 ```{r, warning=FALSE}
 all_data_adj |> 
@@ -156,4 +238,30 @@ all_data_adj |>
   geom_point(alpha = 0.4)
 ```
 
-The adjusted PS values are generally larger than the unadjusted PS values, which is what we would expect because $ps^{adj}_{ij} \ge ps_{ij}$ as we add PS to players who are still active NHL players and do not change the PS values of retired players. We now proceed to the Model step where we will fit several models to this data.
+The adjusted PS values are generally larger than the unadjusted PS values, which is what we would expect because $ps^{adj}_{ij} \ge ps_{ij}$ as we add PS to players who are still active NHL players and do not change the PS values of retired players. This is the final of the four metrics we will use in the Model chapter.
+
+## Combining Everything
+
+Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot fo each metric.
+
+```{r}
+all_data_comb <- all_data_adj |> 
+  group_by(overall) |> 
+  summarize(mean_ps = mean(ps), 
+            mean_gp = mean(gp), 
+            suc_rate = mean(reg), 
+            mean_adj_ps = mean(adj_ps))
+
+mp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
+  geom_point()
+mg_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
+  geom_point()
+sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
+  geom_point()
+map_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
+  geom_point()
+
+(mp_plot + mg_plot) / (sr_plot + map_plot)
+```
+
+These plots all have the same general shape, though they are all on different scales. In the next chapter we will fit a model to this data.

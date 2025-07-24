@@ -8,12 +8,12 @@ author: "Trevor S"
 We install and load the necessary packages.
 
 ```{r, warnings = FALSE, message = FALSE}
-# install.packages("rvest")
-# install.packages("stringr")
-# install.packages("tidyverse")
-# install.packages("janitor")
-# install.packages("gt")
-# install.packages("reactable")
+# renv::install("rvest")
+# renv::install("stringr")
+# renv::install("tidyverse")
+# renv::install("janitor")
+# renv::install("gt")
+# renv::install("reactable")
 
 library(rvest)
 library(stringr)

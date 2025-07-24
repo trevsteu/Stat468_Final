@@ -1,0 +1,104 @@
+---
+title: "holding_file"
+---
+
+## Setup
+
+```{r}
+source("functions.R")
+```
+
+## Visualize
+
+We choose PS over GP for a few reasons.
+
+-   PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team.
+
+-   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain time frame, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distinguishing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed earlier.
+
+-   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
+
+## Transform
+
+This will result in older drafts receiving more weight when we take the average of PS, which is unideal because we'd like all drafts to be equally weighted. To give more weight to more recent drafts, we will change our metric *slightly* for active players selected in drafts after 2015, and will instead use $p^{mod}_{ij} = \frac{ps_{ij}}{\sum_i ps_{ij}}C$, where $ps_{ij}$ is the PS of the player picked at selection $i$ in year $j$ and $C$ is the mean total point share of all drafts between 1996 and 2015. In other words, if draft $j$ were to be an average draft, and all players continued generating PS at their current rates, then player $i$ from draft $j$ would finish their career with a PS of $p^{mod}_{ij}$ To reiterate, this is still not a perfect fix because "late bloomers" drafted after 2015 may not have made any contributions yet, even if they will later on. This adjustment benefits active players drafted in 2016-2020 who have already made NHL contributions, but will make no difference for those who have not yet made the NHL. There is no reason to make this adjustment for players drafted between 2016 and 2020 who have retired.
+
+```{r}
+C <- sum(filter(all_data, year <= 2015)$ps) /
+  length(unique(filter(all_data, year <= 2015)$year))
+
+all_data_new <- all_data |> 
+  filter(year > 2015 & to == 2025) |> # active players drafted after 2015
+  group_by(year) |> 
+  mutate(ps = ps/sum(ps)*C)
+
+all_data_old <- all_data |> 
+  filter(year <= 2015 | to != 2025) # complement of the previous set
+
+all_data_mod <- rbind(all_data_old, all_data_new)
+
+all_data_mod
+```
+
+To reiterate, this is not a perfect solution because players drafted in 2015 and earlier . However estimating the remaining value of a player's career could be a project all on its own, so we will stop here with this proxy.
+
+Note that usually it is not advisable to take the mean of a bunch of ratios because it gives each ratio an equal weight. However, here it is appropriate because we want to give each draft an equal weight. We will recreate the same plot, but note that the only variation will come from the number of selections in a draft (since what we are plotting is literally $\frac{1}{\text{number of picks in draft}}$). Additionally, the scale on the $y$-axis shows that these values are basically all the same.
+
+```{r}
+all_data_prop |> 
+  group_by(year) |> 
+  summarize(avg_ps = mean(prop_ps)) |>
+  ggplot(aes(x = year, y = avg_ps)) +
+  geom_point()
+```
+
+In case this approach is not appropriate, we will still fit a model using the raw `ps` values in the Model step, it turns out the models will be quite similar.
+
+```{r}
+all_data_prop <- all_data_prop |> 
+  group_by(overall) |>  
+  summarize(avg_prop_ps = mean(prop_ps),
+            .groups = "drop")
+
+all_data_prop
+```
+
+Finally, we utilize a weighted $k$-nearest neighbour algorithm which will help smoothen out the plot from the end of the visualization chapter. As a reminder, here is that plot:
+
+```{r, warning = FALSE}
+all_data_raw <- all_data |> 
+  group_by(overall) |> 
+  summarize(mean_ps = mean(ps)) 
+
+head(all_data_raw, 10)
+
+ggplot(all_data_raw, aes(x = overall, y = mean_ps)) + 
+  geom_point() +
+  geom_point(aes(x = 205, y = mean(filter(all_data, overall==205)$ps)), col = "salmon") +
+  labs(title = "Mean PS by Pick Number",
+       x = "Pick Number", y = "Mean PS") + 
+  annotate(geom = "segment", x = 175, y = 37.5, xend = 203, yend = 14, colour = "salmon",
+    arrow = arrow(type = "open", length = unit(0.32, "cm"))) +
+  annotate(geom = "label", x = 140, y = 39,
+    label = "205th overall selection,\n(mean PS of 13.124)",
+    hjust = "left", colour = "salmon")
+```
+
+First, we will recreate this plot using the `avg_prop_ps` values we just defined:
+
+```{r, warning = FALSE}
+all_data_prop |> 
+  ggplot(aes(x = overall, y = avg_prop_ps)) + 
+  geom_point() +
+  geom_point(aes(x = 205, y = mean(filter(all_data_prop, overall==205)$avg_prop_ps)), 
+             col = "salmon") +
+  labs(title = "Mean Proportion of PS by Pick Number",
+       x = "Pick Number", y = "Mean Proportion of PS") + 
+  annotate(geom = "segment", x = 175, y = 0.015, xend = 203, yend = 0.0065, colour = "salmon",
+    arrow = arrow(type = "open", length = unit(0.32, "cm"))) +
+  annotate(geom = "label", x = 140, y = 0.018,
+    label = "205th overall selection, (mean\n0.609% of the draft's ps)",
+    hjust = "left", colour = "salmon")
+
+```
+
+The shapes of the two graphs are quite similar, but the outliers in the second one seem slighly less egregious.

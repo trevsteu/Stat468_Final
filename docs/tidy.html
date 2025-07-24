@@ -293,10 +293,10 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("rvest")</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("gt")</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("reactable")</span></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("rvest")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("tidyverse")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("gt")</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("reactable")</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -317,23 +317,23 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">import_draft</span>(start_year)[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="gnitmnrrvm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gnitmnrrvm table {
+<div id="inkxkpopwi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#inkxkpopwi table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gnitmnrrvm thead, #gnitmnrrvm tbody, #gnitmnrrvm tfoot, #gnitmnrrvm tr, #gnitmnrrvm td, #gnitmnrrvm th {
+#inkxkpopwi thead, #inkxkpopwi tbody, #inkxkpopwi tfoot, #inkxkpopwi tr, #inkxkpopwi td, #inkxkpopwi th {
   border-style: none;
 }
 
-#gnitmnrrvm p {
+#inkxkpopwi p {
   margin: 0;
   padding: 0;
 }
 
-#gnitmnrrvm .gt_table {
+#inkxkpopwi .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -359,12 +359,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_caption {
+#inkxkpopwi .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gnitmnrrvm .gt_title {
+#inkxkpopwi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -376,7 +376,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#gnitmnrrvm .gt_subtitle {
+#inkxkpopwi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -388,7 +388,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#gnitmnrrvm .gt_heading {
+#inkxkpopwi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -400,13 +400,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_bottom_border {
+#inkxkpopwi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_col_headings {
+#inkxkpopwi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -421,7 +421,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_col_heading {
+#inkxkpopwi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -441,7 +441,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#gnitmnrrvm .gt_column_spanner_outer {
+#inkxkpopwi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -453,15 +453,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#gnitmnrrvm .gt_column_spanner_outer:first-child {
+#inkxkpopwi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gnitmnrrvm .gt_column_spanner_outer:last-child {
+#inkxkpopwi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gnitmnrrvm .gt_column_spanner {
+#inkxkpopwi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -473,11 +473,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#gnitmnrrvm .gt_spanner_row {
+#inkxkpopwi .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gnitmnrrvm .gt_group_heading {
+#inkxkpopwi .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -503,7 +503,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#gnitmnrrvm .gt_empty_group_heading {
+#inkxkpopwi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -518,15 +518,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#gnitmnrrvm .gt_from_md > :first-child {
+#inkxkpopwi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gnitmnrrvm .gt_from_md > :last-child {
+#inkxkpopwi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gnitmnrrvm .gt_row {
+#inkxkpopwi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -545,7 +545,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#gnitmnrrvm .gt_stub {
+#inkxkpopwi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -558,7 +558,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#gnitmnrrvm .gt_stub_row_group {
+#inkxkpopwi .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -572,15 +572,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#gnitmnrrvm .gt_row_group_first td {
+#inkxkpopwi .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gnitmnrrvm .gt_row_group_first th {
+#inkxkpopwi .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gnitmnrrvm .gt_summary_row {
+#inkxkpopwi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -590,16 +590,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#gnitmnrrvm .gt_first_summary_row {
+#inkxkpopwi .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_first_summary_row.thick {
+#inkxkpopwi .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gnitmnrrvm .gt_last_summary_row {
+#inkxkpopwi .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -609,7 +609,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_grand_summary_row {
+#inkxkpopwi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -619,7 +619,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#gnitmnrrvm .gt_first_grand_summary_row {
+#inkxkpopwi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -629,7 +629,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_last_grand_summary_row_top {
+#inkxkpopwi .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -639,11 +639,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_striped {
+#inkxkpopwi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gnitmnrrvm .gt_table_body {
+#inkxkpopwi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -652,7 +652,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_footnotes {
+#inkxkpopwi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -666,7 +666,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_footnote {
+#inkxkpopwi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -675,7 +675,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#gnitmnrrvm .gt_sourcenotes {
+#inkxkpopwi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -689,7 +689,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#gnitmnrrvm .gt_sourcenote {
+#inkxkpopwi .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -697,72 +697,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#gnitmnrrvm .gt_left {
+#inkxkpopwi .gt_left {
   text-align: left;
 }
 
-#gnitmnrrvm .gt_center {
+#inkxkpopwi .gt_center {
   text-align: center;
 }
 
-#gnitmnrrvm .gt_right {
+#inkxkpopwi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gnitmnrrvm .gt_font_normal {
+#inkxkpopwi .gt_font_normal {
   font-weight: normal;
 }
 
-#gnitmnrrvm .gt_font_bold {
+#inkxkpopwi .gt_font_bold {
   font-weight: bold;
 }
 
-#gnitmnrrvm .gt_font_italic {
+#inkxkpopwi .gt_font_italic {
   font-style: italic;
 }
 
-#gnitmnrrvm .gt_super {
+#inkxkpopwi .gt_super {
   font-size: 65%;
 }
 
-#gnitmnrrvm .gt_footnote_marks {
+#inkxkpopwi .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gnitmnrrvm .gt_asterisk {
+#inkxkpopwi .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gnitmnrrvm .gt_indent_1 {
+#inkxkpopwi .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gnitmnrrvm .gt_indent_2 {
+#inkxkpopwi .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gnitmnrrvm .gt_indent_3 {
+#inkxkpopwi .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gnitmnrrvm .gt_indent_4 {
+#inkxkpopwi .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gnitmnrrvm .gt_indent_5 {
+#inkxkpopwi .gt_indent_5 {
   text-indent: 25px;
 }
 
-#gnitmnrrvm .katex-display {
+#inkxkpopwi .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#gnitmnrrvm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#inkxkpopwi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1007,6 +1007,7 @@ window.Quarto = {
 <li><p>Remove any players selected after 224<span class="math inline">\(^{\text{th}}\)</span> overall.</p></li>
 <li><p>We don’t care about <code>+/-</code>, so we can ignore the column being renamed since we won’t be using it anyway.</p></li>
 <li><p>It also turns out that for skaters <code>gp2</code> is empty and for goalies <code>gp</code> and <code>gp2</code> will have the same value, so this issue can be resolved by simply selecting <code>gp</code>.</p></li>
+<li><p>The 69<span class="math inline">\(^{\text{th}}\)</span> pick of 2011 and 123<span class="math inline">\(^{\text{rd}}\)</span> pick of 2002 were forfeited and are listed as blank rows, so these should be removed.</p></li>
 </ul>
 <p>Note that we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.</p>
 <div class="cell">
@@ -1014,19 +1015,21 @@ window.Quarto = {
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tidy_draft <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> <span class="fu">import_draft</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span> <span class="fu">as.numeric</span>(overall) <span class="sc">&lt;</span> <span class="dv">225</span>) <span class="sc">|&gt;</span> <span class="co"># remove extra rows and players after pick 224</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type_convert</span>() <span class="sc">|&gt;</span> <span class="co"># fix types </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="st">"year"</span> <span class="ot">=</span> year, <span class="st">"ps"</span> <span class="ot">=</span> <span class="fu">pmax</span>(<span class="fu">coalesce</span>(ps, <span class="dv">0</span>), <span class="dv">0</span>), </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">"gp"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(gp, <span class="dv">0</span>), <span class="st">"to"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(to, year)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, overall, to, pos, gp, ps) <span class="co"># columns we care about</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">tidy_draft</span>(<span class="dv">1996</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(overall <span class="sc">!=</span> <span class="st">"Overall"</span> <span class="sc">&amp;</span> overall <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span> <span class="co"># remove extra rows</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="fu">as.numeric</span>(overall) <span class="sc">&lt;</span> <span class="dv">225</span> <span class="sc">&amp;</span> <span class="co"># remove players drafted after pick 224</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="sc">!</span><span class="fu">is.na</span>(pos))  <span class="sc">|&gt;</span> <span class="co"># remove forfeited picks</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type_convert</span>() <span class="sc">|&gt;</span> <span class="co"># fix types </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="st">"year"</span> <span class="ot">=</span> year, <span class="st">"ps"</span> <span class="ot">=</span> <span class="fu">pmax</span>(<span class="fu">coalesce</span>(ps, <span class="dv">0</span>), <span class="dv">0</span>), </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">"gp"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(gp, <span class="dv">0</span>), <span class="st">"to"</span> <span class="ot">=</span> <span class="fu">coalesce</span>(to, year)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, overall, to, pos, gp, ps) <span class="co"># columns we care about</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">tidy_draft</span>(<span class="dv">1996</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-699645fdb83d59d0d92d" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-699645fdb83d59d0d92d">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"year":[1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996],"overall":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224],"to":[2015,2008,2011,2000,2007,2009,2007,2004,2011,2004,2004,2004,2014,2013,2016,1999,2000,2001,2001,2008,2012,1996,1996,2015,2001,2003,2014,2002,2009,2012,1999,2004,1996,1996,2019,2001,2002,1996,2004,2013,1996,2003,2007,2013,1996,1996,2006,2000,2012,1996,2001,1996,1996,1996,1996,2022,1996,1996,2013,1999,1996,1996,2008,1996,2006,1996,2004,1996,1996,2011,2014,2010,1996,1996,2004,1996,1996,1996,2011,1996,2002,2004,1999,1996,1996,1996,1996,2009,2013,1996,2004,1996,1996,1996,1996,2013,1996,1996,1996,2012,1996,2012,1996,1996,2017,1996,1996,1996,2003,1996,1996,2002,1996,1996,2002,1996,1996,1996,2003,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,2009,1996,1996,2004,2001,1996,2007,2000,1996,1996,1996,1996,1996,2011,1996,1996,1996,1996,1996,1996,1996,2013,1996,1996,2001,1996,1996,1996,1996,1996,1996,1996,1996,1996,2009,1996,2004,1996,2001,1996,1996,2008,1996,2012,2007,1996,2012,1996,1996,1996,1996,1996,1996,2007,1996,1996,1996,2010,1996,2002,2001,2008,2011,2004,1996,1996,2016,1996,1996,1996,1996,2013,1996,1996,1996,1996,1996,1996,1996,2000,1996,1996,1996,2004,1996,1996,1996,1996,1996,1996,2015,1996],"pos":["D","D","RW","C","D","C","LW/C","D","D","D","D","C","D","C","RW","D","RW","C","D","LW","LW","D","G","C","D","D","D","D","LW","LW","D","D","LW","LW","C","D","RW","LW","LW","C","D","D","C","G","RW","C","RW","LW","D","G","C","G","LW","C","G","D","RW","D","D","D","RW","D","RW","RW","LW/C","D","LW","LW","RW","LW","RW","LW","LW","G","D","LW","RW","C","RW","RW","D","RW","G","C","RW","RW","RW","LW","D","RW","D","C","RW","D","C","C","RW","D","C","C","D","RW","RW","C","D","D","G","LW","D","C","RW","LW","D","RW","D","D","D","C","D","D","C","C","D","G","D","LW","D","LW","C","D","LW","D","RW","LW","G","RW","G","C","G","D","C","RW","G","RW","RW","RW","G","D","G","C","LW","D","RW","D","D","LW","C","D","G","G","C","C","D","D","G","G","RW","C","C","RW","D","D","D","RW","D","C","RW","C","D","RW","RW","D","D","D","D","RW","LW","C","C","G","C","D","LW","D","RW","C","LW","D","D","RW","C","RW","C","D","RW","D","F","RW","G","D","D","D","C","D","RW","RW","LW","D","LW","LW","G","G","RW","LW"],"gp":[1179,496,822,3,231,627,545,44,917,209,82,60,1107,798,1293,5,113,57,5,521,938,0,0,973,32,49,969,12,337,341,18,6,0,0,1516,19,73,0,55,524,0,2,552,341,0,0,142,53,797,0,3,0,0,0,0,1680,0,0,824,2,0,0,308,0,493,0,108,0,0,469,789,31,0,0,21,0,0,0,722,0,29,73,3,0,0,0,0,233,847,0,47,0,0,0,0,820,0,0,0,194,0,675,0,0,963,0,0,0,37,0,0,7,0,0,30,0,0,0,112,0,0,0,0,0,0,0,0,0,0,0,0,0,172,0,0,613,3,0,186,2,0,0,0,0,0,381,0,0,0,0,0,0,0,689,0,0,16,0,0,0,0,0,0,0,0,0,503,0,77,0,1,0,0,616,0,798,256,0,970,0,0,0,0,0,0,74,0,0,0,46,0,42,69,282,462,8,0,0,907,0,0,0,0,984,0,0,0,0,0,0,0,1,0,0,0,89,0,0,0,0,0,0,951,0],"ps":[64.6,25.8,56.6,0,8.8,12.5,9.2,0,46.9,2.7,0,0.6,74.6,17.7,52,0,3.5,0,0.3,12.8,54,0,0,78.5,0.6,0.2,36,0.2,0,5.1,0,0,0,0,66,0.6,2.6,0,0,6.6,0,0,22,49,0,0,7.3,0.7,42.1,0,0,0,0,0,0,155.1,0,0,58.9,0.1,0,0,0.3,0,19.5,0,0,0,0,11.3,16.8,0,0,0,0.5,0,0,0,42.6,0,0.4,0.5,0,0,0,0,0,0.5,51.5,0,0.4,0,0,0,0,28.9,0,0,0,0.8,0,8.1,0,0,68.2,0,0,0,1.8,0,0,0,0,0,0.6,0,0,0,3.9,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0,19.9,0,0,24.9,0,0,0,0,0,0,5.9,0,0,0,0,0,0,0,31.7,0,0,0.4,0,0,0,0,0,0,0,0,0,3.1,0,2.6,0,0,0,0,14.5,0,4,0,0,64.1,0,0,0,0,0,0,0.8,0,0,0,6.1,0,0.4,2.6,8.2,15.8,0.1,0,0,58,0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,2.7,0,0,0,0,0,0,1.9,0]},"columns":[{"id":"year","name":"year","type":"numeric"},{"id":"overall","name":"overall","type":"numeric"},{"id":"to","name":"to","type":"numeric"},{"id":"pos","name":"pos","type":"character"},{"id":"gp","name":"gp","type":"numeric"},{"id":"ps","name":"ps","type":"numeric"}],"dataKey":"05be906ae69947bc7dd2b8e71b048736"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-90f69de7e7af6355406f" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-90f69de7e7af6355406f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"year":[1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996],"overall":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224],"to":[2015,2008,2011,2000,2007,2009,2007,2004,2011,2004,2004,2004,2014,2013,2016,1999,2000,2001,2001,2008,2012,1996,1996,2015,2001,2003,2014,2002,2009,2012,1999,2004,1996,1996,2019,2001,2002,1996,2004,2013,1996,2003,2007,2013,1996,1996,2006,2000,2012,1996,2001,1996,1996,1996,1996,2022,1996,1996,2013,1999,1996,1996,2008,1996,2006,1996,2004,1996,1996,2011,2014,2010,1996,1996,2004,1996,1996,1996,2011,1996,2002,2004,1999,1996,1996,1996,1996,2009,2013,1996,2004,1996,1996,1996,1996,2013,1996,1996,1996,2012,1996,2012,1996,1996,2017,1996,1996,1996,2003,1996,1996,2002,1996,1996,2002,1996,1996,1996,2003,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,2009,1996,1996,2004,2001,1996,2007,2000,1996,1996,1996,1996,1996,2011,1996,1996,1996,1996,1996,1996,1996,2013,1996,1996,2001,1996,1996,1996,1996,1996,1996,1996,1996,1996,2009,1996,2004,1996,2001,1996,1996,2008,1996,2012,2007,1996,2012,1996,1996,1996,1996,1996,1996,2007,1996,1996,1996,2010,1996,2002,2001,2008,2011,2004,1996,1996,2016,1996,1996,1996,1996,2013,1996,1996,1996,1996,1996,1996,1996,2000,1996,1996,1996,2004,1996,1996,1996,1996,1996,1996,2015,1996],"pos":["D","D","RW","C","D","C","LW/C","D","D","D","D","C","D","C","RW","D","RW","C","D","LW","LW","D","G","C","D","D","D","D","LW","LW","D","D","LW","LW","C","D","RW","LW","LW","C","D","D","C","G","RW","C","RW","LW","D","G","C","G","LW","C","G","D","RW","D","D","D","RW","D","RW","RW","LW/C","D","LW","LW","RW","LW","RW","LW","LW","G","D","LW","RW","C","RW","RW","D","RW","G","C","RW","RW","RW","LW","D","RW","D","C","RW","D","C","C","RW","D","C","C","D","RW","RW","C","D","D","G","LW","D","C","RW","LW","D","RW","D","D","D","C","D","D","C","C","D","G","D","LW","D","LW","C","D","LW","D","RW","LW","G","RW","G","C","G","D","C","RW","G","RW","RW","RW","G","D","G","C","LW","D","RW","D","D","LW","C","D","G","G","C","C","D","D","G","G","RW","C","C","RW","D","D","D","RW","D","C","RW","C","D","RW","RW","D","D","D","D","RW","LW","C","C","G","C","D","LW","D","RW","C","LW","D","D","RW","C","RW","C","D","RW","D","F","RW","G","D","D","D","C","D","RW","RW","LW","D","LW","LW","G","G","RW","LW"],"gp":[1179,496,822,3,231,627,545,44,917,209,82,60,1107,798,1293,5,113,57,5,521,938,0,0,973,32,49,969,12,337,341,18,6,0,0,1516,19,73,0,55,524,0,2,552,341,0,0,142,53,797,0,3,0,0,0,0,1680,0,0,824,2,0,0,308,0,493,0,108,0,0,469,789,31,0,0,21,0,0,0,722,0,29,73,3,0,0,0,0,233,847,0,47,0,0,0,0,820,0,0,0,194,0,675,0,0,963,0,0,0,37,0,0,7,0,0,30,0,0,0,112,0,0,0,0,0,0,0,0,0,0,0,0,0,172,0,0,613,3,0,186,2,0,0,0,0,0,381,0,0,0,0,0,0,0,689,0,0,16,0,0,0,0,0,0,0,0,0,503,0,77,0,1,0,0,616,0,798,256,0,970,0,0,0,0,0,0,74,0,0,0,46,0,42,69,282,462,8,0,0,907,0,0,0,0,984,0,0,0,0,0,0,0,1,0,0,0,89,0,0,0,0,0,0,951,0],"ps":[64.6,25.8,56.6,0,8.8,12.5,9.2,0,46.9,2.7,0,0.6,74.6,17.7,52,0,3.5,0,0.3,12.8,54,0,0,78.5,0.6,0.2,36,0.2,0,5.1,0,0,0,0,66,0.6,2.6,0,0,6.6,0,0,22,49,0,0,7.3,0.7,42.1,0,0,0,0,0,0,155.1,0,0,58.9,0.1,0,0,0.3,0,19.5,0,0,0,0,11.3,16.8,0,0,0,0.5,0,0,0,42.6,0,0.4,0.5,0,0,0,0,0,0.5,51.5,0,0.4,0,0,0,0,28.9,0,0,0,0.8,0,8.1,0,0,68.2,0,0,0,1.8,0,0,0,0,0,0.6,0,0,0,3.9,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0,19.9,0,0,24.9,0,0,0,0,0,0,5.9,0,0,0,0,0,0,0,31.7,0,0,0.4,0,0,0,0,0,0,0,0,0,3.1,0,2.6,0,0,0,0,14.5,0,4,0,0,64.1,0,0,0,0,0,0,0.8,0,0,0,6.1,0,0.4,2.6,8.2,15.8,0.1,0,0,58,0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,2.7,0,0,0,0,0,0,1.9,0]},"columns":[{"id":"year","name":"year","type":"numeric"},{"id":"overall","name":"overall","type":"numeric"},{"id":"to","name":"to","type":"numeric"},{"id":"pos","name":"pos","type":"character"},{"id":"gp","name":"gp","type":"numeric"},{"id":"ps","name":"ps","type":"numeric"}],"dataKey":"05be906ae69947bc7dd2b8e71b048736"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>This is the form we will use for analysis later.</p>
@@ -1051,7 +1054,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(all_data) <span class="co"># confirm there are 5250-5600 rows and 6 columns</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5427    6</code></pre>
+<pre><code>[1] 5425    6</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1065,23 +1068,23 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(all_data, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="jwfyzqzndc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jwfyzqzndc table {
+<div id="qwhhpdvaph" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qwhhpdvaph table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jwfyzqzndc thead, #jwfyzqzndc tbody, #jwfyzqzndc tfoot, #jwfyzqzndc tr, #jwfyzqzndc td, #jwfyzqzndc th {
+#qwhhpdvaph thead, #qwhhpdvaph tbody, #qwhhpdvaph tfoot, #qwhhpdvaph tr, #qwhhpdvaph td, #qwhhpdvaph th {
   border-style: none;
 }
 
-#jwfyzqzndc p {
+#qwhhpdvaph p {
   margin: 0;
   padding: 0;
 }
 
-#jwfyzqzndc .gt_table {
+#qwhhpdvaph .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1107,12 +1110,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_caption {
+#qwhhpdvaph .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jwfyzqzndc .gt_title {
+#qwhhpdvaph .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1124,7 +1127,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#jwfyzqzndc .gt_subtitle {
+#qwhhpdvaph .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1136,7 +1139,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#jwfyzqzndc .gt_heading {
+#qwhhpdvaph .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1148,13 +1151,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_bottom_border {
+#qwhhpdvaph .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_col_headings {
+#qwhhpdvaph .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1169,7 +1172,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_col_heading {
+#qwhhpdvaph .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1189,7 +1192,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#jwfyzqzndc .gt_column_spanner_outer {
+#qwhhpdvaph .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1201,15 +1204,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#jwfyzqzndc .gt_column_spanner_outer:first-child {
+#qwhhpdvaph .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jwfyzqzndc .gt_column_spanner_outer:last-child {
+#qwhhpdvaph .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jwfyzqzndc .gt_column_spanner {
+#qwhhpdvaph .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1221,11 +1224,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#jwfyzqzndc .gt_spanner_row {
+#qwhhpdvaph .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jwfyzqzndc .gt_group_heading {
+#qwhhpdvaph .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1251,7 +1254,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#jwfyzqzndc .gt_empty_group_heading {
+#qwhhpdvaph .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1266,15 +1269,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#jwfyzqzndc .gt_from_md > :first-child {
+#qwhhpdvaph .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jwfyzqzndc .gt_from_md > :last-child {
+#qwhhpdvaph .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jwfyzqzndc .gt_row {
+#qwhhpdvaph .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1293,7 +1296,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#jwfyzqzndc .gt_stub {
+#qwhhpdvaph .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1306,7 +1309,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#jwfyzqzndc .gt_stub_row_group {
+#qwhhpdvaph .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1320,15 +1323,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#jwfyzqzndc .gt_row_group_first td {
+#qwhhpdvaph .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jwfyzqzndc .gt_row_group_first th {
+#qwhhpdvaph .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jwfyzqzndc .gt_summary_row {
+#qwhhpdvaph .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1338,16 +1341,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#jwfyzqzndc .gt_first_summary_row {
+#qwhhpdvaph .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_first_summary_row.thick {
+#qwhhpdvaph .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jwfyzqzndc .gt_last_summary_row {
+#qwhhpdvaph .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1357,7 +1360,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_grand_summary_row {
+#qwhhpdvaph .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1367,7 +1370,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#jwfyzqzndc .gt_first_grand_summary_row {
+#qwhhpdvaph .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1377,7 +1380,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_last_grand_summary_row_top {
+#qwhhpdvaph .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1387,11 +1390,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_striped {
+#qwhhpdvaph .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jwfyzqzndc .gt_table_body {
+#qwhhpdvaph .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1400,7 +1403,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_footnotes {
+#qwhhpdvaph .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1414,7 +1417,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_footnote {
+#qwhhpdvaph .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1423,7 +1426,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#jwfyzqzndc .gt_sourcenotes {
+#qwhhpdvaph .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1437,7 +1440,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#jwfyzqzndc .gt_sourcenote {
+#qwhhpdvaph .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1445,72 +1448,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#jwfyzqzndc .gt_left {
+#qwhhpdvaph .gt_left {
   text-align: left;
 }
 
-#jwfyzqzndc .gt_center {
+#qwhhpdvaph .gt_center {
   text-align: center;
 }
 
-#jwfyzqzndc .gt_right {
+#qwhhpdvaph .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jwfyzqzndc .gt_font_normal {
+#qwhhpdvaph .gt_font_normal {
   font-weight: normal;
 }
 
-#jwfyzqzndc .gt_font_bold {
+#qwhhpdvaph .gt_font_bold {
   font-weight: bold;
 }
 
-#jwfyzqzndc .gt_font_italic {
+#qwhhpdvaph .gt_font_italic {
   font-style: italic;
 }
 
-#jwfyzqzndc .gt_super {
+#qwhhpdvaph .gt_super {
   font-size: 65%;
 }
 
-#jwfyzqzndc .gt_footnote_marks {
+#qwhhpdvaph .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jwfyzqzndc .gt_asterisk {
+#qwhhpdvaph .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jwfyzqzndc .gt_indent_1 {
+#qwhhpdvaph .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jwfyzqzndc .gt_indent_2 {
+#qwhhpdvaph .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jwfyzqzndc .gt_indent_3 {
+#qwhhpdvaph .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jwfyzqzndc .gt_indent_4 {
+#qwhhpdvaph .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jwfyzqzndc .gt_indent_5 {
+#qwhhpdvaph .gt_indent_5 {
   text-indent: 25px;
 }
 
-#jwfyzqzndc .katex-display {
+#qwhhpdvaph .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#jwfyzqzndc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qwhhpdvaph div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1617,23 +1620,23 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(all_data[<span class="dv">23</span><span class="sc">:</span><span class="dv">30</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="xrdebfcrfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xrdebfcrfg table {
+<div id="pdssvaymkk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pdssvaymkk table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xrdebfcrfg thead, #xrdebfcrfg tbody, #xrdebfcrfg tfoot, #xrdebfcrfg tr, #xrdebfcrfg td, #xrdebfcrfg th {
+#pdssvaymkk thead, #pdssvaymkk tbody, #pdssvaymkk tfoot, #pdssvaymkk tr, #pdssvaymkk td, #pdssvaymkk th {
   border-style: none;
 }
 
-#xrdebfcrfg p {
+#pdssvaymkk p {
   margin: 0;
   padding: 0;
 }
 
-#xrdebfcrfg .gt_table {
+#pdssvaymkk .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1659,12 +1662,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_caption {
+#pdssvaymkk .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xrdebfcrfg .gt_title {
+#pdssvaymkk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1676,7 +1679,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#xrdebfcrfg .gt_subtitle {
+#pdssvaymkk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1688,7 +1691,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#xrdebfcrfg .gt_heading {
+#pdssvaymkk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1700,13 +1703,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_bottom_border {
+#pdssvaymkk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_col_headings {
+#pdssvaymkk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1721,7 +1724,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_col_heading {
+#pdssvaymkk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1741,7 +1744,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#xrdebfcrfg .gt_column_spanner_outer {
+#pdssvaymkk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1753,15 +1756,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#xrdebfcrfg .gt_column_spanner_outer:first-child {
+#pdssvaymkk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xrdebfcrfg .gt_column_spanner_outer:last-child {
+#pdssvaymkk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xrdebfcrfg .gt_column_spanner {
+#pdssvaymkk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1773,11 +1776,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#xrdebfcrfg .gt_spanner_row {
+#pdssvaymkk .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xrdebfcrfg .gt_group_heading {
+#pdssvaymkk .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1803,7 +1806,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#xrdebfcrfg .gt_empty_group_heading {
+#pdssvaymkk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1818,15 +1821,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#xrdebfcrfg .gt_from_md > :first-child {
+#pdssvaymkk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xrdebfcrfg .gt_from_md > :last-child {
+#pdssvaymkk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xrdebfcrfg .gt_row {
+#pdssvaymkk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1845,7 +1848,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#xrdebfcrfg .gt_stub {
+#pdssvaymkk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1858,7 +1861,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xrdebfcrfg .gt_stub_row_group {
+#pdssvaymkk .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1872,15 +1875,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#xrdebfcrfg .gt_row_group_first td {
+#pdssvaymkk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xrdebfcrfg .gt_row_group_first th {
+#pdssvaymkk .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xrdebfcrfg .gt_summary_row {
+#pdssvaymkk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1890,16 +1893,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xrdebfcrfg .gt_first_summary_row {
+#pdssvaymkk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_first_summary_row.thick {
+#pdssvaymkk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xrdebfcrfg .gt_last_summary_row {
+#pdssvaymkk .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1909,7 +1912,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_grand_summary_row {
+#pdssvaymkk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1919,7 +1922,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xrdebfcrfg .gt_first_grand_summary_row {
+#pdssvaymkk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1929,7 +1932,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_last_grand_summary_row_top {
+#pdssvaymkk .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1939,11 +1942,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_striped {
+#pdssvaymkk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xrdebfcrfg .gt_table_body {
+#pdssvaymkk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1952,7 +1955,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_footnotes {
+#pdssvaymkk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1966,7 +1969,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_footnote {
+#pdssvaymkk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1975,7 +1978,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xrdebfcrfg .gt_sourcenotes {
+#pdssvaymkk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1989,7 +1992,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#xrdebfcrfg .gt_sourcenote {
+#pdssvaymkk .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1997,72 +2000,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#xrdebfcrfg .gt_left {
+#pdssvaymkk .gt_left {
   text-align: left;
 }
 
-#xrdebfcrfg .gt_center {
+#pdssvaymkk .gt_center {
   text-align: center;
 }
 
-#xrdebfcrfg .gt_right {
+#pdssvaymkk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xrdebfcrfg .gt_font_normal {
+#pdssvaymkk .gt_font_normal {
   font-weight: normal;
 }
 
-#xrdebfcrfg .gt_font_bold {
+#pdssvaymkk .gt_font_bold {
   font-weight: bold;
 }
 
-#xrdebfcrfg .gt_font_italic {
+#pdssvaymkk .gt_font_italic {
   font-style: italic;
 }
 
-#xrdebfcrfg .gt_super {
+#pdssvaymkk .gt_super {
   font-size: 65%;
 }
 
-#xrdebfcrfg .gt_footnote_marks {
+#pdssvaymkk .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xrdebfcrfg .gt_asterisk {
+#pdssvaymkk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xrdebfcrfg .gt_indent_1 {
+#pdssvaymkk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xrdebfcrfg .gt_indent_2 {
+#pdssvaymkk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xrdebfcrfg .gt_indent_3 {
+#pdssvaymkk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xrdebfcrfg .gt_indent_4 {
+#pdssvaymkk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xrdebfcrfg .gt_indent_5 {
+#pdssvaymkk .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xrdebfcrfg .katex-display {
+#pdssvaymkk .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xrdebfcrfg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#pdssvaymkk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

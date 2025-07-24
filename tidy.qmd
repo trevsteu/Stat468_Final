@@ -8,10 +8,10 @@ author: "Trevor S"
 We install and load the necessary packages, along with functions from prior chapters.
 
 ```{r, message = FALSE, warning = FALSE}
-# install.packages("rvest")
-# install.packages("tidyverse")
-# install.packages("gt")
-# install.packages("reactable")
+# renv::install("rvest")
+# renv::install("tidyverse")
+# renv::install("gt")
+# renv::install("reactable")
 
 library(rvest)
 library(tidyverse)
@@ -66,12 +66,16 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   It also turns out that for skaters `gp2` is empty and for goalies `gp` and `gp2` will have the same value, so this issue can be resolved by simply selecting `gp`.
 
+-   The 69$^{\text{th}}$ pick of 2011 and 123$^{\text{rd}}$ pick of 2002 were forfeited and are listed as blank rows, so these should be removed.
+
 Note that we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
 
 ```{r, warning = FALSE, message = FALSE}
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
-    filter(overall != "Overall" & overall != "" & as.numeric(overall) < 225) |> # remove extra rows and players after pick 224
+    filter(overall != "Overall" & overall != "" & # remove extra rows
+             as.numeric(overall) < 225 & # remove players drafted after pick 224
+             !is.na(pos))  |> # remove forfeited picks
     type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 

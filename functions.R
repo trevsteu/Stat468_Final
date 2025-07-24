@@ -25,8 +25,9 @@ import_draft <- function(year){
 
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
-    filter(overall != "Overall" & overall != "" 
-           & as.numeric(overall) < 225)|> # remove extra rows and players after pick 224
+    filter(overall != "Overall" & overall != "" & # remove extra rows
+             as.numeric(overall) < 225 & # remove players drafted after pick 224
+             !is.na(pos))  |> # remove forfeited picks
     type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 
@@ -40,64 +41,68 @@ all_data <- read.csv("all_data.csv")
 
 # ---------------------------------------------------------------------------------------
 
-all_data_prop <- all_data |> 
-  group_by(year) |> 
-  mutate(prop_ps = ps/sum(ps)) |> 
-  group_by(overall) |>  
-  summarize(avg_prop_ps = mean(prop_ps),
-            .groups = "drop")
+get_threshold <- function(year){
+  ifelse(year <= 2017, 200, 82/3*(2025-year))
+}
+
+thresholds <- data.frame(year = seq(2015,2020)) |> 
+  mutate(t = get_threshold(year))
 
 # ---------------------------------------------------------------------------------------
 
-all_data_raw <- all_data |> 
+all_data_ret <- all_data |> 
+  filter(to != 2025) |> 
+  mutate(thresh = ifelse(pos == "G", 100, 200), 
+         reg = gp >= thresh) |> 
+  select(-thresh)
+
+all_data_act <- all_data |> 
+  filter(to == 2025) |> 
+  mutate(thresh = ifelse(pos == "G", get_threshold(year) / 2, 
+                         get_threshold(year)),
+         reg = gp >= thresh) |> 
+  select(-thresh)
+
+all_data_adj <- rbind(all_data_ret, all_data_act)
+
+# ---------------------------------------------------------------------------------------
+
+get_length <- function(len){ 
+  all_data_adj |> 
+    mutate(rem_career_len = to - year - len) |> 
+    filter(year %in% 1996:2004 & rem_career_len >= 0) |> 
+    summarize(mean = mean(rem_career_len)) |> 
+    pull(mean)
+}
+
+est_yr <- data.frame(k = seq(1,22)) |> 
+  rowwise() |> 
+  mutate(yr = get_length(k)) |> 
+  ungroup()
+
+# ---------------------------------------------------------------------------------------
+
+active_players <- all_data_adj |> 
+  filter(to == 2025) |> 
+  mutate(career_len = to - year) |> 
+  rowwise() |> 
+  mutate(adj_ps = ps + round(ps / career_len * get_length(career_len), 2)) |> 
+  ungroup() |> 
+  select(-career_len)
+
+inactive_players <- all_data_adj |> 
+  filter(to != 2025) |> 
+  mutate(adj_ps = ps)
+
+all_data_adj <- rbind(active_players, inactive_players)
+
+# ---------------------------------------------------------------------------------------
+
+all_data_comb <- all_data_adj |> 
   group_by(overall) |> 
-  summarize(mean_ps = mean(ps)) 
-
-# ---------------------------------------------------------------------------------------
-
-all_data_prop <- all_data |> 
-  group_by(year) |> 
-  mutate(prop_ps = ps/sum(ps)) |>  
-  group_by(overall) |>  
-  summarize(avg_prop_ps = mean(prop_ps),
-            .groups = "drop")
-
-# ---------------------------------------------------------------------------------------
-
-est_ps <- rep(0, times = nrow(all_data_raw))
-
-for(i in 1:nrow(all_data_raw)){
-  k <- sqrt(i)
-  nearest <- which(abs(seq(1, nrow(all_data_raw), 1) - i) <= (k %/% 2)+1)
-  total_weight <- sum(pmin(1/(i - nearest)^2, 1))
-  for(j in nearest){
-    weight <- pmin(1/abs(i - j)^2, 1) / total_weight
-    est_ps[i] <- est_ps[i] + weight * all_data_raw$mean_ps[j]
-  }
-}
-
-ps_scale_fac <- 1000 / est_ps[[1]]
-
-knn_raw <- data.frame(overall = seq(1, length(est_ps), 1),
-                      value_ps = ps_scale_fac * est_ps)
-
-# ---------------------------------------------------------------------------------------
-
-est_ps_prop <- rep(0, times = nrow(all_data_prop))
-
-for(i in 1:nrow(all_data_prop)){
-  k <- sqrt(i)
-  nearest <- which(abs(seq(1, nrow(all_data_prop), 1) - i) <= (k %/% 2)+1)
-  total_weight <- sum(pmin(1/abs(i - nearest)^2, 1))
-  for(j in nearest){
-    weight <- pmin(1/(i - j)^2, 1) / total_weight
-    est_ps_prop[i] <- est_ps_prop[i] + weight * all_data_prop$avg_prop_ps[j]
-  }
-}
-
-ps_prop_scale_fac <- 1000 / est_ps_prop[[1]]
-
-knn_prop <- data.frame(overall = seq(1, length(est_ps_prop), 1),
-                       value_ps = ps_prop_scale_fac * est_ps_prop)
+  summarize(mean_ps = mean(ps), 
+            mean_gp = mean(gp), 
+            suc_rate = mean(reg), 
+            mean_adj_ps = mean(adj_ps))
 
 # ---------------------------------------------------------------------------------------

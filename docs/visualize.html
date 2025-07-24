@@ -281,9 +281,9 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("gt")</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("ggplot2")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("patchwork")</span></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("gt")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("ggplot2")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("patchwork")</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -331,7 +331,7 @@ window.Quarto = {
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>five num1 five num2 five num3 five num4 five num5      mean        sd 
-   0.0000    0.0000    0.0000  145.0000 1779.0000  142.7713  274.0303 </code></pre>
+   0.0000    0.0000    0.0000  145.0000 1779.0000  142.8240  274.0671 </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -339,7 +339,7 @@ window.Quarto = {
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code> five_num1  five_num2  five_num3  five_num4  five_num5       mean         sd 
-  0.000000   0.000000   0.000000   3.000000 217.800000   8.249862  21.182591 </code></pre>
+  0.000000   0.000000   0.000000   3.000000 217.800000   8.252903  21.185903 </code></pre>
 </div>
 </div>
 <p>Clearly both the GP and PS values are right skewed. Note that the maximum of the GP data is around 6 standard deviations from the mean <span class="math inline">\((\frac{1779-142.7713}{274.0303} = 5.97)\)</span> , whereas the maximum of the PS data is almost 10 standard deviations away <span class="math inline">\((\frac{217.8-8.249862}{21.172591} = 9.89)\)</span>.</p>
@@ -352,7 +352,7 @@ window.Quarto = {
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="sc">/</span> <span class="fu">nrow</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.481113</code></pre>
+<pre><code>[1] 0.4812903</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -361,24 +361,29 @@ window.Quarto = {
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="sc">/</span> <span class="fu">nrow</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7280265</code></pre>
+<pre><code>[1] 0.7279263</code></pre>
 </div>
 </div>
 <p>This tells us that just over half of our dataset never played in an NHL game and almost three quarters made minimal on-ice contributions in their career.</p>
-<p>To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). Note that we have to pivot the data and put it in long format first:</p>
+<p>To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). We also set the scales to be the same to make comparing the values easier.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>all_data <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp, ps),</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">names_to =</span> <span class="st">"metric"</span>, </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value)) <span class="sc">+</span> </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>metric, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of GP and PS"</span>, </span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Note the plots have different scales"</span>, </span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gp_hist <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(gp)) <span class="sc">+</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">4200</span>)) <span class="sc">+</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of GP"</span>, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"GP"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>) </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ps_hist <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(ps)) <span class="sc">+</span> </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">4200</span>)) <span class="sc">+</span> </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of PS"</span>, </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"PS"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>) </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>gp_hist <span class="sc">+</span> ps_hist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -388,7 +393,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Indeed, both of these are very right-skewed, and clearly a lot of players end up playing a small number of games and are thus not generating able to generate much PS. Finally,</p>
+<p>Indeed, both of these are very right-skewed, and clearly a lot of players end up playing a small number of games and are thus not generating able to generate much PS. The fact that there are more players with a small PS than a small GP also makes sense since players could be unproductive in ~75 games, which would take them out of the first bin for GP while they remain ib the first bin for PS.</p>
 </section>
 <section id="picking-a-metric" class="level3" data-number="5.3.3">
 <h3 data-number="5.3.3" class="anchored" data-anchor-id="picking-a-metric"><span class="header-section-number">5.3.3</span> Picking a Metric</h3>
@@ -399,7 +404,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(all_data<span class="sc">$</span>ps, all_data<span class="sc">$</span>gp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8558384</code></pre>
+<pre><code>[1] 0.8558304</code></pre>
 </div>
 </div>
 <p>Because of this, we choose to only include one of GP and PS in each model to avoid multicollinearity concerns. As mentioned in the Approach section, we will use two GP-related metrics and two PS-related metrics. For each of these metrics we will fit a linear and non-linear regression model, for a total of 8 models. We now explore the GP and PS values in greater detail.</p>
@@ -554,8 +559,9 @@ window.Quarto = {
 <p>We take the following lessons from our EDA into our Transform and Model chapters:</p>
 <ul>
 <li><p>We will only use one of GP or PS in each model to avoid multicollinearity-related issues.</p></li>
-<li><p>We will need to fit a curve or line to the data, since if we simply set <span class="math inline">\(v_i\)</span> to be the mean GP or PS of players selected at pick <span class="math inline">\(i\)</span> then we will fail the first fundamental requiremnt, that <span class="math inline">\(v_i &gt; v_{i+k}\)</span> for all <span class="math inline">\(i, k \in \mathbb Z^+\)</span>.</p></li>
+<li><p>We will need to fit a curve or line to the data, since if we simply set <span class="math inline">\(v_i\)</span> to be the mean GP or PS of players selected at pick <span class="math inline">\(i\)</span> then we will fail the first fundamental requirement, that <span class="math inline">\(v_i &gt; v_{i+k}\)</span> for all <span class="math inline">\(i, k \in \mathbb Z^+\)</span>.</p></li>
 </ul>
+<p>The mean GP by pick number and mean PS by pick number metrics are two of the metrics we will use in the Model chapter.</p>
 
 
 </section>
