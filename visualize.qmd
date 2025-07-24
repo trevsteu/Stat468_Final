@@ -10,9 +10,11 @@ We install and load the necessary packages, along with functions from prior chap
 ```{r,  message = FALSE, warning = FALSE}
 # install.packages("gt")
 # install.packages("ggplot2")
+# install.packages("patchwork")
 
 library(gt)
 library(ggplot2)
+library(patchwork)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -21,7 +23,9 @@ source("functions.R") # load functions defined in prior chapters
 
 In the visualize step, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the Model chapter.
 
-## Code
+## Exploratory Data Analysis (EDA)
+
+### Number of Picks
 
 Recall that over the years the NHL has changed how many picks there are in each round as franchises have been added. A consequence of this is that the number of rounds has also changed, and the number of total picks in a draft has changed several times throughout our dataset. Recall that we removed all picks after #224, but there could be drafts with *fewer* than 224 total selections. We check for this:
 
@@ -34,6 +38,8 @@ all_data |>
 ```
 
 Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren't worth very much anyway, but it is worth noting that several picks from #211 onward have a smaller sample size than picks 1-210.
+
+### PS and GP Values
 
 Before doing any further EDA, we will take the five number summary, mean, and standard deviation of both the GP and PS values to get a sense of what they look like. Recall that the five number summary gives the minimum, 25% quantile, median, 75% quantile, and maximum of a dataset. Additionally, recall that PS stands for Point Share, and is a measure of a player's career contributions to points in the standings (ie the points you get from wins, not the one that is goals plus assists).
 
@@ -74,80 +80,136 @@ all_data |>
        x = "Value", y = "Number of Players") 
 ```
 
-Indeed, both of these are very right-skewed, and clearly a lot of players end up playing a small number of games and are thus not generating able to generate much PS. We may also guess that GP and PS are positively correlated, since better players get to play in more games and thus accumulate more PS. Indeed:
+Indeed, both of these are very right-skewed, and clearly a lot of players end up playing a small number of games and are thus not generating able to generate much PS. Finally,
+
+### Picking a Metric
+
+We may also guess that GP and PS are positively correlated, since better players get to play in more games and thus accumulate more PS. Indeed:
 
 ```{r}
 cor(all_data$ps, all_data$gp)
 ```
 
-Because of this, we choose to only include one of GP and PS in our model to avoid potential multicollinearity concerns. We choose PS over GP for a few reasons.
+Because of this, we choose to only include one of GP and PS in each model to avoid multicollinearity concerns. As mentioned in the Approach section, we will use two GP-related metrics and two PS-related metrics. For each of these metrics we will fit a linear and non-linear regression model, for a total of 8 models. We now explore the GP and PS values in greater detail.
 
--   PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team.
+### GP and PS of Draft Classes
 
--   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain timeframe, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distingushing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed earlier.
-
--   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
-
-We also wish to confirm that players selected earlier in a draft (ie a lower `overall`) tend to generate more PS in their careers than those selected later. To check this, we start by creating a plot of the PS values by overall for a single draft.
+We wish to confirm that players selected earlier in a draft (ie a lower `overall`) tend to play in more games and generate more PS during their careers than those selected later. To check this, we start by creating plot of the GP and PS values by overall for a single draft. Note we will use `scales = "free"` because the scales of GP and PS are quite different:
 
 ```{r}
 set.seed(468) # for reproducibility
 rand_year <- sample(start_year:end_year, 1) # year is 2015
 
-all_data |> 
+gp_plot_1 <- all_data |> 
+  filter(year == rand_year) |> 
+  ggplot(aes(x = overall, y = gp)) +
+  geom_point() +
+  labs(x = "Pick Number", y = "GP", 
+       title = str_glue("GP of Players Drafted in {rand_year}"), 
+       subtitle = "Note the plots have different scales")
+
+ps_plot_1 <- all_data |> 
   filter(year == rand_year) |> 
   ggplot(aes(x = overall, y = ps)) +
   geom_point() +
   labs(x = "Pick Number", y = "PS", 
-       title = str_glue("PS of Players Drafted in {rand_year}"))
+       title = str_glue("PS of Players Drafted in {rand_year}"), 
+       subtitle = "Note the plots have different scales")
+
+gp_plot_1 + ps_plot_1
 ```
 
-Since clearly so many players generate 0 PS (likely because they played in 0 NHL games), we will create the plot without the players that played in 0 NHL games to make the plot easier to read.
+Since clearly so many players play in 0 games and thus generate 0 PS, we will recreate the plot without the players that played in 0 NHL games to make the plot easier to read. This time we will include multiple drafts.
 
 ```{r}
-all_data |> 
+gp_plot_2 <- all_data |> 
+  filter(gp > 0) |> 
+  ggplot(aes(x = overall, y = gp)) + 
+  geom_point(alpha = 0.5) + 
+  labs(title = "Distribution of GP",
+       subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
+       x = "GP", y = "Number of Players")
+
+ps_plot_2 <- all_data |> 
   filter(gp > 0) |> 
   ggplot(aes(x = overall, y = ps)) + 
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of PS",
-       subtitle = "Players with ≥ 1 game only; note the plots have different scales", 
-       x = "PS", y = "Number of Players") 
+       subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
+       x = "PS", y = "Number of Players")
+
+gp_plot_2 + ps_plot_2
 ```
 
-This plot is quite dense and difficult to interpret, but there isn't really any point in jittering the data because it'll still overlap, so we re plot it with a random 5 year sample of our dataset.
+These plots are quite dense and difficult to interpret, but there isn't really any point in jittering the data because it'll still overlap, so we re plot them with a random 5 year sample of our dataset.
 
 ```{r}
 years <- sample(start_year:end_year, 5) # years are 2018, 1996, 1999, 2010, 2004
 
-all_data |> 
+gp_plot_3 <- all_data |> 
+  filter(gp > 0 & year %in% years) |> 
+  ggplot(aes(x = overall, y = gp)) + 
+  geom_point(alpha = 0.5) + 
+  labs(title = "Distribution of GP for 5 Drafts",
+       subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
+       x = "GP", y = "Number of Players")
+
+ps_plot_3 <- all_data |> 
   filter(gp > 0 & year %in% years) |> 
   ggplot(aes(x = overall, y = ps)) + 
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of PS for 5 Drafts",
-       subtitle = "Players with ≥ 1 game only; note the plots have different scales", 
+       subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
        x = "PS", y = "Number of Players")
+
+gp_plot_3 + ps_plot_3 
 ```
 
-Though this plot is still quite busy, it shows a strange trend that there seems to be a lot of players drafted around 200 overall that end up having successful careers. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.
+Though these plot are still quite busy, it shows a strange trend that there seems to be more players drafted around 200 overall that end up having successful careers, than drafted around 125. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.
 
-The plot above is not great because it is missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean PS of the players selected at each pick. Given how skewed our data is, typically the median would be preferred over the mean to improve resistance to outliers. However in this context we don't really want to be resistant to outliers since the outliers represent elite players, and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.
+The plots above are not great because they are missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean GP and mean PS of the players selected at each pick. Given how skewed our data is, typically the median would be preferred over the mean to improve resistance to outliers. However in this context we don't really want to be resistant to outliers since the outliers represent elite players (those who had a lot of GP or PS), and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.
 
 ```{r, warning=FALSE}
-all_data |> 
+gp_plot_4 <- all_data |> 
+  group_by(overall) |> 
+  summarize(mean_gp = mean(gp)) |> 
+  ggplot(aes(x = overall, y = mean_gp)) + 
+  geom_point() +
+  geom_point(aes(x = 156, y = mean(filter(all_data, overall==156)$gp)), col = "dodgerblue") +
+  geom_point(aes(x = 205, y = mean(filter(all_data, overall==205)$gp)), col = "salmon") +
+  labs(title = "Mean GP by Pick Number", subtitle = "Note the scales are different",
+       x = "Pick Number", y = "Mean GP") + 
+  annotate(geom = "segment", x = 156, y = 450, xend = 156, yend = 220, colour = "dodgerblue",
+    arrow = arrow(type = "open", length = unit(0.32, "cm"))) +
+  annotate(geom = "label", x = 90, y = 400,
+    label = "156th overall selection,\n(mean GP of 203)",
+    hjust = "left", colour = "dodgerblue")
+
+ps_plot_4 <- all_data |> 
   group_by(overall) |> 
   summarize(mean_ps = mean(ps)) |> 
   ggplot(aes(x = overall, y = mean_ps)) + 
   geom_point() +
+  geom_point(aes(x = 156, y = mean(filter(all_data, overall==156)$ps)), col = "dodgerblue") +
   geom_point(aes(x = 205, y = mean(filter(all_data, overall==205)$ps)), col = "salmon") +
-  labs(title = "Mean PS by Pick Number",
-       x = "Pick Number", y = "Mean Points Share") + 
+  labs(title = "Mean PS by Pick Number", subtitle = "Note the scales are different",
+       x = "Pick Number", y = "Mean PS") + 
   annotate(geom = "segment", x = 175, y = 37.5, xend = 203, yend = 14, colour = "salmon",
     arrow = arrow(type = "open", length = unit(0.32, "cm"))) +
-  annotate(geom = "label", x = 140, y = 39,
-    label = "205th overall selection,\n (mean PS of 13.124)",
+  annotate(geom = "label", x = 100, y = 39,
+    label = "205th overall selection,\n(mean PS of 13.124)",
     hjust = "left", colour = "salmon")
+
+gp_plot_4 + ps_plot_4
+
 ```
 
-We can see that in general PS does tend to decrease later in drafts, and that pick value tends to level off around pick 75, though there are some picks that stick out (for example, pick 205 has an average PS of 13.124, whereas pick 204 has an average PS of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having career PSs of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have more than 0.3 PS), so two players with very successful careers skewing the data is not surprising.
+Interestingly, points that appear to be outliers in mean GP may not be outliers in mean PS (and vise versa). This is indicated by the blue and pink points in each plot. We can also see that in general GP and PS both tend to decrease later in drafts, and that pick value tends to level off around pick 75, though there are some picks that stick out (for example, pick 205 has an average PS of 13.124, whereas pick 204 has an average PS of 4.856). This particular outlier is due to Henrik Lundqvist and Joe Pavelski being selected at this spot and having career PSs of 173.3 and 130.1, respectively. Very few players drafted this late make it to the NHL (20 of the 25 players in our dataset drafted at pick 205 have more than 0.3 PS), so two players with very successful careers skewing the GP and PS data is not surprising.
 
-The lessons to take from this plot when creating a model are that it will be necessary to fit a smooth curve to the model (so that $v_i > v_{i+c}$ where $c \in \mathbb Z^+$), and that the estimated value of pick $n$ should probably be influenced by the historical value of pick $n$ AND the historical value of picks "close" to $n$. With this in mind, we proceed to the Transform step.
+## Summary
+
+We take the following lessons from our EDA into our Transform and Model chapters:
+
+-   We will only use one of GP or PS in each model to avoid multicollinearity-related issues.
+
+-   We will need to fit a curve or line to the data, since if we simply set $v_i$ to be the mean GP or PS of players selected at pick $i$ then we will fail the first fundamental requiremnt, that $v_i > v_{i+k}$ for all $i, k \in \mathbb Z^+$.

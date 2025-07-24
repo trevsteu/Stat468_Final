@@ -33,7 +33,7 @@ all_data |>
   geom_point()
 ```
 
-A similar issue is that there are quite a few current players who can still generate additional PS in our dataset. This issue is related because it is probably reasonable to expect that the discrepency between the 2016-2020 PS totals and the other years is due to there being so many active players from those seasons.
+A similar issue is that there are quite a few current players who can still generate additional PS in our dataset. This issue is related because it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is due to there being so many active players from those seasons.
 
 ```{r}
 all_data |> 
@@ -58,9 +58,11 @@ Neither of the first two options are particularly appealing. The first is unidea
 
 Estimating the remaining value of a player's career could be an entire project all on its own, but we will make an adjustment that will reduce the impact of this issue (while acknowledging that we will not completely fix it). Let $gp_{ps}$ and $ps_{ij}$ be the GP and PS of the player drafted at pick $i$ of draft $j$. If that player has not retired, we will set $ps^{adj}_{ij} = ps_{ij} + \frac{ps_{ij}}{gp_{ij}} \times \hat{gr_j}$, where $\hat {gr_j}$ is our [**estimate**]{.underline} of the number of games left in the career of players drafted in year $j$. We will set $\hat{gr_j} = \frac{gp_{ij}}{years_{ij}} \cdot \hat{yr_j}$, where $years_{ij}$ is the number of years since player $ij$ was drafted and $\hat{yr_j}$ is the estimated number of years left in their career. Thus the estimated number of games remaining in a player's career is their average number of games per season times the estimated number of years remaining. Simplifying, we have $ps_{ij}^{adj} = ps_{ij} + \frac{ps_{ij}}{years_{ij}} \cdot\hat{yr_{ij}}$. We will estimate $yr_j$ later using data from 1996-2004. When we actually code this adjustment later in this chapter we will verify that the PS values these drafts end up looking similar to drafts where everyone is retired. Note that we only make this adjustment for active players, there is no reason to adjust the PS of retired players.
 
-## Code
+## Transforming PS
 
-Let $yr_j$ be the nunber of years players drafted in draft $j$ have remaining in their career, given they were drafted $k$ years ago. We aim to estimate this value, and will do so by setting $\hat{yr_j}$ to be the mean career length of players who retired at $k$ years after being drafted and were drafted between 1996 and 2004. We calculate it for $1 \le k \le 22$ to make the indexing more intuitive, even though we will only be using the values $k \ge 5$, since no active player drafted in 2020 or earlier can have played for less than 4 seasons..
+### Estimating Remaining Career Length 
+
+Let $yr_j$ be the number of years players drafted in draft $j$ have remaining in their career, given they were drafted $k$ years ago. We aim to estimate this value, and will do so by setting $\hat{yr_j}$ to be the mean career length of players who retired at $k$ years after being drafted and were drafted between 1996 and 2004. We calculate it for $1 \le k \le 22$ to make the indexing more intuitive, even though we will only be using the values $k \ge 5$, since no active player drafted in 2020 or earlier can have played for less than 4 seasons..
 
 ```{r}
 get_length <- function(len){ 
@@ -77,10 +79,14 @@ est_yr <- data.frame(k = seq(1,22)) |>
   ungroup()
 
 ggplot(est_yr, aes(x = k, y = yr)) + 
-  geom_line() 
+  geom_point() 
 ```
 
-The interpretation for this is a player who was drafted 1 year ago has an estimated 9 years left in their career, a player who was drafted 5 years ago has an estimated 6 years left in their career, and a player who was drafted 10 years ago has an estimated 4 years remaining in their career. We can now make our adjustments:
+The interpretation for this is that a current NHL player who was drafted 1 year ago has an estimated 9.48 years left in their career, a a current NHL player who was drafted 5 years ago has an estimated 6.47 years left in their career, and on.
+
+### Adjusting PS Values
+
+Now that we have estimated the remaining number of years for each active NHL player, we can estimate the total PS for their career. Recall that in the introduction of this chapter we said $ps_{ij}^{adj} = ps_{ij} + \frac{ps_{ij}}{years_{ij}} \cdot\hat{yr_{ij}}$.
 
 ```{r}
 all_data_adj <- all_data |> 
@@ -102,6 +108,8 @@ reactable(all_data_adj)
 
 Note that the adjusted PS values for players who are expected to retire soon may not have changed at all. To say it again, this estimation is not perfect, but it is better than the alternatives (using older data or ignoring the issue). In particular, this method assumes all players will continue to generate PS at the same rate as they have to this point in their career, and that the number of additional years a player will play for only depends on how many years ago they were drafted.
 
+### Evaluating our Adjustment
+
 We can do some checks to see if these estimates seem feasible. First, we recreate the plot of total PS by year from the start of this chapter. We plot all the years for sake of comparison, but recall we only made changes for active players, and thus the drafts between 1996 and 2002 were completely unaffected:
 
 ```{r}
@@ -116,7 +124,7 @@ all_data_adj |>
 
 The 5 drafts after 2015 are considerably closer to the other draft than they were before, so at first glance it seems like the adjustment we have made was good. We can also check if the adjusted drafts seem similar to the drafts which required little adjustment, we do this by comparing a histogram of the drafts between 1996 and 200 with the drafts between 2016 and 2020. Of course, we're not expecting them to be perfectly identical because there is a fair amount of variation even between drafts that required little to no adjustment (ex 1999 and 2003).
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 all_data_adj |> 
   pivot_longer(cols = c(ps,adj_ps), 
                names_to = "metric", values_to = "value") |> 
@@ -127,7 +135,7 @@ all_data_adj |>
 
 These are a bit hard to compare because the tail gets so small so fast, but the values close to 0 look similar enough. We can zoom in on the tail, note that there isn't much to look at after 100:
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 all_data_adj |> 
   pivot_longer(cols = c(ps,adj_ps), 
                names_to = "metric", values_to = "value") |> 
@@ -148,4 +156,4 @@ all_data_adj |>
   geom_point(alpha = 0.4)
 ```
 
-The adjusted PS values are generally larger than the unadjusted PS values, which is what we would expect because $ps^{adj}_{ij} \ge ps_{ij}$, given than we add PS to players who are still active NHL players. We now proceed to the Model step where we will fit several models to this data.
+The adjusted PS values are generally larger than the unadjusted PS values, which is what we would expect because $ps^{adj}_{ij} \ge ps_{ij}$ as we add PS to players who are still active NHL players and do not change the PS values of retired players. We now proceed to the Model step where we will fit several models to this data.

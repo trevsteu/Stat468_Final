@@ -7,7 +7,7 @@ author: "Trevor S"
 
 ## Abstract
 
-In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. To do this, data will be imported from [Hockey Reference](https://www.hockey-reference.com/draft/), and several potential models will be fit to the data with the goal of predicting the value of each pick based on historical outcomes. The RShiny app component of this project allows users to interactively check the fairness of potential trades.
+In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. To do this, data will be imported from [Hockey Reference](https://www.hockey-reference.com/draft/), and several potential models will be fit to the data with the goal of predicting the value of each pick based on historical outcomes. The R Shiny app component of this project allows users to interactively check the fairness of potential trades.
 
 Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams. That is, this project makes contributions to both asset valuation as well as trade analysis, both in the context of selections in the NHL Entry Draft.
 
@@ -15,7 +15,7 @@ Knowing the relative value of picks allows NHL teams to both determine whether t
 
 The data used by this report is imported from [Hockey Reference](https://www.hockey-reference.com/draft/), which has data on the NHL Draft and player games played and point share counts dating back to 1963. Each row on Hockey Reference is one player selected, and the columns included on the site are:
 
--   `Overall`: the selection mumber where the player was selected.
+-   `Overall`: the selection number where the player was selected.
 -   `Team`: the team that selected the player.
 -   `Name`, `Nat`, `Pos`, `Age`: the player's name, nationality, position, at age at the time of the draft.
 -   `To`: the last year a player played in the NHL. For players who never played in the NHL this will be the empty string, for those who are still playing it will be `2025`.
@@ -24,7 +24,7 @@ The data used by this report is imported from [Hockey Reference](https://www.hoc
 -   `GP`, `W`, `L`, `T/O`, `SV%`, `GAA`: the goalie's career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For goalies who never played in the NHL and all skaters, these columns will all be empty strings.
 -   `PS`: the player's estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, [**NOT**]{.underline} goals and assists). There is more info on point shares [here](https://www.hockey-reference.com/about/point_shares.html). Note that I abbreviate point share to PS in this report.
 
-All stats listed are for regular season games only, as we do not want to put players who played on bad teams at more of a disadvantage. Note that we will only use a subset of the years between 1963 and 2025 and of the attributes listed above, as will be explained in the Import and Tidy chapters.
+All stats listed are for regular season games only, as we do not want to put players who played on bad teams at a disadvantage more than they already are (it's harder to get a high PS if your team rarely wins). Note that we will only use a subset of the years between 1963 and 2025 and of the attributes listed above, as will be explained in the Import and Tidy chapters.
 
 ## Constraints
 
@@ -32,9 +32,9 @@ There are a number of technical and practical constraints at play. Here are some
 
 -   There have only been 63 drafts in NHL history, but drafts which occurred too long ago are likely not relevant and drafts which occurred too recently are difficult to evaluate. This will be discussed further in the Import chapter.
 
--   Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into don't ever play in a game for the team. Accounting for this is vert difficult or even impossible, and we will not attempt to remedy it.
+-   Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into don't ever play in a game for the team. Accounting for this is very difficult or even impossible, and we will not attempt to remedy it.
 
--   Estimating the value of a player's career is not a trivial task. We will use point share which is a calculated by Hockey Reference and includes several stats, but it is still not a perfect metric as it can still be dependent on external factors, such as the quality of the player's team the opportunities the player was given. Additionally, we will have to estimate what the career point share *will be* for players who have not yet retired. This issue and a partial fix for this will be discussed in the Transform step.
+-   Estimating the value of a player's career is not a trivial task. One approach we will use is called point share. Point share is calculated by Hockey Reference and incorperates several stats, but it is still not a perfect metric as it can still be dependent on external factors, such as the quality of the player's team the opportunities the player was given. Additionally, we will have to estimate what the career point share *will be* for players who have not yet retired. This issue, and an adjustment for it, will be discussed further in the Transform step.
 
 -   We are interested in using historical data to predict the value of a draft pick from the team's perspective. One slight problem with this is that the value of the pick from the team's perspective depends on how long the player stayed on their team and what (if anything) the team got when the player left the team (via trade, free agency, or retirement). We will ignore this because it is nearly impossible to take these factors into account.
 

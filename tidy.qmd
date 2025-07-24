@@ -34,7 +34,7 @@ Some problems that immediately come up are:
 
 -   Two rows get inserted at the end of every round to indicate the round changed.
 
--   Though not visible beacuse of the usage of `gt`, numbers are being coded as strings (`overall`, `age`, `to`, etc).
+-   Though not visible because of the usage of `gt`, numbers are being coded as strings (`overall`, `age`, `to`, etc).
 
 -   (At least) one player is missing everything except for their pick number, name, team, position, nationality, and amateur team.
 
@@ -44,7 +44,7 @@ Some problems that immediately come up are:
 
 By doing a little bit of detective work with some of the other players with missing values elsewhere in the dataset, we notice that players who never played in the NHL have empty strings listed for everything except for the values attributes listed above. We will have to deal with this in the tidy step. Note that Hockey Reference begins listing player's ages in the 2001 draft, but we aren't going to use ages for our analysis so we won't bother coming up for a remedy for the players drafted between 1996 and 2000. The number of picks in the draft has also changed over the years, we will ignore any player drafted after selection 224 (the number of picks in the 2025 NHL Entry Draft). Finally, it would be helpful to remove the columns we don't care about.
 
-## Code
+## Cleaning
 
 We build a function to tidy the data. In particular, we want it to:
 
@@ -82,7 +82,11 @@ tidy_draft <- function(year){
 reactable(tidy_draft(1996))
 ```
 
-This is the form we will use for analysis later. We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.
+This is the form we will use for analysis later.
+
+## Getting the Data
+
+We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.
 
 ```{r, warning=FALSE, message=FALSE, eval = FALSE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
@@ -96,6 +100,8 @@ all_data <- read.csv("all_data.csv")
 #   tidy_draft takes such a llong time to run and render
 ```
 
+## Verification
+
 We can check that this data has loaded correctly, there should be between 5250 and 5600 rows (the number of picks in a draft has changed over the years in our dataset as we will see, but is always between 210 and 224 so 25 drafts will be between ) and 6 columns:
 
 ```{r}
@@ -108,7 +114,11 @@ gt(head(all_data, 10))
 gt(all_data[23:30,])
 ```
 
-These checks all returned what they should. Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
+These checks all returned what they should.
+
+## Storing the Data
+
+Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
 
 ```{r}
 write.csv(all_data, "all_data.csv", row.names = FALSE)
