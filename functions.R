@@ -107,13 +107,16 @@ all_data_comb <- all_data_adj |>
 
 # ---------------------------------------------------------------------------------------
 
-ps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
-  geom_point()
-gp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
-  geom_point()
-sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
-  geom_point()
-aps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
-  geom_point()
+metrics <- c("mean_ps", "mean_gp", "suc_rate", "mean_adj_ps")
+names <- c("Mean PS", "Mean GP", "Success Rate", "Mean Adjusted PS")
+
+for(i in 1:length(metrics)){
+  assign(str_glue("plot_{metrics[i]}"), 
+         ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
+           geom_point() + 
+           labs(title = str_glue("{names[i]} verses Overall"), 
+                x = "Overall", y = str_glue("{names[i]}")))
+}
 
 # ---------------------------------------------------------------------------------------
+

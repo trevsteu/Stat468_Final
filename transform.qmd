@@ -13,12 +13,14 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("gt")
 # renv::install("reactable")
 # renv::install("patchwork")
+# renv::install("stringr")
 
 library(tidyverse)
 library(dplyr)
 library(gt)
 library(reactable)
 library(patchwork)
+library(stringr)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -242,7 +244,11 @@ The adjusted PS values are generally larger than the unadjusted PS values, which
 
 ## Combining Everything
 
-Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot for each metric, note that no points can be directly on top of each other because all points have different `overall` values.
+Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot for each metric, note that no points can be directly on top of each other because all points have different `overall` values. Note that the following two Stack Overflow posts were particularly helpful for this code:
+
+-   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r)
+
+-   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name)
 
 ```{r}
 all_data_comb <- all_data_adj |> 
@@ -252,16 +258,18 @@ all_data_comb <- all_data_adj |>
             suc_rate = mean(reg), 
             mean_adj_ps = mean(adj_ps))
 
-ps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
-  geom_point()
-gp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
-  geom_point()
-sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
-  geom_point()
-aps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
-  geom_point()
+metrics <- c("mean_ps", "mean_gp", "suc_rate", "mean_adj_ps")
+names <- c("Mean PS", "Mean GP", "Success Rate", "Mean Adjusted PS")
 
-(ps_plot + gp_plot) / (sr_plot + aps_plot)
+for(i in 1:length(metrics)){
+  assign(str_glue("plot_{metrics[i]}"), 
+         ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
+           geom_point() + 
+           labs(title = str_glue("{names[i]} verses Overall"), 
+                x = "Overall", y = str_glue("{names[i]}")))
+}
+
+(plot_mean_ps + plot_mean_gp) / (plot_suc_rate + plot_mean_adj_ps)
 ```
 
-These plots all have the same general shape, though they are all on different scales. In the next chapter we will fit a model to this data.
+These plots all have the same general shape, though some of them are on different scales. In the next chapter we will fit a model to this data.

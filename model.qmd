@@ -9,10 +9,8 @@ We install and load the necessary packages, along with functions from prior chap
 
 ```{r,  message = FALSE, warning = FALSE}
 # renv::install("patchwork")
-# renv::install("purrr")
 
 library(patchwork)
-library(purrr)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -24,7 +22,7 @@ Now that we have metrics representing different ways of calculating the historic
 Recall the four plots we ended the Transform chapter with, based on the mean PS, mean GP, success rate, and mean adjusted PS for every selection between 1 and 224. For convenience we replot this data below:
 
 ```{r}
-(ps_plot + gp_plot) / (sr_plot + aps_plot)
+(plot_mean_ps + plot_mean_gp) / (plot_suc_rate + plot_mean_adj_ps)
 ```
 
 ## Linear Regression

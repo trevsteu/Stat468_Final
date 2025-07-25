@@ -228,15 +228,5 @@ est_yr <- data.frame(k = seq(1,10)) |>
 
 
 
-# How to do this better 
-ps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
-  geom_point()
-gp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
-  geom_point()
-sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
-  geom_point()
-aps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
-  geom_point()
-
-(ps_plot + gp_plot) / (sr_plot + aps_plot)
+# How to cite stack overflow 
 ```
