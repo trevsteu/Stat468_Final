@@ -9,15 +9,21 @@ We install and load the necessary packages, along with functions from prior chap
 
 ```{r,  message = FALSE, warning = FALSE}
 # renv::install("patchwork")
+# renv::install("stringr")
 
 library(patchwork)
+library(stringr)
 
 source("functions.R") # load functions defined in prior chapters
 ```
 
 ## Introduction/Recap
 
-Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, an then we will develop a model via non-linear regression. As always, when fitting a model it is important to ensure that the underlying assumptions of a model hold, otherwise the model can be useless, or even worse, misleading.
+Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, an then we will develop a model via non-linear regression. We will then put the models on the same scale by multiplying each predicted value by a constant, allowing us to compare models more effectively. As always, when fitting a model it is important to ensure that the underlying assumptions of a model hold, otherwise the model can be useless, or even worse, misleading. Note that the following two Stack Overflow posts were once again very helpful when writing the code in this chapter:
+
+-   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r)
+
+-   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name)
 
 Recall the four plots we ended the Transform chapter with, based on the mean PS, mean GP, success rate, and mean adjusted PS for every selection between 1 and 224. For convenience we replot this data below:
 
@@ -49,16 +55,16 @@ pred_vals <- data.frame(overall = seq(1, 224),
                           suc_rate = pred_vals[[3]], 
                           mean_adj_ps = pred_vals[[4]])
 
-lin_ps_plot <- plot_mean_ps + geom_line(data = pred_vals, 
-                    aes(x = overall, y = mean_ps), col = "red", lwd = 1.5)
-lin_gp_plot <- plot_mean_gp + geom_line(data = pred_vals, 
-                    aes(x = overall, y = mean_gp), col = "red", lwd = 1.5)
-lin_sr_plot <- plot_suc_rate + geom_line(data = pred_vals, 
-                    aes(x = overall, y = suc_rate), col = "red", lwd = 1.5)
-lin_aps_plot <- plot_mean_adj_ps + geom_line(data = pred_vals, 
-                    aes(x = overall, y = mean_adj_ps), col = "red", lwd = 1.5)
+names <- c("Mean PS", "Mean GP", "Success Rate", "Mean Adjusted PS")
 
-(lin_ps_plot + lin_gp_plot) / (lin_sr_plot + lin_aps_plot)
+for(i in 1:length(metrics)){
+  assign(str_glue("plot_lm_{metrics[i]}"), 
+         get(str_glue("plot_{metrics[i]}")) + 
+           geom_line(data = pred_vals, aes_string(x = "overall", y = metrics[i]), 
+                     col = "red", lwd = 1.5))
+  }
+
+(plot_lm_mean_ps + plot_lm_mean_gp) / (plot_lm_suc_rate + plot_lm_mean_adj_ps)
 ```
 
 All four of these linear models are very clearly inadequate, but for sake of completeness we will look at plots of the residuals vs fitted values.
@@ -73,19 +79,17 @@ resids <- data.frame(mean_ps_resid = resids[[1]],
 
 pred_vals_resid <- cbind(pred_vals, resids)
 
-ps_resid <- ggplot(pred_vals_resid, aes(x = mean_ps, y = mean_ps_resid)) + 
-  geom_hline(yintercept = 0, col = "pink", lwd = 1.5) + geom_point()
-gp_resid <- ggplot(pred_vals_resid, aes(x = mean_gp, y = mean_gp_resid)) + 
-  geom_hline(yintercept = 0, col = "pink", lwd = 1.5) + geom_point()
-sr_resid <- ggplot(pred_vals_resid, aes(x = suc_rate, y = suc_rate_resid)) + 
-  geom_hline(yintercept = 0, col = "pink", lwd = 1.5) + geom_point()
-aps_resid <- ggplot(pred_vals_resid, aes(x = mean_adj_ps, y = mean_adj_ps_resid)) + 
-  geom_hline(yintercept = 0, col = "pink", lwd = 1.5) + geom_point()
+for(i in 1:length(metrics)){
+  assign(str_glue("plot_res_{metrics[i]}"), 
+         ggplot(pred_vals_resid, aes_string(x = str_glue("{metrics[i]}"), 
+                                            y = str_glue("{metrics[i]}_resid"))) + 
+           geom_hline(yintercept = 0, col = "red", lwd = 1.5) + geom_point())
+  }
 
-(ps_resid + gp_resid) / (sr_resid + aps_resid)
+(plot_res_mean_ps + plot_res_mean_gp) / (plot_res_suc_rate + plot_res_mean_adj_ps)
 ```
 
-Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions.
+Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions. It is also clear that the errors are not normally distributed.
 
 ## Non-Linear Regression
 
@@ -132,3 +136,11 @@ nls_aps_plot <- plot_mean_adj_ps + geom_line(data = pred_vals,
 
 (nls_ps_plot + nls_gp_plot) / (nls_sr_plot + nls_aps_plot)
 ```
+
+## One Last Adjustment
+
+Scale $v_1$ to 1000.
+
+## Model Selection
+
+Probably will take the model with the lowest RSS.

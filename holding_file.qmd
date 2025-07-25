@@ -225,8 +225,5 @@ est_yr <- data.frame(k = seq(1,10)) |>
   mutate(yr = get_length(k)) 
 
 
-
-
-
 # How to cite stack overflow 
 ```

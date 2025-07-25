@@ -239,6 +239,8 @@ window.Quarto = {
   <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression"><span class="header-section-number">7.3</span> Linear Regression</a></li>
   <li><a href="#non-linear-regression" id="toc-non-linear-regression" class="nav-link" data-scroll-target="#non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</a></li>
   <li><a href="#after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" id="toc-after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" class="nav-link" data-scroll-target="#after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff"><span class="header-section-number">7.5</span> After this point I was lazy about coding smartly and writing stuff</a></li>
+  <li><a href="#one-last-adjustment" id="toc-one-last-adjustment" class="nav-link" data-scroll-target="#one-last-adjustment"><span class="header-section-number">7.6</span> One Last Adjustment</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">7.7</span> Model Selection</a></li>
   </ul>
 </nav>
     </div>
@@ -277,16 +279,22 @@ window.Quarto = {
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("patchwork")</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("stringr")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 <section id="introductionrecap" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="introductionrecap"><span class="header-section-number">7.2</span> Introduction/Recap</h2>
-<p>Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, an then we will develop a model via non-linear regression. As always, when fitting a model it is important to ensure that the underlying assumptions of a model hold, otherwise the model can be useless, or even worse, misleading.</p>
+<p>Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, an then we will develop a model via non-linear regression. We will then put the models on the same scale by multiplying each predicted value by a constant, allowing us to compare models more effectively. As always, when fitting a model it is important to ensure that the underlying assumptions of a model hold, otherwise the model can be useless, or even worse, misleading. Note that the following two Stack Overflow posts were once again very helpful when writing the code in this chapter:</p>
+<ul>
+<li><p><a href="https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r">Dynamic Variable naming in r</a></p></li>
+<li><p><a href="https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name">Specifying column with its index rather than name</a></p></li>
+</ul>
 <p>Recall the four plots we ended the Transform chapter with, based on the mean PS, mean GP, success rate, and mean adjusted PS for every selection between 1 and 224. For convenience we replot this data below:</p>
 <div class="cell">
 <details class="code-fold">
@@ -328,16 +336,16 @@ window.Quarto = {
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> pred_vals[[<span class="dv">3</span>]], </span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> pred_vals[[<span class="dv">4</span>]])</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>lin_ps_plot <span class="ot">&lt;-</span> plot_mean_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>lin_gp_plot <span class="ot">&lt;-</span> plot_mean_gp <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>lin_sr_plot <span class="ot">&lt;-</span> plot_suc_rate <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>lin_aps_plot <span class="ot">&lt;-</span> plot_mean_adj_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mean PS"</span>, <span class="st">"Mean GP"</span>, <span class="st">"Success Rate"</span>, <span class="st">"Mean Adjusted PS"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_lm_{metrics[i]}"</span>), </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>(lin_ps_plot <span class="sc">+</span> lin_gp_plot) <span class="sc">/</span> (lin_sr_plot <span class="sc">+</span> lin_aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>(plot_lm_mean_ps <span class="sc">+</span> plot_lm_mean_gp) <span class="sc">/</span> (plot_lm_suc_rate <span class="sc">+</span> plot_lm_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -360,16 +368,14 @@ window.Quarto = {
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>pred_vals_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(pred_vals, resids)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>ps_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> mean_ps, <span class="at">y =</span> mean_ps_resid)) <span class="sc">+</span> </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>gp_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> mean_gp, <span class="at">y =</span> mean_gp_resid)) <span class="sc">+</span> </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>sr_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> suc_rate, <span class="at">y =</span> suc_rate_resid)) <span class="sc">+</span> </span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>aps_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> mean_adj_ps, <span class="at">y =</span> mean_adj_ps_resid)) <span class="sc">+</span> </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>(ps_resid <span class="sc">+</span> gp_resid) <span class="sc">/</span> (sr_resid <span class="sc">+</span> aps_resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_res_{metrics[i]}"</span>), </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}"</span>), </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">y =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}_resid"</span>))) <span class="sc">+</span> </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>())</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>(plot_res_mean_ps <span class="sc">+</span> plot_res_mean_gp) <span class="sc">/</span> (plot_res_suc_rate <span class="sc">+</span> plot_res_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -379,7 +385,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions.</p>
+<p>Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions. It is also clear that the errors are not normally distributed.</p>
 </section>
 <section id="non-linear-regression" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</h2>
@@ -433,6 +439,14 @@ v_i = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 </div>
 </div>
 </div>
+</section>
+<section id="one-last-adjustment" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="one-last-adjustment"><span class="header-section-number">7.6</span> One Last Adjustment</h2>
+<p>Scale <span class="math inline">\(v_1\)</span> to 1000.</p>
+</section>
+<section id="model-selection" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">7.7</span> Model Selection</h2>
+<p>Probably will take the model with the lowest RSS.</p>
 
 
 </section>

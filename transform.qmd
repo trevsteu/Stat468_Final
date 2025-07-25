@@ -194,7 +194,17 @@ Note that the adjusted PS values for players who are expected to retire soon may
 
 ### Evaluating our Adjustment
 
-We can do some checks to see if these estimates seem feasible. First, we recreate the plot of total PS by year from the start of this chapter. We plot all the years for sake of comparison, but recall we only made changes for active players, and thus the drafts between 1996 and 2002 were completely unaffected:
+We can do some checks to see if these estimates seem feasible. First, we check the magnitude of our changes by calculating the mean and standard deviation of the difference between $p_{ij}^{adj}$ and $p_{ij}$ for active players. Recall $ps^{adj}_{ij} \ge ps_{ij}$ for all $i, j$, so there is no need to take the absolute value since the the difference is always positive.
+
+```{r}
+active_players |> 
+  summarize(mean(adj_ps - ps), sd(adj_ps - ps))
+
+active_players |> 
+  summarize(mean(ps), sd(ps))
+```
+
+The mean adjustment is about a quarter of a standard deviation, so it seems the adjustment was worthwhile. Next, we recreate the plot of total PS by year from the start of this chapter. We plot all the years for sake of comparison, but recall we only made changes for active players, and thus the drafts between 1996 and 2002 were completely unaffected:
 
 ```{r}
 all_data_adj |> 
@@ -244,7 +254,7 @@ The adjusted PS values are generally larger than the unadjusted PS values, which
 
 ## Combining Everything
 
-Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot for each metric, note that no points can be directly on top of each other because all points have different `overall` values. Note that the following two Stack Overflow posts were particularly helpful for this code:
+Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot for each metric, note that no points can be directly on top of each other because all points have different `overall` values. Note that the following two Stack Overflow posts were particularly helpful when writing this code:
 
 -   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r)
 
@@ -272,4 +282,4 @@ for(i in 1:length(metrics)){
 (plot_mean_ps + plot_mean_gp) / (plot_suc_rate + plot_mean_adj_ps)
 ```
 
-These plots all have the same general shape, though some of them are on different scales. In the next chapter we will fit a model to this data.
+These plots all have the same general shape, though some of them are on different scale. In the next chapter we will fit a model to this data, put the models on the same scale, and evaluate the models.
