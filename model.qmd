@@ -10,9 +10,11 @@ We install and load the necessary packages, along with functions from prior chap
 ```{r,  message = FALSE, warning = FALSE}
 # renv::install("patchwork")
 # renv::install("stringr")
+# renv::install("reactable")
 
 library(patchwork)
 library(stringr)
+library(reactable)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -45,22 +47,22 @@ lin_models <- lapply(metrics, \(x) lm(all_data_comb[[x]] ~ overall))
 For each linear model, we generate a vector of predicted values and plot it on top of the historical values:
 
 ```{r}
-pred_vals <- lapply(seq(1,4), 
+lm_pred_vals <- lapply(seq(1,4), 
                       \(x) predict(lin_models[[x]], 
                                    data.frame(overall = seq(1,224))))
 
-pred_vals <- data.frame(overall = seq(1, 224), 
-                          mean_ps = pred_vals[[1]], 
-                          mean_gp = pred_vals[[2]], 
-                          suc_rate = pred_vals[[3]], 
-                          mean_adj_ps = pred_vals[[4]])
+lm_pred_vals <- data.frame(overall = seq(1, 224), 
+                          mean_ps = lm_pred_vals[[1]], 
+                          mean_gp = lm_pred_vals[[2]], 
+                          suc_rate = lm_pred_vals[[3]], 
+                          mean_adj_ps = lm_pred_vals[[4]])
 
 names <- c("Mean PS", "Mean GP", "Success Rate", "Mean Adjusted PS")
 
 for(i in 1:length(metrics)){
   assign(str_glue("plot_lm_{metrics[i]}"), 
          get(str_glue("plot_{metrics[i]}")) + 
-           geom_line(data = pred_vals, aes_string(x = "overall", y = metrics[i]), 
+           geom_line(data = lm_pred_vals, aes_string(x = "overall", y = metrics[i]), 
                      col = "red", lwd = 1.5))
   }
 
@@ -70,18 +72,18 @@ for(i in 1:length(metrics)){
 All four of these linear models are very clearly inadequate, but for sake of completeness we will look at plots of the residuals vs fitted values.
 
 ```{r}
-resids <- lapply(lin_models, residuals)
+lm_resids <- lapply(lin_models, residuals)
 
-resids <- data.frame(mean_ps_resid = resids[[1]], 
-                     mean_gp_resid = resids[[2]], 
-                     suc_rate_resid = resids[[3]], 
-                     mean_adj_ps_resid = resids[[4]])
+lm_resids <- data.frame(mean_ps_resid = lm_resids[[1]], 
+                     mean_gp_resid = lm_resids[[2]], 
+                     suc_rate_resid = lm_resids[[3]], 
+                     mean_adj_ps_resid = lm_resids[[4]])
 
-pred_vals_resid <- cbind(pred_vals, resids)
+lm_pred_vals_resid <- cbind(lm_pred_vals, lm_resids)
 
 for(i in 1:length(metrics)){
   assign(str_glue("plot_res_{metrics[i]}"), 
-         ggplot(pred_vals_resid, aes_string(x = str_glue("{metrics[i]}"), 
+         ggplot(lm_pred_vals_resid, aes_string(x = str_glue("{metrics[i]}"), 
                                             y = str_glue("{metrics[i]}_resid"))) + 
            geom_hline(yintercept = 0, col = "red", lwd = 1.5) + geom_point())
   }
@@ -96,51 +98,82 @@ Clearly none of these models are appropriate, they very clearly fail the assumpt
 Given that none of the four linear models were appropriate, we will reattempt to fit a model using non-linear regression (ie the `nls` function, which stands for non-linear least squares). The resource [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) was very helpful when working on this section. In short, we will be fitting the model
 
 $$
-v_i = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
+v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 $$
 
 Where
+
+-   $i$ is the pick number.
+
+-   $m$ is the metric being used.
 
 -   $v_{i,m}$ is the value of pick $i$ based on metric $m$.
 
 -   $\phi_{1, m},\phi_{2, m},\phi_{3, m}$ are parameters that depend on which metric we are using.
 
-We fit this model as follows:
-
-## After this point I was lazy about coding smartly and writing stuff
+We choose to use `nls` because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates. We fit these models as follows:
 
 ```{r}
-ps_nls <- nls(mean_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
-                 data = all_data_comb)
-gp_nls <- nls(mean_gp ~ SSlogis(log(overall), phi1, phi2, phi3), 
-                 data = all_data_comb)
-sr_nls <- nls(suc_rate ~ SSlogis(log(overall), phi1, phi2, phi3), 
-                 data = all_data_comb)
-aps_nls <- nls(mean_adj_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
-                 data = all_data_comb)
+for(i in seq(1,4)){
+  assign(str_glue("nls_{metrics[i]}"), 
+         nls(all_data_comb[[i+1]] ~ SSlogis(log(overall), phi1, phi2, phi3)))
+}
 
-pred_vals <- data.frame(pick = seq(1, 224), 
-                        pred_mean_ps = predict(ps_nls, pick), 
-                        pred_mean_gp = predict(gp_nls, pick), 
-                        pred_suc_rate = predict(sr_nls, pick), 
-                        pred_mean_adj_ps = predict(aps_nls, pick)) 
+nls_pred_vals <- data.frame(pick = seq(1, 224), 
+                            mean_ps = predict(nls_mean_ps, pick), 
+                            mean_gp = predict(nls_mean_gp, pick), 
+                            suc_rate = predict(nls_suc_rate, pick), 
+                            mean_adj_ps = predict(nls_mean_adj_ps, pick))
 
-nls_ps_plot <- plot_mean_ps + geom_line(data = pred_vals, 
-                    aes(x = overall, y = pred_mean_ps), col = "red", lwd = 1.5)
-nls_gp_plot <- plot_mean_gp + geom_line(data = pred_vals, 
-                    aes(x = overall, y = pred_mean_gp), col = "red", lwd = 1.5)
-nls_sr_plot <- plot_suc_rate + geom_line(data = pred_vals, 
-                    aes(x = overall, y = pred_suc_rate), col = "red", lwd = 1.5)
-nls_aps_plot <- plot_mean_adj_ps + geom_line(data = pred_vals, 
-                    aes(x = overall, y = pred_mean_adj_ps), col = "red", lwd = 1.5)
+for(i in 1:length(metrics)){
+  assign(str_glue("plot_nls_{metrics[i]}"), 
+         get(str_glue("plot_{metrics[i]}")) + 
+           geom_line(data = nls_pred_vals, aes_string(x = "overall", y = metrics[i]), 
+                     col = "red", lwd = 1.5))
+  }
 
-(nls_ps_plot + nls_gp_plot) / (nls_sr_plot + nls_aps_plot)
+(plot_nls_mean_ps + plot_nls_mean_gp) / (plot_nls_suc_rate + plot_nls_mean_adj_ps)
 ```
+
+These curves all seem to fit well. We will look into the model's underlying assumptions in the model selection section.
 
 ## One Last Adjustment
 
-Scale $v_1$ to 1000.
+One notable issue with our non-linear model is that most of the models are on very different scales (Mean PS and Mean Adjusted PS are both between roughly 1-100, Mean GP is between roughly 0-1200, and Success Rate is between 0-1). We would like to standardize this to allow for a more direct comparison of models, such as comparing the residual sum of squares. To do this, we will calculate $C_m = \frac{1000}{v_{1,m}}$, and then multiply the value of every pick by $C_m$ to get a value out of 1000 where $v_{1, m} = 1000$ for all metrics. Another point in favour of rescaling is to maintain consistence with existing work such as the research listed in the Question Chapter, which typically make the 1st overall pick worth 1000 "points" and then calculate the relative value of other picks based on that.
+
+```{r}
+nls_pred_vals
+
+C_m <- c(1, 1000 / nls_pred_vals[1,][-1])
+
+nls_pred_vals <- C_m * nls_pred_vals
+
+reactable(head(nls_pred_vals, 10)) # confirm it worked
+```
+
+Now that we have the models on the same scale, we can plot the predicted values on top of each other.
+
+```{r}
+ggplot(nls_pred_vals, aes(x = overall)) + 
+  geom_line(aes(y = mean_ps), col = "purple", lwd = 0.85, lty = 1) + 
+  geom_line(aes(y = mean_gp), col = "dodgerblue", lwd = 0.85, lty = 2) +
+  geom_line(aes(y = suc_rate), col = "salmon", lwd = 0.85, lty = 3) +
+  geom_line(aes(y = mean_adj_ps), col = "limegreen", lwd = 0.85, lty = 5
+            )
+```
+
+The mean PS and mean Adjusted PS lines are almost perfectly on top of each other, indicating the adjustment we made to estimate the PS remaining in players' careers had a minimal impact on the estimate of pick value. Indeed:
+
+```{r}
+mean(abs(nls_pred_vals$mean_ps - nls_pred_vals$mean_adj_ps))
+```
+
+This tells us that the mean distance between pick value estimated by mean PS and mean Adjusted PS is about 1 point, which is effectively nothing since picks are valueed out of 1000 points.
 
 ## Model Selection
 
 Probably will take the model with the lowest RSS.
+
+## Finishing Touches
+
+Create value and pick functions.

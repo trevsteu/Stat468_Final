@@ -105,7 +105,7 @@ The shapes of the two graphs are quite similar, but the outliers in the second o
 
 ## Model
 
-### Code 
+### Code
 
 ```{r, eval=FALSE}
 prop_knn_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 

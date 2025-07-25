@@ -26,8 +26,6 @@
 
 -   [Calculating Point Shares](https://www.hockey-reference.com/about/point_shares.html) (throughout the report)
 
--   [Row-wise Operations](https://dplyr.tidyverse.org/articles/rowwise.html) (in the Transform chapter)
-
 -   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r) (in the Transform chapter)
 
 -   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name) (in the Transform chapter)

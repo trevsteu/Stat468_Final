@@ -103,6 +103,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react.min.js"></script>
+
+<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
+
+<script src="site_libs/reactwidget-2.0.0/react-tools.js"></script>
+
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+
+<script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
+
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -238,9 +254,9 @@ window.Quarto = {
   <li><a href="#introductionrecap" id="toc-introductionrecap" class="nav-link" data-scroll-target="#introductionrecap"><span class="header-section-number">7.2</span> Introduction/Recap</a></li>
   <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression"><span class="header-section-number">7.3</span> Linear Regression</a></li>
   <li><a href="#non-linear-regression" id="toc-non-linear-regression" class="nav-link" data-scroll-target="#non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</a></li>
-  <li><a href="#after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" id="toc-after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" class="nav-link" data-scroll-target="#after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff"><span class="header-section-number">7.5</span> After this point I was lazy about coding smartly and writing stuff</a></li>
-  <li><a href="#one-last-adjustment" id="toc-one-last-adjustment" class="nav-link" data-scroll-target="#one-last-adjustment"><span class="header-section-number">7.6</span> One Last Adjustment</a></li>
-  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">7.7</span> Model Selection</a></li>
+  <li><a href="#one-last-adjustment" id="toc-one-last-adjustment" class="nav-link" data-scroll-target="#one-last-adjustment"><span class="header-section-number">7.5</span> One Last Adjustment</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">7.6</span> Model Selection</a></li>
+  <li><a href="#finishing-touches" id="toc-finishing-touches" class="nav-link" data-scroll-target="#finishing-touches"><span class="header-section-number">7.7</span> Finishing Touches</a></li>
   </ul>
 </nav>
     </div>
@@ -280,11 +296,13 @@ window.Quarto = {
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("patchwork")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("stringr")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("reactable")</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -326,22 +344,22 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>), </span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm_pred_vals <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>), </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                      \(x) <span class="fu">predict</span>(lin_models[[x]], </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">224</span>))))</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_ps =</span> pred_vals[[<span class="dv">1</span>]], </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_gp =</span> pred_vals[[<span class="dv">2</span>]], </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> pred_vals[[<span class="dv">3</span>]], </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> pred_vals[[<span class="dv">4</span>]])</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>lm_pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_ps =</span> lm_pred_vals[[<span class="dv">1</span>]], </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_gp =</span> lm_pred_vals[[<span class="dv">2</span>]], </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> lm_pred_vals[[<span class="dv">3</span>]], </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> lm_pred_vals[[<span class="dv">4</span>]])</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mean PS"</span>, <span class="st">"Mean GP"</span>, <span class="st">"Success Rate"</span>, <span class="st">"Mean Adjusted PS"</span>)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_lm_{metrics[i]}"</span>), </span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> lm_pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
@@ -359,18 +377,18 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>resids <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lin_models, residuals)</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lm_resids <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lin_models, residuals)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>resids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean_ps_resid =</span> resids[[<span class="dv">1</span>]], </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_gp_resid =</span> resids[[<span class="dv">2</span>]], </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">suc_rate_resid =</span> resids[[<span class="dv">3</span>]], </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_adj_ps_resid =</span> resids[[<span class="dv">4</span>]])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>lm_resids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean_ps_resid =</span> lm_resids[[<span class="dv">1</span>]], </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_gp_resid =</span> lm_resids[[<span class="dv">2</span>]], </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">suc_rate_resid =</span> lm_resids[[<span class="dv">3</span>]], </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_adj_ps_resid =</span> lm_resids[[<span class="dv">4</span>]])</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>pred_vals_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(pred_vals, resids)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>lm_pred_vals_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(lm_pred_vals, lm_resids)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_res_{metrics[i]}"</span>), </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}"</span>), </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(lm_pred_vals_resid, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}"</span>), </span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">y =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}_resid"</span>))) <span class="sc">+</span> </span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>())</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  }</span>
@@ -391,45 +409,38 @@ window.Quarto = {
 <h2 data-number="7.4" class="anchored" data-anchor-id="non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</h2>
 <p>Given that none of the four linear models were appropriate, we will reattempt to fit a model using non-linear regression (ie the <code>nls</code> function, which stands for non-linear least squares). The resource <a href="https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html">Non-linear Regression in R</a> was very helpful when working on this section. In short, we will be fitting the model</p>
 <p><span class="math display">\[
-v_i = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
+v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 \]</span></p>
 <p>Where</p>
 <ul>
+<li><p><span class="math inline">\(i\)</span> is the pick number.</p></li>
+<li><p><span class="math inline">\(m\)</span> is the metric being used.</p></li>
 <li><p><span class="math inline">\(v_{i,m}\)</span> is the value of pick <span class="math inline">\(i\)</span> based on metric <span class="math inline">\(m\)</span>.</p></li>
 <li><p><span class="math inline">\(\phi_{1, m},\phi_{2, m},\phi_{3, m}\)</span> are parameters that depend on which metric we are using.</p></li>
 </ul>
-<p>We fit this model as follows:</p>
-</section>
-<section id="after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff"><span class="header-section-number">7.5</span> After this point I was lazy about coding smartly and writing stuff</h2>
+<p>We choose to use <code>nls</code> because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates. We fit these models as follows:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ps_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gp_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_gp <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>sr_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(suc_rate <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>aps_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_adj_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pick =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_ps =</span> <span class="fu">predict</span>(ps_nls, pick), </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_gp =</span> <span class="fu">predict</span>(gp_nls, pick), </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_suc_rate =</span> <span class="fu">predict</span>(sr_nls, pick), </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_adj_ps =</span> <span class="fu">predict</span>(aps_nls, pick)) </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>nls_ps_plot <span class="ot">&lt;-</span> plot_mean_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>nls_gp_plot <span class="ot">&lt;-</span> plot_mean_gp <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_gp), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>nls_sr_plot <span class="ot">&lt;-</span> plot_suc_rate <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_suc_rate), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>nls_aps_plot <span class="ot">&lt;-</span> plot_mean_adj_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_adj_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>(nls_ps_plot <span class="sc">+</span> nls_gp_plot) <span class="sc">/</span> (nls_sr_plot <span class="sc">+</span> nls_aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>)){</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"nls_{metrics[i]}"</span>), </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">nls</span>(all_data_comb[[i<span class="sc">+</span><span class="dv">1</span>]] <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3)))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>nls_pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pick =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_ps =</span> <span class="fu">predict</span>(nls_mean_ps, pick), </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_gp =</span> <span class="fu">predict</span>(nls_mean_gp, pick), </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">suc_rate =</span> <span class="fu">predict</span>(nls_suc_rate, pick), </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_adj_ps =</span> <span class="fu">predict</span>(nls_mean_adj_ps, pick))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_nls_{metrics[i]}"</span>), </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> nls_pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>(plot_nls_mean_ps <span class="sc">+</span> plot_nls_mean_gp) <span class="sc">/</span> (plot_nls_suc_rate <span class="sc">+</span> plot_nls_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -439,14 +450,294 @@ v_i = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 </div>
 </div>
 </div>
+<p>These curves all seem to fit well. We will look into the model’s underlying assumptions in the model selection section.</p>
 </section>
-<section id="one-last-adjustment" class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="one-last-adjustment"><span class="header-section-number">7.6</span> One Last Adjustment</h2>
-<p>Scale <span class="math inline">\(v_1\)</span> to 1000.</p>
+<section id="one-last-adjustment" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="one-last-adjustment"><span class="header-section-number">7.5</span> One Last Adjustment</h2>
+<p>One notable issue with our non-linear model is that most of the models are on very different scales (Mean PS and Mean Adjusted PS are both between roughly 1-100, Mean GP is between roughly 0-1200, and Success Rate is between 0-1). We would like to standardize this to allow for a more direct comparison of models, such as comparing the residual sum of squares. To do this, we will calculate <span class="math inline">\(C_m = \frac{1000}{v_{1,m}}\)</span>, and then multiply the value of every pick by <span class="math inline">\(C_m\)</span> to get a value out of 1000 where <span class="math inline">\(v_{1, m} = 1000\)</span> for all metrics. Another point in favour of rescaling is to maintain consistence with existing work such as the research listed in the Question Chapter, which typically make the 1st overall pick worth 1000 “points” and then calculate the relative value of other picks based on that.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>nls_pred_vals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    pick   mean_ps   mean_gp   suc_rate mean_adj_ps
+1      1 95.790143 892.91050 1.04073107  110.689279
+2      2 72.762382 815.44292 1.00063213   84.938154
+3      3 59.689045 751.43570 0.96153116   69.959180
+4      4 51.053132 697.34683 0.92413006   59.941891
+5      5 44.848707 650.90740 0.88864971   52.692570
+6      6 40.141446 610.53523 0.85512832   47.166999
+7      7 36.429660 575.07533 0.82352148   42.796431
+8      8 33.417171 543.65798 0.79374557   39.241708
+9      9 30.916725 515.61270 0.76569939   36.286806
+10    10 28.803600 490.41273 0.73927552   33.787026
+11    11 26.991236 467.63761 0.71436658   31.641500
+12    12 25.417523 446.94722 0.69086859   29.777593
+13    13 24.036642 428.06310 0.66868280   28.141572
+14    14 22.814002 410.75496 0.64771655   26.692776
+15    15 21.722958 394.83049 0.62788354   25.399823
+16    16 20.742633 380.12784 0.60910379   24.238087
+17    17 19.856417 366.50969 0.59130343   23.187949
+18    18 19.050923 353.85877 0.57441441   22.233577
+19    19 18.315231 342.07428 0.55837403   21.362047
+20    20 17.640338 331.06910 0.54312464   20.562693
+21    21 17.018752 320.76748 0.52861319   19.826636
+22    22 16.444185 311.10327 0.51479088   19.146416
+23    23 15.911317 302.01844 0.50161280   18.515720
+24    24 15.415614 293.46184 0.48903757   17.929167
+25    25 14.953188 285.38820 0.47702706   17.382140
+26    26 14.520685 277.75733 0.46554611   16.870653
+27    27 14.115193 270.53341 0.45456225   16.391248
+28    28 13.734174 263.68440 0.44404546   15.940907
+29    29 13.375403 257.18156 0.43396801   15.516986
+30    30 13.036921 250.99905 0.42430419   15.117157
+31    31 12.716996 245.11352 0.41503018   14.739361
+32    32 12.414091 239.50390 0.40612388   14.381772
+33    33 12.126839 234.15102 0.39756478   14.042761
+34    34 11.854016 229.03751 0.38933378   13.720874
+35    35 11.594524 224.14750 0.38141313   13.414808
+36    36 11.347378 219.46653 0.37378629   13.123389
+37    37 11.111686 214.98136 0.36643783   12.845558
+38    38 10.886645 210.67983 0.35935335   12.580359
+39    39 10.671524 206.55080 0.35251939   12.326924
+40    40 10.465659 202.58400 0.34592337   12.084463
+41    41 10.268445 198.76998 0.33955352   11.852258
+42    42 10.079331 195.10001 0.33339880   11.629653
+43    43  9.897810 191.56599 0.32744886   11.416045
+44    44  9.723419 188.16045 0.32169398   11.210885
+45    45  9.555731 184.87646 0.31612506   11.013665
+46    46  9.394356 181.70756 0.31073350   10.823921
+47    47  9.238930 178.64775 0.30551124   10.641222
+48    48  9.089120 175.69146 0.30045068   10.465171
+49    49  8.944617 172.83347 0.29554466   10.295402
+50    50  8.805134 170.06893 0.29078641   10.131573
+51    51  8.670406 167.39328 0.28616956    9.973370
+52    52  8.540185 164.80227 0.28168810    9.820499
+53    53  8.414241 162.29191 0.27733633    9.672687
+54    54  8.292360 159.85848 0.27310885    9.529679
+55    55  8.174342 157.49845 0.26900059    9.391238
+56    56  8.060000 155.20853 0.26500670    9.257142
+57    57  7.949159 152.98561 0.26112261    9.127184
+58    58  7.841655 150.82678 0.25734399    9.001169
+59    59  7.737335 148.72928 0.25366671    8.878916
+60    60  7.636055 146.69052 0.25008686    8.760253
+61    61  7.537680 144.70803 0.24660073    8.645020
+62    62  7.442081 142.77951 0.24320479    8.533065
+63    63  7.349140 140.90277 0.23989566    8.424248
+64    64  7.258743 139.07572 0.23667017    8.318433
+65    65  7.170784 137.29642 0.23352525    8.215495
+66    66  7.085161 135.56299 0.23045800    8.115315
+67    67  7.001781 133.87367 0.22746566    8.017779
+68    68  6.920554 132.22679 0.22454559    7.922782
+69    69  6.841393 130.62075 0.22169526    7.830222
+70    70  6.764219 129.05405 0.21891228    7.740004
+71    71  6.688955 127.52524 0.21619434    7.652039
+72    72  6.615530 126.03296 0.21353925    7.566239
+73    73  6.543873 124.57590 0.21094490    7.482524
+74    74  6.473920 123.15282 0.20840930    7.400817
+75    75  6.405610 121.76253 0.20593050    7.321043
+76    76  6.338881 120.40392 0.20350668    7.243133
+77    77  6.273680 119.07589 0.20113607    7.167021
+78    78  6.209951 117.77743 0.19881698    7.092643
+79    79  6.147644 116.50754 0.19654778    7.019939
+80    80  6.086711 115.26530 0.19432693    6.948851
+81    81  6.027104 114.04979 0.19215292    6.879325
+82    82  5.968781 112.86015 0.19002434    6.811308
+83    83  5.911697 111.69558 0.18793981    6.744749
+84    84  5.855813 110.55526 0.18589799    6.679602
+85    85  5.801091 109.43846 0.18389764    6.615820
+86    86  5.747492 108.34444 0.18193751    6.553360
+87    87  5.694982 107.27251 0.18001645    6.492180
+88    88  5.643527 106.22201 0.17813332    6.432240
+89    89  5.593094 105.19228 0.17628704    6.373501
+90    90  5.543653 104.18272 0.17447655    6.315926
+91    91  5.495172 103.19274 0.17270086    6.259481
+92    92  5.447624 102.22177 0.17095899    6.204130
+93    93  5.400980 101.26926 0.16925000    6.149843
+94    94  5.355216 100.33468 0.16757300    6.096588
+95    95  5.310304  99.41754 0.16592712    6.044333
+96    96  5.266221  98.51734 0.16431151    5.993052
+97    97  5.222943  97.63361 0.16272537    5.942716
+98    98  5.180448  96.76591 0.16116792    5.893298
+99    99  5.138713  95.91380 0.15963840    5.844773
+100  100  5.097719  95.07686 0.15813609    5.797116
+101  101  5.057444  94.25468 0.15666028    5.750304
+102  102  5.017870  93.44689 0.15521029    5.704313
+103  103  4.978977  92.65309 0.15378546    5.659121
+104  104  4.940748  91.87292 0.15238517    5.614707
+105  105  4.903165  91.10604 0.15100879    5.571051
+106  106  4.866211  90.35211 0.14965573    5.528133
+107  107  4.829871  89.61080 0.14832542    5.485933
+108  108  4.794128  88.88179 0.14701730    5.444434
+109  109  4.758967  88.16477 0.14573083    5.403617
+110  110  4.724375  87.45946 0.14446549    5.363465
+111  111  4.690336  86.76556 0.14322077    5.323962
+112  112  4.656837  86.08280 0.14199619    5.285092
+113  113  4.623865  85.41091 0.14079128    5.246839
+114  114  4.591408  84.74963 0.13960556    5.209188
+115  115  4.559452  84.09871 0.13843860    5.172124
+116  116  4.527986  83.45791 0.13728997    5.135634
+117  117  4.496999  82.82698 0.13615924    5.099704
+118  118  4.466478  82.20571 0.13504601    5.064321
+119  119  4.436415  81.59387 0.13394988    5.029471
+120  120  4.406796  80.99125 0.13287047    4.995144
+121  121  4.377614  80.39764 0.13180741    4.961326
+122  122  4.348858  79.81283 0.13076034    4.928006
+123  123  4.320517  79.23663 0.12972891    4.895173
+124  124  4.292584  78.66886 0.12871278    4.862816
+125  125  4.265049  78.10932 0.12771161    4.830924
+126  126  4.237903  77.55784 0.12672509    4.799487
+127  127  4.211137  77.01424 0.12575290    4.768496
+128  128  4.184745  76.47835 0.12479474    4.737940
+129  129  4.158717  75.95001 0.12385032    4.707810
+130  130  4.133046  75.42907 0.12291934    4.678097
+131  131  4.107724  74.91536 0.12200153    4.648792
+132  132  4.082744  74.40873 0.12109661    4.619886
+133  133  4.058099  73.90905 0.12020433    4.591372
+134  134  4.033782  73.41615 0.11932442    4.563241
+135  135  4.009786  72.92992 0.11845664    4.535485
+136  136  3.986105  72.45021 0.11760074    4.508097
+137  137  3.962732  71.97688 0.11675648    4.481069
+138  138  3.939661  71.50983 0.11592363    4.454393
+139  139  3.916887  71.04891 0.11510197    4.428063
+140  140  3.894403  70.59400 0.11429127    4.402072
+141  141  3.872203  70.14500 0.11349133    4.376413
+142  142  3.850283  69.70178 0.11270194    4.351080
+143  143  3.828636  69.26424 0.11192288    4.326066
+144  144  3.807258  68.83226 0.11115398    4.301365
+145  145  3.786143  68.40574 0.11039502    4.276971
+146  146  3.765286  67.98457 0.10964583    4.252879
+147  147  3.744683  67.56866 0.10890622    4.229082
+148  148  3.724328  67.15790 0.10817601    4.205575
+149  149  3.704217  66.75220 0.10745502    4.182353
+150  150  3.684346  66.35147 0.10674309    4.159409
+151  151  3.664710  65.95561 0.10604006    4.136740
+152  152  3.645305  65.56454 0.10534575    4.114340
+153  153  3.626127  65.17816 0.10466001    4.092205
+154  154  3.607171  64.79640 0.10398269    4.070328
+155  155  3.588434  64.41918 0.10331363    4.048707
+156  156  3.569911  64.04640 0.10265268    4.027335
+157  157  3.551599  63.67799 0.10199972    4.006210
+158  158  3.533495  63.31388 0.10135458    3.985325
+159  159  3.515594  62.95399 0.10071714    3.964678
+160  160  3.497894  62.59825 0.10008726    3.944264
+161  161  3.480390  62.24658 0.09946481    3.924079
+162  162  3.463079  61.89891 0.09884966    3.904119
+163  163  3.445958  61.55518 0.09824169    3.884380
+164  164  3.429024  61.21532 0.09764077    3.864858
+165  165  3.412274  60.87927 0.09704679    3.845551
+166  166  3.395704  60.54695 0.09645962    3.826453
+167  167  3.379312  60.21831 0.09587916    3.807562
+168  168  3.363095  59.89329 0.09530529    3.788875
+169  169  3.347049  59.57182 0.09473790    3.770387
+170  170  3.331172  59.25385 0.09417689    3.752096
+171  171  3.315462  58.93933 0.09362215    3.733998
+172  172  3.299915  58.62818 0.09307357    3.716090
+173  173  3.284528  58.32037 0.09253106    3.698370
+174  174  3.269301  58.01584 0.09199452    3.680833
+175  175  3.254229  57.71452 0.09146385    3.663478
+176  176  3.239310  57.41639 0.09093897    3.646302
+177  177  3.224543  57.12137 0.09041976    3.629300
+178  178  3.209924  56.82943 0.08990616    3.612472
+179  179  3.195451  56.54051 0.08939806    3.595813
+180  180  3.181122  56.25457 0.08889539    3.579323
+181  181  3.166935  55.97157 0.08839805    3.562996
+182  182  3.152888  55.69145 0.08790597    3.546833
+183  183  3.138979  55.41418 0.08741906    3.530829
+184  184  3.125205  55.13970 0.08693725    3.514982
+185  185  3.111564  54.86798 0.08646045    3.499290
+186  186  3.098055  54.59898 0.08598859    3.483752
+187  187  3.084675  54.33265 0.08552160    3.468363
+188  188  3.071423  54.06896 0.08505939    3.453123
+189  189  3.058296  53.80786 0.08460191    3.438029
+190  190  3.045294  53.54932 0.08414907    3.423078
+191  191  3.032413  53.29330 0.08370081    3.408270
+192  192  3.019653  53.03976 0.08325706    3.393601
+193  193  3.007011  52.78867 0.08281776    3.379069
+194  194  2.994486  52.53999 0.08238284    3.364673
+195  195  2.982077  52.29369 0.08195224    3.350411
+196  196  2.969781  52.04973 0.08152589    3.336281
+197  197  2.957597  51.80807 0.08110373    3.322281
+198  198  2.945523  51.56870 0.08068570    3.308409
+199  199  2.933558  51.33156 0.08027174    3.294663
+200  200  2.921701  51.09664 0.07986180    3.281042
+201  201  2.909949  50.86390 0.07945581    3.267543
+202  202  2.898302  50.63331 0.07905373    3.254166
+203  203  2.886757  50.40485 0.07865549    3.240907
+204  204  2.875315  50.17847 0.07826105    3.227767
+205  205  2.863972  49.95415 0.07787034    3.214743
+206  206  2.852728  49.73187 0.07748332    3.201834
+207  207  2.841582  49.51160 0.07709994    3.189037
+208  208  2.830532  49.29331 0.07672015    3.176352
+209  209  2.819577  49.07697 0.07634389    3.163777
+210  210  2.808715  48.86255 0.07597112    3.151311
+211  211  2.797946  48.65004 0.07560179    3.138952
+212  212  2.787268  48.43940 0.07523586    3.126699
+213  213  2.776680  48.23061 0.07487328    3.114549
+214  214  2.766181  48.02365 0.07451400    3.102503
+215  215  2.755770  47.81849 0.07415798    3.090559
+216  216  2.745445  47.61511 0.07380518    3.078714
+217  217  2.735205  47.41348 0.07345556    3.066969
+218  218  2.725050  47.21359 0.07310906    3.055322
+219  219  2.714979  47.01541 0.07276566    3.043770
+220  220  2.704989  46.81891 0.07242531    3.032315
+221  221  2.695081  46.62408 0.07208797    3.020953
+222  222  2.685253  46.43090 0.07175361    3.009684
+223  223  2.675504  46.23934 0.07142217    2.998507
+224  224  2.665833  46.04939 0.07109364    2.987420</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>C_m <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1000</span> <span class="sc">/</span> nls_pred_vals[<span class="dv">1</span>,][<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>nls_pred_vals <span class="ot">&lt;-</span> C_m <span class="sc">*</span> nls_pred_vals</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">head</span>(nls_pred_vals, <span class="dv">10</span>)) <span class="co"># confirm it worked</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-652fd98dac1aa02d8d64" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-652fd98dac1aa02d8d64">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pick":[1,2,3,4,5,6,7,8,9,10],"mean_ps":[1000,759.601982116975,623.123040039035,532.968539604286,468.197520328187,419.056125693938,380.30698583533,348.858143929139,322.754768006111,300.694824939955],"mean_gp":[1000,913.241496011176,841.557695511433,780.981779648695,728.972729686678,683.758599290513,644.045883527816,608.860557347915,577.451720442834,549.229431398409],"suc_rate":[1000,961.470418714522,923.899738669947,887.962401465634,853.870643190774,821.661187997876,791.291335135877,762.680765104044,735.732230272753,710.342516452215],"mean_adj_ps":[1000,767.356645875059,632.032125689231,541.532937975246,476.040409753001,426.120755205512,386.635740063855,354.521305487089,327.825840459855,305.24208631199]},"columns":[{"id":"pick","name":"pick","type":"numeric"},{"id":"mean_ps","name":"mean_ps","type":"numeric"},{"id":"mean_gp","name":"mean_gp","type":"numeric"},{"id":"suc_rate","name":"suc_rate","type":"numeric"},{"id":"mean_adj_ps","name":"mean_adj_ps","type":"numeric"}],"dataKey":"62347f27f4b363026c9978c09b8cfa11"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Now that we have the models on the same scale, we can plot the predicted values on top of each other.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nls_pred_vals, <span class="fu">aes</span>(<span class="at">x =</span> overall)) <span class="sc">+</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"purple"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"dodgerblue"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"salmon"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"limegreen"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">5</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The mean PS and mean Adjusted PS lines are almost perfectly on top of each other, indicating the adjustment we made to estimate the PS remaining in players’ careers had a minimal impact on the estimate of pick value. Indeed:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">abs</span>(nls_pred_vals<span class="sc">$</span>mean_ps <span class="sc">-</span> nls_pred_vals<span class="sc">$</span>mean_adj_ps))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.092829</code></pre>
+</div>
+</div>
+<p>This tells us that the mean distance between pick value estimated by mean PS and mean Adjusted PS is about 1 point, which is effectively nothing since picks are valueed out of 1000 points.</p>
 </section>
-<section id="model-selection" class="level2" data-number="7.7">
-<h2 data-number="7.7" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">7.7</span> Model Selection</h2>
+<section id="model-selection" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">7.6</span> Model Selection</h2>
 <p>Probably will take the model with the lowest RSS.</p>
+</section>
+<section id="finishing-touches" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="finishing-touches"><span class="header-section-number">7.7</span> Finishing Touches</h2>
+<p>Create value and pick functions.</p>
 
 
 </section>
