@@ -41,7 +41,7 @@ Considering this, it makes sense to make an adjustment to active players based o
 
 ## Transforming GP
 
-### Introduction 
+### Introduction
 
 In this chapter we will add a column our dataset indicating whether the player became or is on track to become an NHL regular. We will adopt Luo's definition of an NHL regular being a skater who plays in or is on track to play in 200 games. This is straightforward a player is retired or has already played in enough games, but is more complex if the player is active and has not yet reached the required number of games. For these players, we will take an almost identical approach as Luo (2024), which changes the GP threshold depending on when a player was drafted. The modified threshold for skaters is given below, where $j$ is the year the player was drafted in $t_j$ is the threshold for players drafted in year $j$.
 
@@ -55,7 +55,7 @@ The only other difference between our threshold is Luo's is that the years are d
 
 ### Adding the Indicator
 
-```{r}
+```{r, warning = FALSE}
 get_threshold <- function(year){
   ifelse(year <= 2017, 200, 82/3*(2025-year))
 }
@@ -242,7 +242,7 @@ The adjusted PS values are generally larger than the unadjusted PS values, which
 
 ## Combining Everything
 
-Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot fo each metric.
+Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot for each metric, note that no points can be directly on top of each other because all points have different `overall` values.
 
 ```{r}
 all_data_comb <- all_data_adj |> 
@@ -252,16 +252,16 @@ all_data_comb <- all_data_adj |>
             suc_rate = mean(reg), 
             mean_adj_ps = mean(adj_ps))
 
-mp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
+ps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
   geom_point()
-mg_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
+gp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
   geom_point()
 sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
   geom_point()
-map_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
+aps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
   geom_point()
 
-(mp_plot + mg_plot) / (sr_plot + map_plot)
+(ps_plot + gp_plot) / (sr_plot + aps_plot)
 ```
 
 These plots all have the same general shape, though they are all on different scales. In the next chapter we will fit a model to this data.

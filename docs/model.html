@@ -235,9 +235,10 @@ window.Quarto = {
    
   <ul>
   <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup"><span class="header-section-number">7.1</span> Setup</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">7.2</span> Introduction</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">7.3</span> Code</a></li>
-  <li><a href="#knn-stuff" id="toc-knn-stuff" class="nav-link" data-scroll-target="#knn-stuff"><span class="header-section-number">7.4</span> KNN Stuff</a></li>
+  <li><a href="#introductionrecap" id="toc-introductionrecap" class="nav-link" data-scroll-target="#introductionrecap"><span class="header-section-number">7.2</span> Introduction/Recap</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression"><span class="header-section-number">7.3</span> Linear Regression</a></li>
+  <li><a href="#non-linear-regression" id="toc-non-linear-regression" class="nav-link" data-scroll-target="#non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</a></li>
+  <li><a href="#after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" id="toc-after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" class="nav-link" data-scroll-target="#after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff"><span class="header-section-number">7.5</span> After this point I was lazy about coding smartly and writing stuff</a></li>
   </ul>
 </nav>
     </div>
@@ -275,132 +276,165 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("tidyverse")</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("dplyr")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("gt")</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("patchwork")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("purrr")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="introduction" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">7.2</span> Introduction</h2>
-<p>In the model step, we will develop a model for predicting the value of picks in the NHL Entry Draft based on historical data. We will first start with a linear model, then progress to a logarithmic model, and then conclude by finding a model via non-linear regression.</p>
-</section>
-<section id="code" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="code"><span class="header-section-number">7.3</span> Code</h2>
+<section id="introductionrecap" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="introductionrecap"><span class="header-section-number">7.2</span> Introduction/Recap</h2>
+<p>Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, an then we will develop a model via non-linear regression. As always, when fitting a model it is important to ensure that the underlying assumptions of a model hold, otherwise the model can be useless, or even worse, misleading.</p>
+<p>Recall the four plots we ended the Transform chapter with, based on the mean PS, mean GP, success rate, and mean adjusted PS for every selection between 1 and 224. For convenience we replot this data below:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>prop_knn_model <span class="ot">&lt;-</span> <span class="fu">nls</span>(value_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> knn_prop)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>pred_data_prop_knn <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pred_vals_prop_knn <span class="ot">&lt;-</span> <span class="fu">predict</span>(prop_knn_model, pred_data_prop_knn)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>pred_data <span class="ot">&lt;-</span> <span class="fu">mutate</span>(pred_data_prop_knn, <span class="at">value_ps =</span> pred_vals_prop_knn)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_data, <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> value_ps)) <span class="sc">+</span> </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> knn_prop)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>raw_knn_model <span class="ot">&lt;-</span> <span class="fu">nls</span>(value_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> knn_raw)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>pred_data_raw_knn <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>))</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>pred_vals_raw_knn <span class="ot">&lt;-</span> <span class="fu">predict</span>(raw_knn_model, pred_data_raw_knn)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>pred_data <span class="ot">&lt;-</span> <span class="fu">mutate</span>(pred_data, <span class="at">value_ps =</span> pred_vals_raw_knn)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_data, <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> value_ps)) <span class="sc">+</span> </span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> knn_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ps_plot <span class="sc">+</span> gp_plot) <span class="sc">/</span> (sr_plot <span class="sc">+</span> aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mean_data <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(overall) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ps =</span> <span class="fu">mean</span>(ps))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>raw_model <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> mean_data)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>pred_data_raw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>))</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>pred_vals_raw <span class="ot">&lt;-</span> <span class="fu">predict</span>(raw_model, pred_data_raw)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>pred_data_raw <span class="ot">&lt;-</span> <span class="fu">mutate</span>(pred_data_raw, <span class="at">value_ps =</span> pred_vals_raw)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_data, <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> value_ps)) <span class="sc">+</span> </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> pred_data_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+</div>
 </div>
 </section>
-<section id="knn-stuff" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="knn-stuff"><span class="header-section-number">7.4</span> KNN Stuff</h2>
-<p>We now apply the weighted <span class="math inline">\(k\)</span>-nearest neighbour algorithm, first on <code>all_data</code>, and then on <code>all_data_prop</code>. Note that we will choose <span class="math inline">\(k\)</span> to be a function of <span class="math inline">\(n\)</span>, specifically we will include any pick which is within <span class="math inline">\(\lfloor \frac{\sqrt n}{2}\rfloor +1\)</span> of <span class="math inline">\(n\)</span> which means that our estimate of <span class="math inline">\(v_1\)</span> depends on the historical values of just pick 1 and 2, whereas the estimated value of pick 200 depends on the historical values of picks 192-208 (ie any pick <span class="math inline">\(i\)</span> such that <span class="math inline">\(| i - 200 | \le \lfloor \frac{\sqrt {200}}{2}\rfloor +1 = 8\)</span>). We also need to choose a weight function, we choose to give each pick satisfying the equation above weight <span class="math inline">\(y_i = \frac{w_i}{\sum w_i}\)</span>, where <span class="math inline">\(w_i = \min(\frac{1}{(n - i)^2}, 1)\)</span>. Note that <span class="math inline">\(w_i = 1\)</span> if and only if <span class="math inline">\(n = i\)</span>, and that <span class="math inline">\(\sum y_i  =1\)</span>. Finally, we scale all the values so that the first pick is worth (roughly) 1000 points to allow for an easier comparison between models (this is also in line with how most NHL draft pick value models are structured).</p>
+<section id="linear-regression" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="linear-regression"><span class="header-section-number">7.3</span> Linear Regression</h2>
+<p>We use <code>lm</code> to fit a linear model to each of the metrics:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>est_ps <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(all_data_raw))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(all_data_raw)){</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(i)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  nearest <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">abs</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(all_data_raw), <span class="dv">1</span>) <span class="sc">-</span> i) <span class="sc">&lt;=</span> (k <span class="sc">%/%</span> <span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  total_weight <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span>(i <span class="sc">-</span> nearest)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> nearest){</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    weight <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">abs</span>(i <span class="sc">-</span> j)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>) <span class="sc">/</span> total_weight</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    est_ps[i] <span class="ot">&lt;-</span> est_ps[i] <span class="sc">+</span> weight <span class="sc">*</span> all_data_raw<span class="sc">$</span>mean_ps[j]</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ps_scale_fac <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="sc">/</span> est_ps[[<span class="dv">1</span>]]</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>knn_raw <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(est_ps), <span class="dv">1</span>),</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value_ps =</span> ps_scale_fac <span class="sc">*</span> est_ps)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean_ps"</span>, <span class="st">"mean_gp"</span>, <span class="st">"suc_rate"</span>, <span class="st">"mean_adj_ps"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>overall <span class="ot">&lt;-</span> all_data_comb<span class="sc">$</span>overall</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>lin_models <span class="ot">&lt;-</span> <span class="fu">lapply</span>(metrics, \(x) <span class="fu">lm</span>(all_data_comb[[x]] <span class="sc">~</span> overall))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>For each linear model, we generate a vector of predicted values and plot it on top of the historical values:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>), </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                      \(x) <span class="fu">predict</span>(lin_models[[x]], </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">224</span>))))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_ps =</span> pred_vals[[<span class="dv">1</span>]], </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_gp =</span> pred_vals[[<span class="dv">2</span>]], </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> pred_vals[[<span class="dv">3</span>]], </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> pred_vals[[<span class="dv">4</span>]])</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>lin_ps_plot <span class="ot">&lt;-</span> ps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>lin_gp_plot <span class="ot">&lt;-</span> gp_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>lin_sr_plot <span class="ot">&lt;-</span> sr_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>lin_aps_plot <span class="ot">&lt;-</span> aps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>est_ps_prop <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">nrow</span>(all_data_prop))</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(all_data_prop)){</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(i)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  nearest <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">abs</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(all_data_prop), <span class="dv">1</span>) <span class="sc">-</span> i) <span class="sc">&lt;=</span> (k <span class="sc">%/%</span> <span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  total_weight <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">abs</span>(i <span class="sc">-</span> nearest)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> nearest){</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    weight <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="dv">1</span><span class="sc">/</span>(i <span class="sc">-</span> j)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">1</span>) <span class="sc">/</span> total_weight</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    est_ps_prop[i] <span class="ot">&lt;-</span> est_ps_prop[i] <span class="sc">+</span> weight <span class="sc">*</span> all_data_prop<span class="sc">$</span>avg_prop_ps[j]</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>ps_prop_scale_fac <span class="ot">&lt;-</span> <span class="dv">1000</span> <span class="sc">/</span> est_ps_prop[[<span class="dv">1</span>]]</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>knn_prop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">length</span>(est_ps_prop), <span class="dv">1</span>),</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value_ps =</span> ps_prop_scale_fac <span class="sc">*</span> est_ps_prop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>(lin_ps_plot <span class="sc">+</span> lin_gp_plot) <span class="sc">/</span> (lin_sr_plot <span class="sc">+</span> lin_aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<p>Now that both the raw average method and average proportion method are on the same scale, we can plot them on top of each other. Indeed, they are similar before around pick 20 and nearly identical after that:</p>
+</div>
+</div>
+<p>All four of these linear models are very clearly inadequate, but for sake of completeness we will look at plots of the residuals vs fitted values.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">mutate</span>(knn_raw, <span class="at">mod =</span> <span class="st">"Raw PS"</span>), </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">mutate</span>(knn_prop, <span class="at">mod =</span> <span class="st">"Proportional"</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_data, <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> value_ps, <span class="at">col =</span> mod)) <span class="sc">+</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Historical Value of Draft Picks by Overall"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Values smoothened using a weighted k-nearest-neigbour algorithm"</span>, </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"Value of Pick"</span>, <span class="at">col =</span> <span class="st">"Model Used"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>resids <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lin_models, residuals)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>resids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean_ps_resid =</span> resids[[<span class="dv">1</span>]], </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_gp_resid =</span> resids[[<span class="dv">2</span>]], </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">suc_rate_resid =</span> resids[[<span class="dv">3</span>]], </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_adj_ps_resid =</span> resids[[<span class="dv">4</span>]])</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>pred_vals_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(pred_vals, resids)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>ps_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> mean_ps, <span class="at">y =</span> mean_ps_resid)) <span class="sc">+</span> </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>gp_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> mean_gp, <span class="at">y =</span> mean_gp_resid)) <span class="sc">+</span> </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>sr_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> suc_rate, <span class="at">y =</span> suc_rate_resid)) <span class="sc">+</span> </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>aps_resid <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(pred_vals_resid, <span class="fu">aes</span>(<span class="at">x =</span> mean_adj_ps, <span class="at">y =</span> mean_adj_ps_resid)) <span class="sc">+</span> </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"pink"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>(ps_resid <span class="sc">+</span> gp_resid) <span class="sc">/</span> (sr_resid <span class="sc">+</span> aps_resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<p>Though not perfect, this curve is much smoother than the previous one, so we will use this when fitting a curve.</p>
+</div>
+</div>
+<p>Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions.</p>
+</section>
+<section id="non-linear-regression" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</h2>
+<p>Given that none of the four linear models were appropriate, we will reattempt to fit a model using non-linear regression (ie the <code>nls</code> function, which stands for non-linear least squares). The resource <a href="https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html">Non-linear Regression in R</a> was very helpful when working on this section. In short, we will be fitting the model</p>
+<p><span class="math display">\[
+v_i = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
+\]</span></p>
+<p>Where</p>
+<ul>
+<li><p><span class="math inline">\(v_{i,m}\)</span> is the value of pick <span class="math inline">\(i\)</span> based on metric <span class="math inline">\(m\)</span>.</p></li>
+<li><p><span class="math inline">\(\phi_{1, m},\phi_{2, m},\phi_{3, m}\)</span> are parameters that depend on which metric we are using.</p></li>
+</ul>
+<p>We fit this model as follows:</p>
+</section>
+<section id="after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="after-this-point-i-was-lazy-about-coding-smartly-and-writing-stuff"><span class="header-section-number">7.5</span> After this point I was lazy about coding smartly and writing stuff</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ps_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gp_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_gp <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>sr_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(suc_rate <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>aps_nls <span class="ot">&lt;-</span> <span class="fu">nls</span>(mean_adj_ps <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3), </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> all_data_comb)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pick =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_ps =</span> <span class="fu">predict</span>(ps_nls, pick), </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_gp =</span> <span class="fu">predict</span>(gp_nls, pick), </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_suc_rate =</span> <span class="fu">predict</span>(sr_nls, pick), </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_adj_ps =</span> <span class="fu">predict</span>(aps_nls, pick)) </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>nls_ps_plot <span class="ot">&lt;-</span> ps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>nls_gp_plot <span class="ot">&lt;-</span> gp_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_gp), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>nls_sr_plot <span class="ot">&lt;-</span> sr_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_suc_rate), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>nls_aps_plot <span class="ot">&lt;-</span> aps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_adj_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>(nls_ps_plot <span class="sc">+</span> nls_gp_plot) <span class="sc">/</span> (nls_sr_plot <span class="sc">+</span> nls_aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>

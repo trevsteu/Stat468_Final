@@ -107,7 +107,7 @@ old_ps_players <- player_stats_1996_1997 |>
 reactable(arrange(old_ps_players, player))
 ```
 
-I checked all of these manually and it turns out that Jeff Brown is a different Jeff Brown so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.
+I checked all of these manually and it turns out that the Jeff Brown listed is not the Jeff Brown that was drafted in 1996, so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.
 
 ```{r}
 old_ps_players |> 
@@ -121,4 +121,6 @@ old_ps_players |>
   gt()
 ```
 
-We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results. Note also that we will also use GP (games played) as a measure of player success, and that there have been 82 games per regular season for most NHL seasons since 1996 (2004-2005 was cancelled, 2012-2013, 2019-2020, and 2020-2021 were shortened to 48 games, between 68-71 games, and 56 games, respectively). It is unlikely these will meaningfully affect our results. We can now proceed to the Tidy step.
+We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results.
+
+Note also that we will also use GP (games played) as a measure of player success, and that there have been 82 games per regular season for most NHL seasons since 1996 (2004-2005 was cancelled, 2012-2013, 2019-2020, and 2020-2021 were shortened to 48 games, between 68-71 games, and 56 games, respectively). It is unlikely these will meaningfully affect our results given how many games are in our dataset. We can now proceed to the Tidy step.

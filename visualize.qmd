@@ -51,7 +51,7 @@ c("five_num" = fivenum(all_data$ps), "mean" = mean(all_data$ps), "sd" = sd(all_d
 
 Clearly both the GP and PS values are right skewed. Note that the maximum of the GP data is around 6 standard deviations from the mean $(\frac{1779-142.7713}{274.0303} = 5.97)$ , whereas the maximum of the PS data is almost 10 standard deviations away $(\frac{217.8-8.249862}{21.172591} = 9.89)$.
 
-We next check what proportion of our dataset ever played in an NHL game and what proportion generated less than 2 PS in their career, which is the value of exactly one win in the NHL.
+We next check what proportion of our dataset ever played in an NHL game and what proportion generated more than 2 PS in their career, which is the value of exactly one win in the NHL. Based on the research of Luo (2024), we also plan to create a metric based on the proportion of players in our dataset who played in less than 200 NHL games (note that in the Transfom chapter we will use a slightly different metric for active players and goalies, but since we are just exploring the data this will be sufficient for now).
 
 ```{r}
 all_data |> 
@@ -59,11 +59,15 @@ all_data |>
   nrow() / nrow(all_data)
 
 all_data |> 
-  filter(ps < 2) |> 
+  filter(ps > 2) |> 
+  nrow() / nrow(all_data)
+
+all_data |> 
+  filter(gp >= 200) |> 
   nrow() / nrow(all_data)
 ```
 
-This tells us that just over half of our dataset never played in an NHL game and almost three quarters made minimal on-ice contributions in their career.
+This tells us that just over half of our dataset never played in an NHL game, almost three quarters made minimal on-ice contributions in their career, and that approximately 20% of our dataset played in at least 200 NHL games.
 
 To get visual confirmation that our data is very right skewed, we check the histograms of the data, one of GP (on the left) and one of PS (on the right). We also set the scales to be the same to make comparing the values easier.
 

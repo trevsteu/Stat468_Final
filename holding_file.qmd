@@ -102,3 +102,141 @@ all_data_prop |>
 ```
 
 The shapes of the two graphs are quite similar, but the outliers in the second one seem slighly less egregious.
+
+## Model
+
+### Code 
+
+```{r, eval=FALSE}
+prop_knn_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = knn_prop)
+
+pred_data_prop_knn <- data.frame(overall = seq(1, 224))
+pred_vals_prop_knn <- predict(prop_knn_model, pred_data_prop_knn)
+
+pred_data <- mutate(pred_data_prop_knn, value_ps = pred_vals_prop_knn)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = knn_prop)
+
+
+
+raw_knn_model <- nls(value_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = knn_raw)
+
+pred_data_raw_knn <- data.frame(overall = seq(1, 224))
+pred_vals_raw_knn <- predict(raw_knn_model, pred_data_raw_knn)
+
+pred_data <- mutate(pred_data, value_ps = pred_vals_raw_knn)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = knn_raw)
+```
+
+```{r, eval=FALSE}
+mean_data <- all_data |> 
+  group_by(overall) |> 
+  summarize(mean_ps = mean(ps))
+
+raw_model <- nls(mean_ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                 data = mean_data)
+
+pred_data_raw <- data.frame(overall = seq(1, 224))
+pred_vals_raw <- predict(raw_model, pred_data_raw)
+
+pred_data_raw <- mutate(pred_data_raw, value_ps = pred_vals_raw)
+
+ggplot(pred_data, aes(x = overall, y = value_ps)) + 
+  geom_line(lwd = 1.5, col = "red") + 
+  geom_point(data = pred_data_raw)
+```
+
+### KNN Stuff
+
+We now apply the weighted $k$-nearest neighbour algorithm, first on `all_data`, and then on `all_data_prop`. Note that we will choose $k$ to be a function of $n$, specifically we will include any pick which is within $\lfloor \frac{\sqrt n}{2}\rfloor +1$ of $n$ which means that our estimate of $v_1$ depends on the historical values of just pick 1 and 2, whereas the estimated value of pick 200 depends on the historical values of picks 192-208 (ie any pick $i$ such that $| i - 200 | \le \lfloor \frac{\sqrt {200}}{2}\rfloor +1 = 8$). We also need to choose a weight function, we choose to give each pick satisfying the equation above weight $y_i = \frac{w_i}{\sum w_i}$, where $w_i = \min(\frac{1}{(n - i)^2}, 1)$. Note that $w_i = 1$ if and only if $n = i$, and that $\sum y_i  =1$. Finally, we scale all the values so that the first pick is worth (roughly) 1000 points to allow for an easier comparison between models (this is also in line with how most NHL draft pick value models are structured).
+
+```{r, eval=FALSE}
+est_ps <- rep(0, times = nrow(all_data_raw))
+
+for(i in 1:nrow(all_data_raw)){
+  k <- sqrt(i)
+  nearest <- which(abs(seq(1, nrow(all_data_raw), 1) - i) <= (k %/% 2)+1)
+  total_weight <- sum(pmin(1/(i - nearest)^2, 1))
+  for(j in nearest){
+    weight <- pmin(1/abs(i - j)^2, 1) / total_weight
+    est_ps[i] <- est_ps[i] + weight * all_data_raw$mean_ps[j]
+  }
+}
+
+ps_scale_fac <- 1000 / est_ps[[1]]
+
+knn_raw <- data.frame(overall = seq(1, length(est_ps), 1),
+                        value_ps = ps_scale_fac * est_ps)
+
+
+
+est_ps_prop <- rep(0, times = nrow(all_data_prop))
+
+for(i in 1:nrow(all_data_prop)){
+  k <- sqrt(i)
+  nearest <- which(abs(seq(1, nrow(all_data_prop), 1) - i) <= (k %/% 2)+1)
+  total_weight <- sum(pmin(1/abs(i - nearest)^2, 1))
+  for(j in nearest){
+    weight <- pmin(1/(i - j)^2, 1) / total_weight
+    est_ps_prop[i] <- est_ps_prop[i] + weight * all_data_prop$avg_prop_ps[j]
+  }
+}
+
+ps_prop_scale_fac <- 1000 / est_ps_prop[[1]]
+
+knn_prop <- data.frame(overall = seq(1, length(est_ps_prop), 1),
+                        value_ps = ps_prop_scale_fac * est_ps_prop)
+```
+
+Now that both the raw average method and average proportion method are on the same scale, we can plot them on top of each other. Indeed, they are similar before around pick 20 and nearly identical after that:
+
+```{r, eval=FALSE}
+combined_data <- rbind(mutate(knn_raw, mod = "Raw PS"), 
+                       mutate(knn_prop, mod = "Proportional"))
+ggplot(combined_data, aes(x = overall, y = value_ps, col = mod)) + 
+  geom_point(alpha = 0.4) + 
+  labs(title = "Historical Value of Draft Picks by Overall",
+       subtitle = "Values smoothened using a weighted k-nearest-neigbour algorithm", 
+       x = "Pick Number", y = "Value of Pick", col = "Model Used")
+```
+
+Though not perfect, this curve is much smoother than the previous one, so we will use this when fitting a curve.
+
+## Questions for David:
+
+```{r}
+
+# why does this not work 
+get_length <- function(len){ 
+  all_data_adj |> 
+    mutate(rem_career_len = to - year - len) |> 
+    summarize(mean = mean(rem_career_len)) |> 
+    pull(mean)
+}
+
+est_yr <- data.frame(k = seq(1,10)) |> 
+  mutate(yr = get_length(k)) 
+
+
+
+
+
+# How to do this better 
+ps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
+  geom_point()
+gp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
+  geom_point()
+sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
+  geom_point()
+aps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
+  geom_point()
+
+(ps_plot + gp_plot) / (sr_plot + aps_plot)
+```

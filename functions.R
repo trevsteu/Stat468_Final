@@ -106,3 +106,14 @@ all_data_comb <- all_data_adj |>
             mean_adj_ps = mean(adj_ps))
 
 # ---------------------------------------------------------------------------------------
+
+ps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_ps)) + 
+  geom_point()
+gp_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_gp)) + 
+  geom_point()
+sr_plot <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
+  geom_point()
+aps_plot <- ggplot(all_data_comb, aes(x = overall, y = mean_adj_ps)) + 
+  geom_point()
+
+# ---------------------------------------------------------------------------------------
