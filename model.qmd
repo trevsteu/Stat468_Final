@@ -49,13 +49,13 @@ pred_vals <- data.frame(overall = seq(1, 224),
                           suc_rate = pred_vals[[3]], 
                           mean_adj_ps = pred_vals[[4]])
 
-lin_ps_plot <- ps_plot + geom_line(data = pred_vals, 
+lin_ps_plot <- plot_mean_ps + geom_line(data = pred_vals, 
                     aes(x = overall, y = mean_ps), col = "red", lwd = 1.5)
-lin_gp_plot <- gp_plot + geom_line(data = pred_vals, 
+lin_gp_plot <- plot_mean_gp + geom_line(data = pred_vals, 
                     aes(x = overall, y = mean_gp), col = "red", lwd = 1.5)
-lin_sr_plot <- sr_plot + geom_line(data = pred_vals, 
+lin_sr_plot <- plot_suc_rate + geom_line(data = pred_vals, 
                     aes(x = overall, y = suc_rate), col = "red", lwd = 1.5)
-lin_aps_plot <- aps_plot + geom_line(data = pred_vals, 
+lin_aps_plot <- plot_mean_adj_ps + geom_line(data = pred_vals, 
                     aes(x = overall, y = mean_adj_ps), col = "red", lwd = 1.5)
 
 (lin_ps_plot + lin_gp_plot) / (lin_sr_plot + lin_aps_plot)
@@ -121,13 +121,13 @@ pred_vals <- data.frame(pick = seq(1, 224),
                         pred_suc_rate = predict(sr_nls, pick), 
                         pred_mean_adj_ps = predict(aps_nls, pick)) 
 
-nls_ps_plot <- ps_plot + geom_line(data = pred_vals, 
+nls_ps_plot <- plot_mean_ps + geom_line(data = pred_vals, 
                     aes(x = overall, y = pred_mean_ps), col = "red", lwd = 1.5)
-nls_gp_plot <- gp_plot + geom_line(data = pred_vals, 
+nls_gp_plot <- plot_mean_gp + geom_line(data = pred_vals, 
                     aes(x = overall, y = pred_mean_gp), col = "red", lwd = 1.5)
-nls_sr_plot <- sr_plot + geom_line(data = pred_vals, 
+nls_sr_plot <- plot_suc_rate + geom_line(data = pred_vals, 
                     aes(x = overall, y = pred_suc_rate), col = "red", lwd = 1.5)
-nls_aps_plot <- aps_plot + geom_line(data = pred_vals, 
+nls_aps_plot <- plot_mean_adj_ps + geom_line(data = pred_vals, 
                     aes(x = overall, y = pred_mean_adj_ps), col = "red", lwd = 1.5)
 
 (nls_ps_plot + nls_gp_plot) / (nls_sr_plot + nls_aps_plot)

@@ -277,12 +277,10 @@ window.Quarto = {
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("patchwork")</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("purrr")</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -293,7 +291,7 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ps_plot <span class="sc">+</span> gp_plot) <span class="sc">/</span> (sr_plot <span class="sc">+</span> aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(plot_mean_ps <span class="sc">+</span> plot_mean_gp) <span class="sc">/</span> (plot_suc_rate <span class="sc">+</span> plot_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -330,13 +328,13 @@ window.Quarto = {
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> pred_vals[[<span class="dv">3</span>]], </span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> pred_vals[[<span class="dv">4</span>]])</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>lin_ps_plot <span class="ot">&lt;-</span> ps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>lin_ps_plot <span class="ot">&lt;-</span> plot_mean_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>lin_gp_plot <span class="ot">&lt;-</span> gp_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>lin_gp_plot <span class="ot">&lt;-</span> plot_mean_gp <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>lin_sr_plot <span class="ot">&lt;-</span> sr_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>lin_sr_plot <span class="ot">&lt;-</span> plot_suc_rate <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>lin_aps_plot <span class="ot">&lt;-</span> aps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>lin_aps_plot <span class="ot">&lt;-</span> plot_mean_adj_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>(lin_ps_plot <span class="sc">+</span> lin_gp_plot) <span class="sc">/</span> (lin_sr_plot <span class="sc">+</span> lin_aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -416,13 +414,13 @@ v_i = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_suc_rate =</span> <span class="fu">predict</span>(sr_nls, pick), </span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pred_mean_adj_ps =</span> <span class="fu">predict</span>(aps_nls, pick)) </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>nls_ps_plot <span class="ot">&lt;-</span> ps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>nls_ps_plot <span class="ot">&lt;-</span> plot_mean_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>nls_gp_plot <span class="ot">&lt;-</span> gp_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>nls_gp_plot <span class="ot">&lt;-</span> plot_mean_gp <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_gp), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>nls_sr_plot <span class="ot">&lt;-</span> sr_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>nls_sr_plot <span class="ot">&lt;-</span> plot_suc_rate <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_suc_rate), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>nls_aps_plot <span class="ot">&lt;-</span> aps_plot <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>nls_aps_plot <span class="ot">&lt;-</span> plot_mean_adj_ps <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span> pred_vals, </span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> overall, <span class="at">y =</span> pred_mean_adj_ps), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>(nls_ps_plot <span class="sc">+</span> nls_gp_plot) <span class="sc">/</span> (nls_sr_plot <span class="sc">+</span> nls_aps_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
