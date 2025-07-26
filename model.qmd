@@ -11,10 +11,12 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("patchwork")
 # renv::install("stringr")
 # renv::install("reactable")
+# renv::install("nlstools")
 
 library(patchwork)
 library(stringr)
 library(reactable)
+library(nlstools)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -33,15 +35,39 @@ Recall the four plots we ended the Transform chapter with, based on the mean PS,
 (plot_mean_ps + plot_mean_gp) / (plot_suc_rate + plot_mean_adj_ps)
 ```
 
+## One Last Adjustment 
+
+One notable issue with our non-linear model is that most of the models are on very different scales (Mean PS and Mean Adjusted PS goes up to about 100, Mean GP goes up to roughly 1200, and Success Rate only goes up to a maximum of 1). We would like to standardize this to allow for a more direct comparison of models. To do this, we will calculate $C_m = \frac{1000}{h_{1,m}}$, and then multiply the historical value of every pick by $C_m$ to get a value out of 1000 where $h_{1, m} = 1000$ for all metrics. Another point in favour of rescaling is to maintain consistence with existing work such as the research listed in the Question Chapter, which typically make the 1st overall pick worth 1000 "points" and then calculate the relative value of other picks based on that. We do this now because if we do it after fitting a model then we will have to refit all the models anyway.
+
+```{r}
+C_m <- c(1, 1000 / all_data_comb[1,][-1])
+
+all_data_scaled <- all_data_comb * C_m
+
+reactable(all_data_scaled) # confirm it worked
+```
+
+Now that all metrics are on the same scale, we can plot them on top of each other.
+
+```{r}
+ggplot(all_data_scaled, aes(x = overall)) + 
+  geom_point(aes(y = mean_ps), col = "salmon", alpha = 0.7) +   
+  geom_point(aes(y = mean_gp), col = "dodgerblue", alpha = 0.3) + 
+  geom_point(aes(y = suc_rate), col = "purple", alpha = 0.3) + 
+  geom_point(aes(y = mean_adj_ps), col = "limegreen", alpha = 0.3)
+```
+
+This plot confirms that mean PS and adjusted PS give very similar estimates, and that value decreases slowest when using Success Rate. Now that we have the plots on the same scale, we can fit models to the scaled data.
+
 ## Linear Regression
 
 We use `lm` to fit a linear model to each of the metrics:
 
 ```{r}
 metrics <- c("mean_ps", "mean_gp", "suc_rate", "mean_adj_ps")
-overall <- all_data_comb$overall
+overall <- all_data_scaled$overall
 
-lin_models <- lapply(metrics, \(x) lm(all_data_comb[[x]] ~ overall))
+lin_models <- lapply(metrics, \(x) lm(all_data_scaled[[x]] ~ overall))
 ```
 
 For each linear model, we generate a vector of predicted values and plot it on top of the historical values:
@@ -60,6 +86,14 @@ lm_pred_vals <- data.frame(overall = seq(1, 224),
 names <- c("Mean PS", "Mean GP", "Success Rate", "Mean Adjusted PS")
 
 for(i in 1:length(metrics)){
+  assign(str_glue("plot_{metrics[i]}"), 
+         ggplot(all_data_scaled, aes_string(x = "overall", y = metrics[i])) + 
+           geom_point() + 
+           labs(title = str_glue("{names[i]} verses Overall"), 
+                x = "Overall", y = str_glue("{names[i]}")))
+}
+
+for(i in 1:length(metrics)){
   assign(str_glue("plot_lm_{metrics[i]}"), 
          get(str_glue("plot_{metrics[i]}")) + 
            geom_line(data = lm_pred_vals, aes_string(x = "overall", y = metrics[i]), 
@@ -67,6 +101,12 @@ for(i in 1:length(metrics)){
   }
 
 (plot_lm_mean_ps + plot_lm_mean_gp) / (plot_lm_suc_rate + plot_lm_mean_adj_ps)
+```
+
+The fitted values are given in the table below:
+
+```{r}
+reactable(lm_pred_vals)
 ```
 
 All four of these linear models are very clearly inadequate, but for sake of completeness we will look at plots of the residuals vs fitted values.
@@ -91,7 +131,7 @@ for(i in 1:length(metrics)){
 (plot_res_mean_ps + plot_res_mean_gp) / (plot_res_suc_rate + plot_res_mean_adj_ps)
 ```
 
-Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions. It is also clear that the errors are not normally distributed.
+Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions. It is also clear that the errors are not normally distributed. Moreover, these models all fail our second requirement for a feasible model in the Approach section of the Question chapter (which is that all picks have a strictly positive value).
 
 ## Non-Linear Regression
 
@@ -109,14 +149,14 @@ Where
 
 -   $v_{i,m}$ is the value of pick $i$ based on metric $m$.
 
--   $\phi_{1, m},\phi_{2, m},\phi_{3, m}$ are parameters that depend on which metric we are using.
+-   $\phi_{1, m},\phi_{2, m},\phi_{3, m}$ are parameters we are estimating which depend on which metric we are using.
 
 We choose to use `nls` because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates. We fit these models as follows:
 
 ```{r}
 for(i in seq(1,4)){
   assign(str_glue("nls_{metrics[i]}"), 
-         nls(all_data_comb[[i+1]] ~ SSlogis(log(overall), phi1, phi2, phi3)))
+         nls(all_data_scaled[[i+1]] ~ SSlogis(log(overall), phi1, phi2, phi3)))
 }
 
 nls_pred_vals <- data.frame(pick = seq(1, 224), 
@@ -135,31 +175,14 @@ for(i in 1:length(metrics)){
 (plot_nls_mean_ps + plot_nls_mean_gp) / (plot_nls_suc_rate + plot_nls_mean_adj_ps)
 ```
 
-These curves all seem to fit well. We will look into the model's underlying assumptions in the model selection section.
-
-## One Last Adjustment
-
-One notable issue with our non-linear model is that most of the models are on very different scales (Mean PS and Mean Adjusted PS are both between roughly 1-100, Mean GP is between roughly 0-1200, and Success Rate is between 0-1). We would like to standardize this to allow for a more direct comparison of models, such as comparing the residual sum of squares. To do this, we will calculate $C_m = \frac{1000}{v_{1,m}}$, and then multiply the value of every pick by $C_m$ to get a value out of 1000 where $v_{1, m} = 1000$ for all metrics. Another point in favour of rescaling is to maintain consistence with existing work such as the research listed in the Question Chapter, which typically make the 1st overall pick worth 1000 "points" and then calculate the relative value of other picks based on that.
-
-```{r}
-nls_pred_vals
-
-C_m <- c(1, 1000 / nls_pred_vals[1,][-1])
-
-nls_pred_vals <- C_m * nls_pred_vals
-
-reactable(head(nls_pred_vals, 10)) # confirm it worked
-```
-
-Now that we have the models on the same scale, we can plot the predicted values on top of each other.
+These curves all seem to fit well. We can also plot the curves on top of each other since they are on (roughly) the same scale. Note that the scales may not be exactly equal because the predicted value of the first pick may not be exactly 1000 points. When we pick a model we will rescale all the values so that this is the case but for the sake of comparing models this is good enough.
 
 ```{r}
 ggplot(nls_pred_vals, aes(x = overall)) + 
-  geom_line(aes(y = mean_ps), col = "purple", lwd = 0.85, lty = 1) + 
+  geom_line(aes(y = mean_ps), col = "salmon", lwd = 1.5, lty = 1) + 
   geom_line(aes(y = mean_gp), col = "dodgerblue", lwd = 0.85, lty = 2) +
-  geom_line(aes(y = suc_rate), col = "salmon", lwd = 0.85, lty = 3) +
-  geom_line(aes(y = mean_adj_ps), col = "limegreen", lwd = 0.85, lty = 5
-            )
+  geom_line(aes(y = suc_rate), col = "purple", lwd = 0.85, lty = 3) +
+  geom_line(aes(y = mean_adj_ps), col = "limegreen", lwd = 0.85, lty = 6)
 ```
 
 The mean PS and mean Adjusted PS lines are almost perfectly on top of each other, indicating the adjustment we made to estimate the PS remaining in players' careers had a minimal impact on the estimate of pick value. Indeed:
@@ -168,12 +191,29 @@ The mean PS and mean Adjusted PS lines are almost perfectly on top of each other
 mean(abs(nls_pred_vals$mean_ps - nls_pred_vals$mean_adj_ps))
 ```
 
-This tells us that the mean distance between pick value estimated by mean PS and mean Adjusted PS is about 1 point, which is effectively nothing since picks are valueed out of 1000 points.
+This tells us that the mean distance between pick value estimated by mean PS and mean Adjusted PS is about 1.5 points, which is effectively nothing since picks are valued out of 1000 points.
 
 ## Model Selection
+
+We have the following four models. Recall the model we fit is $v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}$ where $i$ is the pick number, $m$ is the metric being used, $v_{i,m}$ is the estimated value of pick $i$ based on model $m$, and $\phi_{1,m}, \phi_{2,m}, \phi_{3,m}$ are the parameters we estimated. Here are the each of the models we fit. In order, they are for mean PS, mean GP, Success Rate, and mean Adjusted PS:
+
+```{r}
+for(metric in metrics){
+  print(get(str_glue("nls_{metric}")))
+}
+```
+
+We now have four models which are backed by historical data. Additionally, all four of them seem feasible based on the criteria we noted in the Approach section of the Question chapter since clearly the lines we have fit are decreasing and $>0$ for all $i$ (since $\phi_{1,m} >0$ for all four models). Now that we know the models are all feasible, we check the model assumptions regarding independence, normality, and constant variance of the residuals.
+
+```{r}
+nls_fitted_resid <- cbind(nls_pred_vals, all_data_scaled[,-1] - nls_pred_vals[,-1])
+colnames(nls_fitted_resid) <- c("overall", "mean_ps", "mean_gp", "suc_rate", 
+                                "mean_adj_ps", "resid_mean_ps", "resid_mean_gp", 
+                                "resid_suc_rate", "resid_mean_adj_ps")
+```
 
 Probably will take the model with the lowest RSS.
 
 ## Finishing Touches
 
-Create value and pick functions.
+Rescale so first pick is worth exactly 1000 points Create value and pick functions.

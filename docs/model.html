@@ -252,9 +252,9 @@ window.Quarto = {
   <ul>
   <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup"><span class="header-section-number">7.1</span> Setup</a></li>
   <li><a href="#introductionrecap" id="toc-introductionrecap" class="nav-link" data-scroll-target="#introductionrecap"><span class="header-section-number">7.2</span> Introduction/Recap</a></li>
-  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression"><span class="header-section-number">7.3</span> Linear Regression</a></li>
-  <li><a href="#non-linear-regression" id="toc-non-linear-regression" class="nav-link" data-scroll-target="#non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</a></li>
-  <li><a href="#one-last-adjustment" id="toc-one-last-adjustment" class="nav-link" data-scroll-target="#one-last-adjustment"><span class="header-section-number">7.5</span> One Last Adjustment</a></li>
+  <li><a href="#one-last-adjustment" id="toc-one-last-adjustment" class="nav-link" data-scroll-target="#one-last-adjustment"><span class="header-section-number">7.3</span> One Last Adjustment</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression"><span class="header-section-number">7.4</span> Linear Regression</a></li>
+  <li><a href="#non-linear-regression" id="toc-non-linear-regression" class="nav-link" data-scroll-target="#non-linear-regression"><span class="header-section-number">7.5</span> Non-Linear Regression</a></li>
   <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">7.6</span> Model Selection</a></li>
   <li><a href="#finishing-touches" id="toc-finishing-touches" class="nav-link" data-scroll-target="#finishing-touches"><span class="header-section-number">7.7</span> Finishing Touches</a></li>
   </ul>
@@ -297,12 +297,14 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("patchwork")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("stringr")</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("reactable")</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># renv::install("nlstools")</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlstools)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"functions.R"</span>) <span class="co"># load functions defined in prior chapters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -328,42 +330,32 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="linear-regression" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="linear-regression"><span class="header-section-number">7.3</span> Linear Regression</h2>
-<p>We use <code>lm</code> to fit a linear model to each of the metrics:</p>
+<section id="one-last-adjustment" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="one-last-adjustment"><span class="header-section-number">7.3</span> One Last Adjustment</h2>
+<p>One notable issue with our non-linear model is that most of the models are on very different scales (Mean PS and Mean Adjusted PS goes up to about 100, Mean GP goes up to roughly 1200, and Success Rate only goes up to a maximum of 1). We would like to standardize this to allow for a more direct comparison of models. To do this, we will calculate <span class="math inline">\(C_m = \frac{1000}{h_{1,m}}\)</span>, and then multiply the historical value of every pick by <span class="math inline">\(C_m\)</span> to get a value out of 1000 where <span class="math inline">\(h_{1, m} = 1000\)</span> for all metrics. Another point in favour of rescaling is to maintain consistence with existing work such as the research listed in the Question Chapter, which typically make the 1st overall pick worth 1000 “points” and then calculate the relative value of other picks based on that. We do this now because if we do it after fitting a model then we will have to refit all the models anyway.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean_ps"</span>, <span class="st">"mean_gp"</span>, <span class="st">"suc_rate"</span>, <span class="st">"mean_adj_ps"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>overall <span class="ot">&lt;-</span> all_data_comb<span class="sc">$</span>overall</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>lin_models <span class="ot">&lt;-</span> <span class="fu">lapply</span>(metrics, \(x) <span class="fu">lm</span>(all_data_comb[[x]] <span class="sc">~</span> overall))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>C_m <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1000</span> <span class="sc">/</span> all_data_comb[<span class="dv">1</span>,][<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all_data_scaled <span class="ot">&lt;-</span> all_data_comb <span class="sc">*</span> C_m</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(all_data_scaled) <span class="co"># confirm it worked</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-b4f7bbfa038fc462dae9" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b4f7bbfa038fc462dae9">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"overall":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224],"mean_ps":[1000,803.590723963095,564.583160169562,522.234228243704,468.165572271632,352.173551658216,407.572105394398,239.464716149946,340.204471781232,183.318094921453,273.792702186019,374.241542681406,283.476020280941,285.096833180949,218.144792619067,193.624802593301,230.571024852464,169.561964923946,223.547502285762,228.32682237553,190.092261657385,219.724046213947,213.656387665198,256.337794032084,192.087108303549,263.319757293658,151.566785803341,200.398969329233,149.862854293076,100.864433546671,62.8792286592968,55.5232316515668,130.953370459646,81.3315601363145,127.129914387831,66.9520405618818,102.526805751808,119.233646413432,119.857035990358,65.2065497464882,51.6997755797523,62.5467542182695,146.247194746904,195.328734103566,150.195328734104,91.5967085030338,118.693375446763,38.7748316848142,170.306569140831,45.0502867592054,67.6169894439365,68.1572604106059,85.1134569030006,105.394397805669,171.681489485496,115.576427562131,40.6865597207215,114.745241459563,55.647909566952,93.2175214030421,96.8747402543429,146.205635441775,90.723963095337,133.530047377608,32.7487324411936,106.93209209542,51.866012800266,16.0418917795694,98.7466406228354,30.7954451001579,154.849970908486,77.3834261491148,68.7390906824038,43.9697448258665,70.7754966336963,51.9491314105228,139.223672180201,77.1756296234727,92.2200980799601,36.6137478181365,8.10406450004156,82.2043055440113,69.5702767849722,26.7226331975729,87.440777990192,41.3930679079046,76.0950876901338,40.0631701437952,41.9748981797024,16.3328069154684,62.5051949131411,17.288670933422,62.2558390823705,64.6662787798188,104.064500041559,41.933338874574,29.2993101155349,41.6839830438035,129.457235475023,15.9172138641842,16.1250103898263,42.9723215027845,10.0573518410772,65.3727869670019,81.1237636106724,67.6585487490649,8.68589477183941,45.1749646745906,17.5795860693209,25.3096168232067,27.0966669437287,66.6195661208545,3.24162580001662,37.4449339207048,25.3511761283351,12.9665032000665,47.2529299310116,70.4343640041005,18.0782977308619,51.9075721053944,52.6556395977059,9.80799601030671,44.5896711273654,10.8885379436456,12.6340287590391,27.4707006898845,41.1021527720057,9.89111462056354,70.6092594131826,79.8769844568199,37.4033746155764,30.4629706591306,28.8837170642507,38.0267641925027,37.2786967001912,29.507106641177,18.1198570359904,75.4301388080791,29.7564624719475,2.82603274873244,59.0557725874823,9.05992851799518,5.02867592053861,17.8289419000914,28.5928019283518,4.86243870002494,35.6578838001829,40.8527969412351,12.9665032000665,48.291912559222,39.2735433463552,32.7071731360652,8.06250519491314,26.3070401462888,10.1820297564625,120.064832516,31.9175463386252,6.64948882054692,51.4504197489818,30.6292078796443,127.379270218602,66.2870916798271,32.9980882719641,30.4629706591306,6.48325160003325,12.218435707755,1.99484664616408,47.5854043720389,13.2574183359654,0.914304712825202,73.1859363311445,24.145956279611,21.3199235308786,14.3795195744327,25.9745657052614,49.1230986617904,37.6111711412185,35.5332058847976,58.3492644002992,20.2809409026681,10.930097248774,24.5615493308952,21.7770758872912,4.94555731028177,0.24935583077051,23.9797190590973,39.2735433463552,18.7848059180451,16.9977557975231,13.7561299975064,59.5544842490234,24.2290748898678,12.8418252846812,43.8035076053528,11.8444019615992,3.28318510514504,0,10.2651483667193,36.7799850386502,9.14304712825202,18.8263652231735,8.85213199235309,1.08054193333887,50.4529964258998,136.35608012634,39.3151026514837,10.4729448923614,41.6424237386751,2.53511761283351,58.0999085695287,3.88489156635214,56.174327431912,9.28157814534674,89.5009321158436,38.7392094232756,86.3839842312122,6.38232185900709,0,3.32474441027346,33.6630371540188,48.6243870002493,6.33779403208378,8.93525060260992,45.7152356412601],"mean_gp":[1000,979.308187343582,868.743296388988,685.421880586343,732.70468358956,625.580979621022,705.890239542367,463.44297461566,615.302109402932,403.289238469789,418.305327136217,599.481587415088,565.695387915624,532.445477297104,362.620664998212,410.707901322846,491.464068644977,382.731498033607,368.385770468359,468.671791204862,423.310690025027,365.257418662853,399.356453342867,462.057561673221,357.615302109403,416.160171612442,325.840185913479,367.268501966393,298.087236324634,279.898105112621,109.313550232392,139.122273864855,294.601358598498,142.920986771541,278.199856989632,145.647121916339,201.331784054344,236.726850196639,177.86914551305,158.875580979621,131.65892027172,171.612441902038,286.24419020379,308.634250983196,237.978190918842,174.159814086521,286.601716124419,77.0915266356811,251.01299010845,164.059706828745,154.183053271362,155.300321773329,172.19342152306,198.203432248838,352.07365033965,220.727565248481,178.673578834466,221.978905970683,95.9063282087951,203.78977475867,214.113335716839,179.299249195567,182.382910260994,167.54558455488,96.8895244905256,196.862710046478,177.422238112263,93.7611726850197,186.118311285902,100.956381837683,270.60243117626,134.563818376832,91.0797282803003,84.0632820879514,134.206292456203,90.5881301394351,155.836610654272,123.927422238112,201.242402574187,84.242045048266,40.6685734715767,155.300321773329,111.503396496246,97.2917411512335,147.211297819092,69.9410082230962,134.787272077226,77.5384340364676,103.950661422953,67.9746156596353,126.474794422596,74.4100822309617,108.330353950661,120.977833392921,224.213442974616,124.821237039685,92.5992134429746,130.899177690383,177.913836253128,60.7347157668931,94.2080800858062,115.972470504112,21.8537718984626,153.423310690025,144.887379335002,158.696818019306,35.5738291026099,69.5834823024669,38.4340364676439,73.3821952091527,74.2313192706471,113.603861279943,28.0210940293171,91.6607079013229,57.248838040758,57.6510547014659,113.469789059707,78.1156894291503,65.4719342152306,108.37504469074,143.591347872721,39.1043975688237,76.4397866762007,22.971040400429,24.5799070432606,70.3432248838041,114.408294601359,55.1483732570611,98.1855559528066,86.7447264926707,87.6832320343225,103.72720772256,90.5881301394351,90.4093671791205,41.7411512334644,67.7064712191634,63.2820879513765,60.2878083661065,73.4268859492313,19.5298534143725,69.4047193421523,37.3167679656775,9.07222023596711,83.3482302466929,51.1262066499821,46.7018233821952,80.3986414015016,128.977475867,60.6900250268144,119.145513049696,70.3432248838041,70.7901322845906,9.34036467643904,61.4050768680729,57.8745084018591,226.850196639256,71.4604933857705,35.7079013228459,102.028959599571,81.0243117626028,172.55094744369,87.3703968537719,58.9470861637469,65.6953879156239,12.0218090811584,29.1830532713622,34.009653199857,101.090454057919,44.3332141580265,4.64783696818019,90.990346800143,57.5169824812299,72.041473006793,63.3714694315338,53.6735788344655,116.285305684662,96.1744726492671,70.1197711834108,122.363246335359,89.5155523775474,29.2724347515195,77.0915266356811,90.9009653199857,17.9209867715409,1.96639256346085,93.1355023239185,27.8870218090812,32.4007865570254,42.1433678941723,71.0135859849839,110.609581694673,47.7297104040043,39.7300679299249,103.72720772256,47.9084733643189,16.5355738291026,2.45799070432606,40.2216660707901,51.2155881301394,21.7643904183053,46.6571326421166,39.9535216303182,7.59742581337147,105.06792992492,126.206649982124,40.3110475509474,25.7418662853057,84.6889524490526,12.4687164819449,81.3371469431534,20.4022943837341,96.1595757359075,11.0237158860684,169.505592726901,63.6044997190868,149.554369477501,37.8275192808621,3.57525920629246,42.121022524133,142.228280300322,105.023239184841,68.4885591705399,123.68162316768,122.564354665713],"suc_rate":[1000,1000,960,880,840,880,880,720,880,760,600,760,760,680,520,680,680,560,520,680,720,480,600,560,520,560,440,360,440,400,200,200,360,360,320,280,280,400,280,280,240,320,400,400,360,320,360,120,375,200,160,240,200,280,480,320,280,360,120,360,240,240,360,160,120,280,200,120,291.666666666667,200,280,160,120,160,200,200,240,240,280,80,40,240,240,200,320,120,200,200,120,120,160,120,240,200,280,160,120,240,280,120,160,160,40,240,160,280,40,80,80,160,200,200,80,80,120,80,240,125,120,160,200,40,125,40,80,80,200,120,120,120,120,120,160,120,80,120,160,120,120,0,120,80,40,120,80,120,120,160,120,160,80,120,40,120,80,280,80,40,160,120,240,80,80,120,40,40,40,160,120,0,120,40,120,120,80,200,200,120,160,120,40,120,120,0,0,160,40,80,120,120,200,40,40,200,80,40,0,40,80,40,40,80,0,160,160,80,80,80,0,80,43.4782608695652,66.6666666666667,66.6666666666667,214.285714285714,142.857142857143,142.857142857143,71.4285714285714,0,100,200,100,100,100,200],"mean_adj_ps":[1000,771.104143416414,561.442667091814,526.073940231351,457.231935661016,356.68455828949,418.635630901136,247.712175160759,349.198419868559,201.658075144816,261.224779011886,369.899558909497,281.13939522772,285.309383359019,227.273210394856,210.029937467892,229.505234628262,181.782430780677,221.597491629909,226.405200970753,173.895945155976,218.87300490691,209.420559423217,244.51294042621,190.505039769003,263.644576712547,141.644966431064,190.579440576783,146.34993179926,107.544596198473,58.7199518166197,56.6792439460771,123.717914651645,90.0745779525606,132.008290375724,72.4770154647393,106.017608191175,118.169740128607,138.374873784344,63.222972135126,48.2825813537404,67.9987954154931,140.486439567058,176.5070592195,140.932844413739,89.4297709517989,115.186622026182,33.8452817487733,167.623248480984,41.8557687197747,61.5507254078759,67.4354750137287,92.7884359887336,97.1993410214168,169.839329684151,110.368283998512,40.7574710811146,117.918194540398,51.6022745389807,92.1613434660148,84.6220616109546,135.126038511275,82.3475226302457,123.668314113125,31.4006837788525,114.545357921029,52.6934863864236,16.1839471399975,88.4321505966827,26.2528564595844,138.732706240811,73.5717702077908,60.264654301961,45.1258613664948,70.383164160068,55.0601406529557,135.721244973517,86.5989973605428,94.1949655453402,37.9266974898585,9.88822164354927,78.4503374608067,66.376149226763,27.397211741156,88.3137588350959,43.4394430568103,74.0146321588634,41.802625285646,40.576783405077,15.5497688260615,58.1070308763352,18.3415705656233,56.8741032045491,60.3567695877841,96.9159093727303,40.7893571415918,24.9774140404953,42.9469805672176,122.587730952507,15.3655382544153,17.0696710421427,40.3535809817364,13.9129510548972,61.051177127066,72.3459283272218,58.2452038050699,10.820003188606,46.0470142247259,18.7206603957414,27.2058953782927,31.5920001417158,67.7224495580238,4.15581654886539,38.082584896636,25.9552532284636,14.0830100441091,46.0824431808117,71.4963714844142,15.4115958973269,55.6092894722857,53.9334998494269,8.94581141166676,46.4303850537044,9.28238649448194,11.5958973268853,29.4202051336557,37.3279481320083,9.26467201643904,63.2584010912119,78.7054259446245,37.7460098138208,25.9694248108979,27.1244087792953,32.739898318896,39.7406600414519,28.3112788081699,19.6949566881012,65.6285982533525,25.3671325574392,2.40916901383501,59.6269330924164,8.59152185080867,7.7872845476608,15.4009672105011,29.739065738428,4.14518786203965,35.8045030203185,40.3535809817364,12.4072204212503,46.6315920001417,36.5237108288604,31.5211422295442,6.87321748064693,26.1713698605871,8.68009424102319,109.305415315938,29.2784893093125,5.66863297372943,55.2231138509504,29.3245469522241,113.532089776975,65.1715647198455,33.5228782483924,28.775398132894,5.94143593559016,14.7136454624365,1.83876282085348,42.5182901985793,15.3655382544153,0.779437033887797,65.168021824237,20.7649111618926,18.17505447202,13.576375972082,23.7834582204035,41.8770260934262,32.6761261979416,34.8868930576961,52.5907424137748,17.3070450479177,12.155674833041,22.6036739827461,19.8295867212273,4.21604577421126,0.212573736514854,20.9278843598873,39.4395139147225,20.5452516341606,14.4904430390959,11.7269844644028,50.7696940709642,20.6550813980266,10.947547430515,43.0390958530407,10.0972524844555,3.12129103115977,0,9.46307417051957,36.35010894404,8.51712104302847,17.0200705036226,7.58179660236311,1.56595985899276,43.010752688172,116.334520203362,38.7805353315265,10.0051371986324,39.5599723654143,2.16116632123435,53.8378416679953,3.31183719932562,52.2459005745396,7.912466859164,84.953575414329,33.0248483514148,73.6416158640743,5.44087539889209,0,2.83431648686471,28.6974544295052,41.4518786203964,5.40291580308586,7.61722555844892,38.9718516943898]},"columns":[{"id":"overall","name":"overall","type":"numeric"},{"id":"mean_ps","name":"mean_ps","type":"numeric"},{"id":"mean_gp","name":"mean_gp","type":"numeric"},{"id":"suc_rate","name":"suc_rate","type":"numeric"},{"id":"mean_adj_ps","name":"mean_adj_ps","type":"numeric"}],"dataKey":"1d66cedd2ee20eb03880714a84a5ca08"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
-<p>For each linear model, we generate a vector of predicted values and plot it on top of the historical values:</p>
+</div>
+<p>Now that all metrics are on the same scale, we can plot them on top of each other.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lm_pred_vals <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>), </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                      \(x) <span class="fu">predict</span>(lin_models[[x]], </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">224</span>))))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>lm_pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_ps =</span> lm_pred_vals[[<span class="dv">1</span>]], </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_gp =</span> lm_pred_vals[[<span class="dv">2</span>]], </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> lm_pred_vals[[<span class="dv">3</span>]], </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> lm_pred_vals[[<span class="dv">4</span>]])</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mean PS"</span>, <span class="st">"Mean GP"</span>, <span class="st">"Success Rate"</span>, <span class="st">"Mean Adjusted PS"</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_lm_{metrics[i]}"</span>), </span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> lm_pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>(plot_lm_mean_ps <span class="sc">+</span> plot_lm_mean_gp) <span class="sc">/</span> (plot_lm_suc_rate <span class="sc">+</span> plot_lm_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_data_scaled, <span class="fu">aes</span>(<span class="at">x =</span> overall)) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"salmon"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span>   </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"dodgerblue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"purple"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"limegreen"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -373,74 +365,52 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>All four of these linear models are very clearly inadequate, but for sake of completeness we will look at plots of the residuals vs fitted values.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lm_resids <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lin_models, residuals)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>lm_resids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean_ps_resid =</span> lm_resids[[<span class="dv">1</span>]], </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_gp_resid =</span> lm_resids[[<span class="dv">2</span>]], </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">suc_rate_resid =</span> lm_resids[[<span class="dv">3</span>]], </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_adj_ps_resid =</span> lm_resids[[<span class="dv">4</span>]])</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>lm_pred_vals_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(lm_pred_vals, lm_resids)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_res_{metrics[i]}"</span>), </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(lm_pred_vals_resid, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}"</span>), </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">y =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}_resid"</span>))) <span class="sc">+</span> </span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>())</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>(plot_res_mean_ps <span class="sc">+</span> plot_res_mean_gp) <span class="sc">/</span> (plot_res_suc_rate <span class="sc">+</span> plot_res_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="model_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions. It is also clear that the errors are not normally distributed.</p>
+<p>This plot confirms that mean PS and adjusted PS give very similar estimates, and that value decreases slowest when using Success Rate. Now that we have the plots on the same scale, we can fit models to the scaled data.</p>
 </section>
-<section id="non-linear-regression" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="non-linear-regression"><span class="header-section-number">7.4</span> Non-Linear Regression</h2>
-<p>Given that none of the four linear models were appropriate, we will reattempt to fit a model using non-linear regression (ie the <code>nls</code> function, which stands for non-linear least squares). The resource <a href="https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html">Non-linear Regression in R</a> was very helpful when working on this section. In short, we will be fitting the model</p>
-<p><span class="math display">\[
-v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
-\]</span></p>
-<p>Where</p>
-<ul>
-<li><p><span class="math inline">\(i\)</span> is the pick number.</p></li>
-<li><p><span class="math inline">\(m\)</span> is the metric being used.</p></li>
-<li><p><span class="math inline">\(v_{i,m}\)</span> is the value of pick <span class="math inline">\(i\)</span> based on metric <span class="math inline">\(m\)</span>.</p></li>
-<li><p><span class="math inline">\(\phi_{1, m},\phi_{2, m},\phi_{3, m}\)</span> are parameters that depend on which metric we are using.</p></li>
-</ul>
-<p>We choose to use <code>nls</code> because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates. We fit these models as follows:</p>
+<section id="linear-regression" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="linear-regression"><span class="header-section-number">7.4</span> Linear Regression</h2>
+<p>We use <code>lm</code> to fit a linear model to each of the metrics:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>)){</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"nls_{metrics[i]}"</span>), </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">nls</span>(all_data_comb[[i<span class="sc">+</span><span class="dv">1</span>]] <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3)))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>nls_pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pick =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_ps =</span> <span class="fu">predict</span>(nls_mean_ps, pick), </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_gp =</span> <span class="fu">predict</span>(nls_mean_gp, pick), </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">suc_rate =</span> <span class="fu">predict</span>(nls_suc_rate, pick), </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_adj_ps =</span> <span class="fu">predict</span>(nls_mean_adj_ps, pick))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_nls_{metrics[i]}"</span>), </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> nls_pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>(plot_nls_mean_ps <span class="sc">+</span> plot_nls_mean_gp) <span class="sc">/</span> (plot_nls_suc_rate <span class="sc">+</span> plot_nls_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mean_ps"</span>, <span class="st">"mean_gp"</span>, <span class="st">"suc_rate"</span>, <span class="st">"mean_adj_ps"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>overall <span class="ot">&lt;-</span> all_data_scaled<span class="sc">$</span>overall</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>lin_models <span class="ot">&lt;-</span> <span class="fu">lapply</span>(metrics, \(x) <span class="fu">lm</span>(all_data_scaled[[x]] <span class="sc">~</span> overall))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>For each linear model, we generate a vector of predicted values and plot it on top of the historical values:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lm_pred_vals <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>), </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                      \(x) <span class="fu">predict</span>(lin_models[[x]], </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">224</span>))))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>lm_pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">overall =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_ps =</span> lm_pred_vals[[<span class="dv">1</span>]], </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_gp =</span> lm_pred_vals[[<span class="dv">2</span>]], </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">suc_rate =</span> lm_pred_vals[[<span class="dv">3</span>]], </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean_adj_ps =</span> lm_pred_vals[[<span class="dv">4</span>]])</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Mean PS"</span>, <span class="st">"Mean GP"</span>, <span class="st">"Success Rate"</span>, <span class="st">"Mean Adjusted PS"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>), </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(all_data_scaled, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i])) <span class="sc">+</span> </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>           <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">str_glue</span>(<span class="st">"{names[i]} verses Overall"</span>), </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="st">"Overall"</span>, <span class="at">y =</span> <span class="fu">str_glue</span>(<span class="st">"{names[i]}"</span>)))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_lm_{metrics[i]}"</span>), </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> lm_pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>(plot_lm_mean_ps <span class="sc">+</span> plot_lm_mean_gp) <span class="sc">/</span> (plot_lm_suc_rate <span class="sc">+</span> plot_lm_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -450,271 +420,108 @@ v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 </div>
 </div>
 </div>
-<p>These curves all seem to fit well. We will look into the model’s underlying assumptions in the model selection section.</p>
-</section>
-<section id="one-last-adjustment" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="one-last-adjustment"><span class="header-section-number">7.5</span> One Last Adjustment</h2>
-<p>One notable issue with our non-linear model is that most of the models are on very different scales (Mean PS and Mean Adjusted PS are both between roughly 1-100, Mean GP is between roughly 0-1200, and Success Rate is between 0-1). We would like to standardize this to allow for a more direct comparison of models, such as comparing the residual sum of squares. To do this, we will calculate <span class="math inline">\(C_m = \frac{1000}{v_{1,m}}\)</span>, and then multiply the value of every pick by <span class="math inline">\(C_m\)</span> to get a value out of 1000 where <span class="math inline">\(v_{1, m} = 1000\)</span> for all metrics. Another point in favour of rescaling is to maintain consistence with existing work such as the research listed in the Question Chapter, which typically make the 1st overall pick worth 1000 “points” and then calculate the relative value of other picks based on that.</p>
+<p>The fitted values are given in the table below:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>nls_pred_vals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    pick   mean_ps   mean_gp   suc_rate mean_adj_ps
-1      1 95.790143 892.91050 1.04073107  110.689279
-2      2 72.762382 815.44292 1.00063213   84.938154
-3      3 59.689045 751.43570 0.96153116   69.959180
-4      4 51.053132 697.34683 0.92413006   59.941891
-5      5 44.848707 650.90740 0.88864971   52.692570
-6      6 40.141446 610.53523 0.85512832   47.166999
-7      7 36.429660 575.07533 0.82352148   42.796431
-8      8 33.417171 543.65798 0.79374557   39.241708
-9      9 30.916725 515.61270 0.76569939   36.286806
-10    10 28.803600 490.41273 0.73927552   33.787026
-11    11 26.991236 467.63761 0.71436658   31.641500
-12    12 25.417523 446.94722 0.69086859   29.777593
-13    13 24.036642 428.06310 0.66868280   28.141572
-14    14 22.814002 410.75496 0.64771655   26.692776
-15    15 21.722958 394.83049 0.62788354   25.399823
-16    16 20.742633 380.12784 0.60910379   24.238087
-17    17 19.856417 366.50969 0.59130343   23.187949
-18    18 19.050923 353.85877 0.57441441   22.233577
-19    19 18.315231 342.07428 0.55837403   21.362047
-20    20 17.640338 331.06910 0.54312464   20.562693
-21    21 17.018752 320.76748 0.52861319   19.826636
-22    22 16.444185 311.10327 0.51479088   19.146416
-23    23 15.911317 302.01844 0.50161280   18.515720
-24    24 15.415614 293.46184 0.48903757   17.929167
-25    25 14.953188 285.38820 0.47702706   17.382140
-26    26 14.520685 277.75733 0.46554611   16.870653
-27    27 14.115193 270.53341 0.45456225   16.391248
-28    28 13.734174 263.68440 0.44404546   15.940907
-29    29 13.375403 257.18156 0.43396801   15.516986
-30    30 13.036921 250.99905 0.42430419   15.117157
-31    31 12.716996 245.11352 0.41503018   14.739361
-32    32 12.414091 239.50390 0.40612388   14.381772
-33    33 12.126839 234.15102 0.39756478   14.042761
-34    34 11.854016 229.03751 0.38933378   13.720874
-35    35 11.594524 224.14750 0.38141313   13.414808
-36    36 11.347378 219.46653 0.37378629   13.123389
-37    37 11.111686 214.98136 0.36643783   12.845558
-38    38 10.886645 210.67983 0.35935335   12.580359
-39    39 10.671524 206.55080 0.35251939   12.326924
-40    40 10.465659 202.58400 0.34592337   12.084463
-41    41 10.268445 198.76998 0.33955352   11.852258
-42    42 10.079331 195.10001 0.33339880   11.629653
-43    43  9.897810 191.56599 0.32744886   11.416045
-44    44  9.723419 188.16045 0.32169398   11.210885
-45    45  9.555731 184.87646 0.31612506   11.013665
-46    46  9.394356 181.70756 0.31073350   10.823921
-47    47  9.238930 178.64775 0.30551124   10.641222
-48    48  9.089120 175.69146 0.30045068   10.465171
-49    49  8.944617 172.83347 0.29554466   10.295402
-50    50  8.805134 170.06893 0.29078641   10.131573
-51    51  8.670406 167.39328 0.28616956    9.973370
-52    52  8.540185 164.80227 0.28168810    9.820499
-53    53  8.414241 162.29191 0.27733633    9.672687
-54    54  8.292360 159.85848 0.27310885    9.529679
-55    55  8.174342 157.49845 0.26900059    9.391238
-56    56  8.060000 155.20853 0.26500670    9.257142
-57    57  7.949159 152.98561 0.26112261    9.127184
-58    58  7.841655 150.82678 0.25734399    9.001169
-59    59  7.737335 148.72928 0.25366671    8.878916
-60    60  7.636055 146.69052 0.25008686    8.760253
-61    61  7.537680 144.70803 0.24660073    8.645020
-62    62  7.442081 142.77951 0.24320479    8.533065
-63    63  7.349140 140.90277 0.23989566    8.424248
-64    64  7.258743 139.07572 0.23667017    8.318433
-65    65  7.170784 137.29642 0.23352525    8.215495
-66    66  7.085161 135.56299 0.23045800    8.115315
-67    67  7.001781 133.87367 0.22746566    8.017779
-68    68  6.920554 132.22679 0.22454559    7.922782
-69    69  6.841393 130.62075 0.22169526    7.830222
-70    70  6.764219 129.05405 0.21891228    7.740004
-71    71  6.688955 127.52524 0.21619434    7.652039
-72    72  6.615530 126.03296 0.21353925    7.566239
-73    73  6.543873 124.57590 0.21094490    7.482524
-74    74  6.473920 123.15282 0.20840930    7.400817
-75    75  6.405610 121.76253 0.20593050    7.321043
-76    76  6.338881 120.40392 0.20350668    7.243133
-77    77  6.273680 119.07589 0.20113607    7.167021
-78    78  6.209951 117.77743 0.19881698    7.092643
-79    79  6.147644 116.50754 0.19654778    7.019939
-80    80  6.086711 115.26530 0.19432693    6.948851
-81    81  6.027104 114.04979 0.19215292    6.879325
-82    82  5.968781 112.86015 0.19002434    6.811308
-83    83  5.911697 111.69558 0.18793981    6.744749
-84    84  5.855813 110.55526 0.18589799    6.679602
-85    85  5.801091 109.43846 0.18389764    6.615820
-86    86  5.747492 108.34444 0.18193751    6.553360
-87    87  5.694982 107.27251 0.18001645    6.492180
-88    88  5.643527 106.22201 0.17813332    6.432240
-89    89  5.593094 105.19228 0.17628704    6.373501
-90    90  5.543653 104.18272 0.17447655    6.315926
-91    91  5.495172 103.19274 0.17270086    6.259481
-92    92  5.447624 102.22177 0.17095899    6.204130
-93    93  5.400980 101.26926 0.16925000    6.149843
-94    94  5.355216 100.33468 0.16757300    6.096588
-95    95  5.310304  99.41754 0.16592712    6.044333
-96    96  5.266221  98.51734 0.16431151    5.993052
-97    97  5.222943  97.63361 0.16272537    5.942716
-98    98  5.180448  96.76591 0.16116792    5.893298
-99    99  5.138713  95.91380 0.15963840    5.844773
-100  100  5.097719  95.07686 0.15813609    5.797116
-101  101  5.057444  94.25468 0.15666028    5.750304
-102  102  5.017870  93.44689 0.15521029    5.704313
-103  103  4.978977  92.65309 0.15378546    5.659121
-104  104  4.940748  91.87292 0.15238517    5.614707
-105  105  4.903165  91.10604 0.15100879    5.571051
-106  106  4.866211  90.35211 0.14965573    5.528133
-107  107  4.829871  89.61080 0.14832542    5.485933
-108  108  4.794128  88.88179 0.14701730    5.444434
-109  109  4.758967  88.16477 0.14573083    5.403617
-110  110  4.724375  87.45946 0.14446549    5.363465
-111  111  4.690336  86.76556 0.14322077    5.323962
-112  112  4.656837  86.08280 0.14199619    5.285092
-113  113  4.623865  85.41091 0.14079128    5.246839
-114  114  4.591408  84.74963 0.13960556    5.209188
-115  115  4.559452  84.09871 0.13843860    5.172124
-116  116  4.527986  83.45791 0.13728997    5.135634
-117  117  4.496999  82.82698 0.13615924    5.099704
-118  118  4.466478  82.20571 0.13504601    5.064321
-119  119  4.436415  81.59387 0.13394988    5.029471
-120  120  4.406796  80.99125 0.13287047    4.995144
-121  121  4.377614  80.39764 0.13180741    4.961326
-122  122  4.348858  79.81283 0.13076034    4.928006
-123  123  4.320517  79.23663 0.12972891    4.895173
-124  124  4.292584  78.66886 0.12871278    4.862816
-125  125  4.265049  78.10932 0.12771161    4.830924
-126  126  4.237903  77.55784 0.12672509    4.799487
-127  127  4.211137  77.01424 0.12575290    4.768496
-128  128  4.184745  76.47835 0.12479474    4.737940
-129  129  4.158717  75.95001 0.12385032    4.707810
-130  130  4.133046  75.42907 0.12291934    4.678097
-131  131  4.107724  74.91536 0.12200153    4.648792
-132  132  4.082744  74.40873 0.12109661    4.619886
-133  133  4.058099  73.90905 0.12020433    4.591372
-134  134  4.033782  73.41615 0.11932442    4.563241
-135  135  4.009786  72.92992 0.11845664    4.535485
-136  136  3.986105  72.45021 0.11760074    4.508097
-137  137  3.962732  71.97688 0.11675648    4.481069
-138  138  3.939661  71.50983 0.11592363    4.454393
-139  139  3.916887  71.04891 0.11510197    4.428063
-140  140  3.894403  70.59400 0.11429127    4.402072
-141  141  3.872203  70.14500 0.11349133    4.376413
-142  142  3.850283  69.70178 0.11270194    4.351080
-143  143  3.828636  69.26424 0.11192288    4.326066
-144  144  3.807258  68.83226 0.11115398    4.301365
-145  145  3.786143  68.40574 0.11039502    4.276971
-146  146  3.765286  67.98457 0.10964583    4.252879
-147  147  3.744683  67.56866 0.10890622    4.229082
-148  148  3.724328  67.15790 0.10817601    4.205575
-149  149  3.704217  66.75220 0.10745502    4.182353
-150  150  3.684346  66.35147 0.10674309    4.159409
-151  151  3.664710  65.95561 0.10604006    4.136740
-152  152  3.645305  65.56454 0.10534575    4.114340
-153  153  3.626127  65.17816 0.10466001    4.092205
-154  154  3.607171  64.79640 0.10398269    4.070328
-155  155  3.588434  64.41918 0.10331363    4.048707
-156  156  3.569911  64.04640 0.10265268    4.027335
-157  157  3.551599  63.67799 0.10199972    4.006210
-158  158  3.533495  63.31388 0.10135458    3.985325
-159  159  3.515594  62.95399 0.10071714    3.964678
-160  160  3.497894  62.59825 0.10008726    3.944264
-161  161  3.480390  62.24658 0.09946481    3.924079
-162  162  3.463079  61.89891 0.09884966    3.904119
-163  163  3.445958  61.55518 0.09824169    3.884380
-164  164  3.429024  61.21532 0.09764077    3.864858
-165  165  3.412274  60.87927 0.09704679    3.845551
-166  166  3.395704  60.54695 0.09645962    3.826453
-167  167  3.379312  60.21831 0.09587916    3.807562
-168  168  3.363095  59.89329 0.09530529    3.788875
-169  169  3.347049  59.57182 0.09473790    3.770387
-170  170  3.331172  59.25385 0.09417689    3.752096
-171  171  3.315462  58.93933 0.09362215    3.733998
-172  172  3.299915  58.62818 0.09307357    3.716090
-173  173  3.284528  58.32037 0.09253106    3.698370
-174  174  3.269301  58.01584 0.09199452    3.680833
-175  175  3.254229  57.71452 0.09146385    3.663478
-176  176  3.239310  57.41639 0.09093897    3.646302
-177  177  3.224543  57.12137 0.09041976    3.629300
-178  178  3.209924  56.82943 0.08990616    3.612472
-179  179  3.195451  56.54051 0.08939806    3.595813
-180  180  3.181122  56.25457 0.08889539    3.579323
-181  181  3.166935  55.97157 0.08839805    3.562996
-182  182  3.152888  55.69145 0.08790597    3.546833
-183  183  3.138979  55.41418 0.08741906    3.530829
-184  184  3.125205  55.13970 0.08693725    3.514982
-185  185  3.111564  54.86798 0.08646045    3.499290
-186  186  3.098055  54.59898 0.08598859    3.483752
-187  187  3.084675  54.33265 0.08552160    3.468363
-188  188  3.071423  54.06896 0.08505939    3.453123
-189  189  3.058296  53.80786 0.08460191    3.438029
-190  190  3.045294  53.54932 0.08414907    3.423078
-191  191  3.032413  53.29330 0.08370081    3.408270
-192  192  3.019653  53.03976 0.08325706    3.393601
-193  193  3.007011  52.78867 0.08281776    3.379069
-194  194  2.994486  52.53999 0.08238284    3.364673
-195  195  2.982077  52.29369 0.08195224    3.350411
-196  196  2.969781  52.04973 0.08152589    3.336281
-197  197  2.957597  51.80807 0.08110373    3.322281
-198  198  2.945523  51.56870 0.08068570    3.308409
-199  199  2.933558  51.33156 0.08027174    3.294663
-200  200  2.921701  51.09664 0.07986180    3.281042
-201  201  2.909949  50.86390 0.07945581    3.267543
-202  202  2.898302  50.63331 0.07905373    3.254166
-203  203  2.886757  50.40485 0.07865549    3.240907
-204  204  2.875315  50.17847 0.07826105    3.227767
-205  205  2.863972  49.95415 0.07787034    3.214743
-206  206  2.852728  49.73187 0.07748332    3.201834
-207  207  2.841582  49.51160 0.07709994    3.189037
-208  208  2.830532  49.29331 0.07672015    3.176352
-209  209  2.819577  49.07697 0.07634389    3.163777
-210  210  2.808715  48.86255 0.07597112    3.151311
-211  211  2.797946  48.65004 0.07560179    3.138952
-212  212  2.787268  48.43940 0.07523586    3.126699
-213  213  2.776680  48.23061 0.07487328    3.114549
-214  214  2.766181  48.02365 0.07451400    3.102503
-215  215  2.755770  47.81849 0.07415798    3.090559
-216  216  2.745445  47.61511 0.07380518    3.078714
-217  217  2.735205  47.41348 0.07345556    3.066969
-218  218  2.725050  47.21359 0.07310906    3.055322
-219  219  2.714979  47.01541 0.07276566    3.043770
-220  220  2.704989  46.81891 0.07242531    3.032315
-221  221  2.695081  46.62408 0.07208797    3.020953
-222  222  2.685253  46.43090 0.07175361    3.009684
-223  223  2.675504  46.23934 0.07142217    2.998507
-224  224  2.665833  46.04939 0.07109364    2.987420</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>C_m <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1000</span> <span class="sc">/</span> nls_pred_vals[<span class="dv">1</span>,][<span class="sc">-</span><span class="dv">1</span>])</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>nls_pred_vals <span class="ot">&lt;-</span> C_m <span class="sc">*</span> nls_pred_vals</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">head</span>(nls_pred_vals, <span class="dv">10</span>)) <span class="co"># confirm it worked</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(lm_pred_vals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-652fd98dac1aa02d8d64" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-652fd98dac1aa02d8d64">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"pick":[1,2,3,4,5,6,7,8,9,10],"mean_ps":[1000,759.601982116975,623.123040039035,532.968539604286,468.197520328187,419.056125693938,380.30698583533,348.858143929139,322.754768006111,300.694824939955],"mean_gp":[1000,913.241496011176,841.557695511433,780.981779648695,728.972729686678,683.758599290513,644.045883527816,608.860557347915,577.451720442834,549.229431398409],"suc_rate":[1000,961.470418714522,923.899738669947,887.962401465634,853.870643190774,821.661187997876,791.291335135877,762.680765104044,735.732230272753,710.342516452215],"mean_adj_ps":[1000,767.356645875059,632.032125689231,541.532937975246,476.040409753001,426.120755205512,386.635740063855,354.521305487089,327.825840459855,305.24208631199]},"columns":[{"id":"pick","name":"pick","type":"numeric"},{"id":"mean_ps","name":"mean_ps","type":"numeric"},{"id":"mean_gp","name":"mean_gp","type":"numeric"},{"id":"suc_rate","name":"suc_rate","type":"numeric"},{"id":"mean_adj_ps","name":"mean_adj_ps","type":"numeric"}],"dataKey":"62347f27f4b363026c9978c09b8cfa11"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-0059a3caf78940809f9e" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-0059a3caf78940809f9e">{"x":{"tag":{"name":"Reactable","attribs":{"data":{".rownames":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224"],"overall":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224],"mean_ps":[208.154903786634,207.04212724089,205.929350695146,204.816574149402,203.703797603659,202.591021057915,201.478244512171,200.365467966427,199.252691420683,198.139914874939,197.027138329196,195.914361783452,194.801585237708,193.688808691964,192.57603214622,191.463255600477,190.350479054733,189.237702508989,188.124925963245,187.012149417501,185.899372871758,184.786596326014,183.67381978027,182.561043234526,181.448266688782,180.335490143039,179.222713597295,178.109937051551,176.997160505807,175.884383960063,174.77160741432,173.658830868576,172.546054322832,171.433277777088,170.320501231344,169.2077246856,168.094948139857,166.982171594113,165.869395048369,164.756618502625,163.643841956881,162.531065411138,161.418288865394,160.30551231965,159.192735773906,158.079959228162,156.967182682419,155.854406136675,154.741629590931,153.628853045187,152.516076499443,151.4032999537,150.290523407956,149.177746862212,148.064970316468,146.952193770724,145.839417224981,144.726640679237,143.613864133493,142.501087587749,141.388311042005,140.275534496262,139.162757950518,138.049981404774,136.93720485903,135.824428313286,134.711651767542,133.598875221799,132.486098676055,131.373322130311,130.260545584567,129.147769038823,128.03499249308,126.922215947336,125.809439401592,124.696662855848,123.583886310104,122.471109764361,121.358333218617,120.245556672873,119.132780127129,118.020003581385,116.907227035642,115.794450489898,114.681673944154,113.56889739841,112.456120852666,111.343344306923,110.230567761179,109.117791215435,108.005014669691,106.892238123947,105.779461578204,104.66668503246,103.553908486716,102.441131940972,101.328355395228,100.215578849484,99.1028023037407,97.9900257579969,96.8772492122531,95.7644726665092,94.6516961207655,93.5389195750216,92.4261430292778,91.313366483534,90.2005899377902,89.0878133920464,87.9750368463026,86.8622603005588,85.749483754815,84.6367072090712,83.5239306633274,82.4111541175836,81.2983775718398,80.185601026096,79.0728244803522,77.9600479346084,76.8472713888645,75.7344948431207,74.6217182973769,73.5089417516331,72.3961652058893,71.2833886601455,70.1706121144017,69.0578355686579,67.9450590229141,66.8322824771703,65.7195059314265,64.6067293856827,63.4939528399389,62.3811762941951,61.2683997484513,60.1556232027074,59.0428466569636,57.9300701112198,56.817293565476,55.7045170197322,54.5917404739884,53.4789639282446,52.3661873825008,51.253410836757,50.1406342910132,49.0278577452694,47.9150811995256,46.8023046537818,45.689528108038,44.5767515622942,43.4639750165503,42.3511984708065,41.2384219250627,40.1256453793189,39.0128688335751,37.9000922878313,36.7873157420875,35.6745391963437,34.5617626505999,33.4489861048561,32.3362095591123,31.2234330133685,30.1106564676247,28.9978799218809,27.885103376137,26.7723268303932,25.6595502846494,24.5467737389056,23.4339971931618,22.321220647418,21.2084441016742,20.0956675559304,18.9828910101866,17.8701144644428,16.757337918699,15.6445613729552,14.5317848272114,13.4190082814676,12.3062317357238,11.1934551899799,10.0806786442361,8.96790209849235,7.85512555274855,6.74234900700472,5.62957246126092,4.51679591551712,3.40401936977329,2.2912428240295,1.1784662782857,0.0656897325418981,-1.04708681320193,-2.15986335894573,-3.27263990468953,-4.38541645043333,-5.49819299617715,-6.61096954192095,-7.72374608766475,-8.83652263340858,-9.94929917915238,-11.0620757248962,-12.17485227064,-13.2876288163838,-14.4004053621276,-15.5131819078714,-16.6259584536152,-17.738734999359,-18.8515115451028,-19.9642880908466,-21.0770646365904,-22.1898411823342,-23.302617728078,-24.4153942738218,-25.5281708195657,-26.6409473653095,-27.7537239110533,-28.8665004567971,-29.9792770025409,-31.0920535482847,-32.2048300940285,-33.3176066397723,-34.4303831855161,-35.5431597312599,-36.6559362770037,-37.7687128227475,-38.8814893684913,-39.9942659142351],"mean_gp":[358.692956641109,356.887137285972,355.081317930834,353.275498575697,351.46967922056,349.663859865423,347.858040510286,346.052221155149,344.246401800012,342.440582444875,340.634763089738,338.828943734601,337.023124379464,335.217305024327,333.41148566919,331.605666314053,329.799846958916,327.994027603779,326.188208248642,324.382388893504,322.576569538367,320.77075018323,318.964930828093,317.159111472956,315.353292117819,313.547472762682,311.741653407545,309.935834052408,308.130014697271,306.324195342134,304.518375986997,302.71255663186,300.906737276723,299.100917921586,297.295098566449,295.489279211311,293.683459856174,291.877640501037,290.0718211459,288.266001790763,286.460182435626,284.654363080489,282.848543725352,281.042724370215,279.236905015078,277.431085659941,275.625266304804,273.819446949667,272.01362759453,270.207808239393,268.401988884256,266.596169529119,264.790350173981,262.984530818844,261.178711463707,259.37289210857,257.567072753433,255.761253398296,253.955434043159,252.149614688022,250.343795332885,248.537975977748,246.732156622611,244.926337267474,243.120517912337,241.3146985572,239.508879202063,237.703059846926,235.897240491789,234.091421136651,232.285601781514,230.479782426377,228.67396307124,226.868143716103,225.062324360966,223.256505005829,221.450685650692,219.644866295555,217.839046940418,216.033227585281,214.227408230144,212.421588875007,210.61576951987,208.809950164733,207.004130809596,205.198311454459,203.392492099321,201.586672744184,199.780853389047,197.97503403391,196.169214678773,194.363395323636,192.557575968499,190.751756613362,188.945937258225,187.140117903088,185.334298547951,183.528479192814,181.722659837677,179.91684048254,178.111021127403,176.305201772266,174.499382417129,172.693563061991,170.887743706854,169.081924351717,167.27610499658,165.470285641443,163.664466286306,161.858646931169,160.052827576032,158.247008220895,156.441188865758,154.635369510621,152.829550155484,151.023730800347,149.21791144521,147.412092090073,145.606272734936,143.800453379799,141.994634024661,140.188814669524,138.382995314387,136.57717595925,134.771356604113,132.965537248976,131.159717893839,129.353898538702,127.548079183565,125.742259828428,123.936440473291,122.130621118154,120.324801763017,118.51898240788,116.713163052743,114.907343697606,113.101524342469,111.295704987331,109.489885632194,107.684066277057,105.87824692192,104.072427566783,102.266608211646,100.460788856509,98.654969501372,96.849150146235,95.043330791098,93.2375114359609,91.4316920808238,89.6258727256867,87.8200533705497,86.0142340154126,84.2084146602756,82.4025953051385,80.5967759500015,78.7909565948644,76.9851372397274,75.1793178845903,73.3734985294532,71.5676791743161,69.7618598191791,67.956040464042,66.150221108905,64.3444017537679,62.5385823986309,60.7327630434938,58.9269436883567,57.1211243332197,55.3153049780826,53.5094856229456,51.7036662678085,49.8978469126715,48.0920275575344,46.2862082023973,44.4803888472603,42.6745694921232,40.8687501369861,39.0629307818491,37.257111426712,35.451292071575,33.6454727164379,31.8396533613009,30.0338340061638,28.2280146510267,26.4221952958897,24.6163759407526,22.8105565856156,21.0047372304785,19.1989178753415,17.3930985202044,15.5872791650673,13.7814598099303,11.9756404547932,10.1698210996561,8.3640017445191,6.55818238938201,4.75236303424498,2.94654367910789,1.14072432397086,-0.665095031166231,-2.47091438630326,-4.2767337414403,-6.08255309657739,-7.88837245171442,-9.69419180685151,-11.5000111619885,-13.3058305171256,-15.1116498722627,-16.9174692273997,-18.7232885825368,-20.5291079376739,-22.3349272928109,-24.140746647948,-25.946566003085,-27.7523853582221,-29.5582047133591,-31.3640240684962,-33.1698434236333,-34.9756627787704,-36.7814821339074,-38.5873014890444,-40.3931208441815,-42.1989401993185,-44.0047595544556],"suc_rate":[494.378000838017,491.963051872793,489.54810290757,487.133153942347,484.718204977123,482.3032560119,479.888307046677,477.473358081453,475.05840911623,472.643460151007,470.228511185783,467.81356222056,465.398613255337,462.983664290113,460.56871532489,458.153766359667,455.738817394443,453.32386842922,450.908919463997,448.493970498774,446.07902153355,443.664072568327,441.249123603104,438.83417463788,436.419225672657,434.004276707434,431.58932774221,429.174378776987,426.759429811764,424.34448084654,421.929531881317,419.514582916094,417.09963395087,414.684684985647,412.269736020424,409.854787055201,407.439838089977,405.024889124754,402.609940159531,400.194991194307,397.780042229084,395.365093263861,392.950144298637,390.535195333414,388.120246368191,385.705297402967,383.290348437744,380.875399472521,378.460450507297,376.045501542074,373.630552576851,371.215603611628,368.800654646404,366.385705681181,363.970756715958,361.555807750734,359.140858785511,356.725909820288,354.310960855064,351.896011889841,349.481062924618,347.066113959394,344.651164994171,342.236216028948,339.821267063724,337.406318098501,334.991369133278,332.576420168054,330.161471202831,327.746522237608,325.331573272385,322.916624307161,320.501675341938,318.086726376715,315.671777411491,313.256828446268,310.841879481045,308.426930515821,306.011981550598,303.597032585375,301.182083620151,298.767134654928,296.352185689705,293.937236724481,291.522287759258,289.107338794035,286.692389828812,284.277440863588,281.862491898365,279.447542933142,277.032593967918,274.617645002695,272.202696037472,269.787747072248,267.372798107025,264.957849141802,262.542900176578,260.127951211355,257.713002246132,255.298053280908,252.883104315685,250.468155350462,248.053206385239,245.638257420015,243.223308454792,240.808359489569,238.393410524345,235.978461559122,233.563512593899,231.148563628675,228.733614663452,226.318665698229,223.903716733005,221.488767767782,219.073818802559,216.658869837335,214.243920872112,211.828971906889,209.414022941666,206.999073976442,204.584125011219,202.169176045996,199.754227080772,197.339278115549,194.924329150326,192.509380185102,190.094431219879,187.679482254656,185.264533289432,182.849584324209,180.434635358986,178.019686393762,175.604737428539,173.189788463316,170.774839498092,168.359890532869,165.944941567646,163.529992602423,161.115043637199,158.700094671976,156.285145706753,153.870196741529,151.455247776306,149.040298811083,146.625349845859,144.210400880636,141.795451915413,139.380502950189,136.965553984966,134.550605019743,132.135656054519,129.720707089296,127.305758124073,124.89080915885,122.475860193626,120.060911228403,117.64596226318,115.231013297956,112.816064332733,110.40111536751,107.986166402286,105.571217437063,103.15626847184,100.741319506616,98.3263705413931,95.9114215761697,93.4964726109465,91.0815236457231,88.6665746804998,86.2516257152765,83.8366767500532,81.4217277848299,79.0067788196066,76.5918298543833,74.1768808891599,71.7619319239366,69.3469829587133,66.93203399349,64.5170850282667,62.1021360630434,59.6871870978201,57.2722381325967,54.8572891673734,52.4423402021501,50.0273912369268,47.6124422717035,45.1974933064802,42.7825443412569,40.3675953760335,37.9526464108102,35.5376974455869,33.1227484803636,30.7077995151403,28.292850549917,25.8779015846937,23.4629526194703,21.0480036542471,18.6330546890237,16.2181057238004,13.8031567585771,11.3882077933538,8.9732588281305,6.55830986290715,4.14336089768386,1.72841193246052,-0.686537032762772,-3.10148599798612,-5.51643496320941,-7.93138392843269,-10.346332893656,-12.7612818588793,-15.1762308241027,-17.591179789326,-20.0061287545493,-22.4210777197726,-24.8360266849959,-27.2509756502192,-29.6659246154426,-32.0808735806659,-34.4958225458892,-36.9107715111124,-39.3257204763358,-41.7406694415591,-44.1556184067824],"mean_adj_ps":[207.251864044178,206.131227065662,205.010590087147,203.889953108631,202.769316130116,201.6486791516,200.528042173085,199.407405194569,198.286768216054,197.166131237538,196.045494259023,194.924857280507,193.804220301992,192.683583323476,191.562946344961,190.442309366445,189.32167238793,188.201035409414,187.080398430899,185.959761452383,184.839124473868,183.718487495352,182.597850516837,181.477213538321,180.356576559806,179.23593958129,178.115302602775,176.994665624259,175.874028645744,174.753391667228,173.632754688713,172.512117710197,171.391480731682,170.270843753166,169.150206774651,168.029569796135,166.90893281762,165.788295839104,164.667658860589,163.547021882073,162.426384903558,161.305747925042,160.185110946527,159.064473968011,157.943836989496,156.82320001098,155.702563032465,154.581926053949,153.461289075434,152.340652096918,151.220015118403,150.099378139887,148.978741161372,147.858104182856,146.737467204341,145.616830225825,144.49619324731,143.375556268794,142.254919290279,141.134282311763,140.013645333248,138.893008354733,137.772371376217,136.651734397701,135.531097419186,134.41046044067,133.289823462155,132.16918648364,131.048549505124,129.927912526609,128.807275548093,127.686638569578,126.566001591062,125.445364612547,124.324727634031,123.204090655516,122.083453677,120.962816698485,119.842179719969,118.721542741454,117.600905762938,116.480268784423,115.359631805907,114.238994827392,113.118357848876,111.997720870361,110.877083891845,109.75644691333,108.635809934814,107.515172956299,106.394535977783,105.273898999268,104.153262020752,103.032625042237,101.911988063721,100.791351085206,99.6707141066901,98.5500771281746,97.4294401496591,96.3088031711436,95.1881661926281,94.0675292141126,92.9468922355971,91.8262552570817,90.7056182785661,89.5849813000507,88.4643443215352,87.3437073430197,86.2230703645042,85.1024333859887,83.9817964074732,82.8611594289577,81.7405224504422,80.6198854719267,79.4992484934112,78.3786115148957,77.2579745363802,76.1373375578647,75.0167005793492,73.8960636008337,72.7754266223182,71.6547896438027,70.5341526652872,69.4135156867717,68.2928787082562,67.1722417297407,66.0516047512253,64.9309677727097,63.8103307941942,62.6896938156788,61.5690568371633,60.4484198586478,59.3277828801323,58.2071459016168,57.0865089231013,55.9658719445858,54.8452349660703,53.7245979875548,52.6039610090393,51.4833240305238,50.3626870520083,49.2420500734928,48.1214130949773,47.0007761164618,45.8801391379463,44.7595021594308,43.6388651809153,42.5182282023998,41.3975912238843,40.2769542453688,39.1563172668533,38.0356802883379,36.9150433098224,35.7944063313068,34.6737693527914,33.5531323742759,32.4324953957604,31.3118584172449,30.1912214387294,29.0705844602139,27.9499474816984,26.8293105031829,25.7086735246674,24.5880365461519,23.4673995676364,22.3467625891209,21.2261256106054,20.1054886320899,18.9848516535744,17.8642146750589,16.7435776965434,15.6229407180279,14.5023037395124,13.3816667609969,12.2610297824814,11.1403928039659,10.0197558254505,8.89911884693495,7.77848186841945,6.65784488990397,5.53720791138846,4.41657093287296,3.29593395435748,2.17529697584197,1.05465999732647,-0.0659769811890101,-1.18661395970452,-2.30725093821999,-3.4278879167355,-4.54852489525101,-5.66916187376648,-6.78979885228199,-7.9104358307975,-9.03107280931297,-10.1517097878285,-11.272346766344,-12.3929837448595,-13.513620723375,-14.6342577018904,-15.754894680406,-16.8755316589215,-17.9961686374369,-19.1168056159524,-20.237442594468,-21.3580795729834,-22.4787165514989,-23.5993535300144,-24.7199905085299,-25.8406274870454,-26.9612644655609,-28.0819014440764,-29.2025384225919,-30.3231754011074,-31.4438123796229,-32.5644493581384,-33.6850863366539,-34.8057233151694,-35.9263602936849,-37.0469972722004,-38.1676342507159,-39.2882712292314,-40.4089082077469,-41.5295451862624,-42.6501821647779]},"columns":[{"id":".rownames","name":"","type":"character","sortable":false,"filterable":false,"rowHeader":true},{"id":"overall","name":"overall","type":"numeric"},{"id":"mean_ps","name":"mean_ps","type":"numeric"},{"id":"mean_gp","name":"mean_gp","type":"numeric"},{"id":"suc_rate","name":"suc_rate","type":"numeric"},{"id":"mean_adj_ps","name":"mean_adj_ps","type":"numeric"}],"dataKey":"7d62838744728d2e3c93006f350ef7b2"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-<p>Now that we have the models on the same scale, we can plot the predicted values on top of each other.</p>
+<p>All four of these linear models are very clearly inadequate, but for sake of completeness we will look at plots of the residuals vs fitted values.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nls_pred_vals, <span class="fu">aes</span>(<span class="at">x =</span> overall)) <span class="sc">+</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"purple"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"dodgerblue"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"salmon"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"limegreen"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">5</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lm_resids <span class="ot">&lt;-</span> <span class="fu">lapply</span>(lin_models, residuals)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lm_resids <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean_ps_resid =</span> lm_resids[[<span class="dv">1</span>]], </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_gp_resid =</span> lm_resids[[<span class="dv">2</span>]], </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">suc_rate_resid =</span> lm_resids[[<span class="dv">3</span>]], </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean_adj_ps_resid =</span> lm_resids[[<span class="dv">4</span>]])</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>lm_pred_vals_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(lm_pred_vals, lm_resids)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_res_{metrics[i]}"</span>), </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(lm_pred_vals_resid, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}"</span>), </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">y =</span> <span class="fu">str_glue</span>(<span class="st">"{metrics[i]}_resid"</span>))) <span class="sc">+</span> </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">geom_point</span>())</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>(plot_res_mean_ps <span class="sc">+</span> plot_res_mean_gp) <span class="sc">/</span> (plot_res_suc_rate <span class="sc">+</span> plot_res_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="model_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Clearly none of these models are appropriate, they very clearly fail the assumptions regarding a correct functional form, constant variance of residuals, and independent residual assumptions. It is also clear that the errors are not normally distributed. Moreover, these models all fail our second requirement for a feasible model in the Approach section of the Question chapter (which is that all picks have a strictly positive value).</p>
+</section>
+<section id="non-linear-regression" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="non-linear-regression"><span class="header-section-number">7.5</span> Non-Linear Regression</h2>
+<p>Given that none of the four linear models were appropriate, we will reattempt to fit a model using non-linear regression (ie the <code>nls</code> function, which stands for non-linear least squares). The resource <a href="https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html">Non-linear Regression in R</a> was very helpful when working on this section. In short, we will be fitting the model</p>
+<p><span class="math display">\[
+v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
+\]</span></p>
+<p>Where</p>
+<ul>
+<li><p><span class="math inline">\(i\)</span> is the pick number.</p></li>
+<li><p><span class="math inline">\(m\)</span> is the metric being used.</p></li>
+<li><p><span class="math inline">\(v_{i,m}\)</span> is the value of pick <span class="math inline">\(i\)</span> based on metric <span class="math inline">\(m\)</span>.</p></li>
+<li><p><span class="math inline">\(\phi_{1, m},\phi_{2, m},\phi_{3, m}\)</span> are parameters we are estimating which depend on which metric we are using.</p></li>
+</ul>
+<p>We choose to use <code>nls</code> because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates. We fit these models as follows:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>)){</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"nls_{metrics[i]}"</span>), </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">nls</span>(all_data_scaled[[i<span class="sc">+</span><span class="dv">1</span>]] <span class="sc">~</span> <span class="fu">SSlogis</span>(<span class="fu">log</span>(overall), phi1, phi2, phi3)))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>nls_pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pick =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">224</span>), </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_ps =</span> <span class="fu">predict</span>(nls_mean_ps, pick), </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_gp =</span> <span class="fu">predict</span>(nls_mean_gp, pick), </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">suc_rate =</span> <span class="fu">predict</span>(nls_suc_rate, pick), </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mean_adj_ps =</span> <span class="fu">predict</span>(nls_mean_adj_ps, pick))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(metrics)){</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">str_glue</span>(<span class="st">"plot_nls_{metrics[i]}"</span>), </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"plot_{metrics[i]}"</span>)) <span class="sc">+</span> </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>           <span class="fu">geom_line</span>(<span class="at">data =</span> nls_pred_vals, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"overall"</span>, <span class="at">y =</span> metrics[i]), </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>(plot_nls_mean_ps <span class="sc">+</span> plot_nls_mean_gp) <span class="sc">/</span> (plot_nls_suc_rate <span class="sc">+</span> plot_nls_mean_adj_ps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These curves all seem to fit well. We can also plot the curves on top of each other since they are on (roughly) the same scale. Note that the scales may not be exactly equal because the predicted value of the first pick may not be exactly 1000 points. When we pick a model we will rescale all the values so that this is the case but for the sake of comparing models this is good enough.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nls_pred_vals, <span class="fu">aes</span>(<span class="at">x =</span> overall)) <span class="sc">+</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_ps), <span class="at">col =</span> <span class="st">"salmon"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">lty =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_gp), <span class="at">col =</span> <span class="st">"dodgerblue"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> suc_rate), <span class="at">col =</span> <span class="st">"purple"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_adj_ps), <span class="at">col =</span> <span class="st">"limegreen"</span>, <span class="at">lwd =</span> <span class="fl">0.85</span>, <span class="at">lty =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="model_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -726,18 +533,75 @@ v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">abs</span>(nls_pred_vals<span class="sc">$</span>mean_ps <span class="sc">-</span> nls_pred_vals<span class="sc">$</span>mean_adj_ps))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.092829</code></pre>
+<pre><code>[1] 1.504096</code></pre>
 </div>
 </div>
-<p>This tells us that the mean distance between pick value estimated by mean PS and mean Adjusted PS is about 1 point, which is effectively nothing since picks are valueed out of 1000 points.</p>
+<p>This tells us that the mean distance between pick value estimated by mean PS and mean Adjusted PS is about 1.5 points, which is effectively nothing since picks are valued out of 1000 points.</p>
 </section>
 <section id="model-selection" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="model-selection"><span class="header-section-number">7.6</span> Model Selection</h2>
+<p>We have the following four models. Recall the model we fit is <span class="math inline">\(v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}}\)</span> where <span class="math inline">\(i\)</span> is the pick number, <span class="math inline">\(m\)</span> is the metric being used, <span class="math inline">\(v_{i,m}\)</span> is the estimated value of pick <span class="math inline">\(i\)</span> based on model <span class="math inline">\(m\)</span>, and <span class="math inline">\(\phi_{1,m}, \phi_{2,m}, \phi_{3,m}\)</span> are the parameters we estimated. Here are the each of the models we fit. In order, they are for mean PS, mean GP, Success Rate, and mean Adjusted PS:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(metric <span class="cf">in</span> metrics){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">get</span>(<span class="fu">str_glue</span>(<span class="st">"nls_{metric}"</span>)))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Nonlinear regression model
+  model: all_data_scaled[[i + 1]] ~ SSlogis(log(overall), phi1, phi2,     phi3)
+   data: parent.frame()
+     phi1      phi2      phi3 
+1691.5119    0.4342   -1.2153 
+ residual sum-of-squares: 294409
+
+Number of iterations to convergence: 0 
+Achieved convergence tolerance: 1.44e-06
+Nonlinear regression model
+  model: all_data_scaled[[i + 1]] ~ SSlogis(log(overall), phi1, phi2,     phi3)
+   data: parent.frame()
+    phi1     phi2     phi3 
+1108.213    2.279   -1.036 
+ residual sum-of-squares: 648801
+
+Number of iterations to convergence: 0 
+Achieved convergence tolerance: 2.447e-07
+Nonlinear regression model
+  model: all_data_scaled[[i + 1]] ~ SSlogis(log(overall), phi1, phi2,     phi3)
+   data: parent.frame()
+     phi1      phi2      phi3 
+1078.3555    3.0090   -0.9063 
+ residual sum-of-squares: 1123580
+
+Number of iterations to convergence: 0 
+Achieved convergence tolerance: 6.513e-07
+Nonlinear regression model
+  model: all_data_scaled[[i + 1]] ~ SSlogis(log(overall), phi1, phi2,     phi3)
+   data: parent.frame()
+     phi1      phi2      phi3 
+1587.8630    0.5685   -1.1877 
+ residual sum-of-squares: 256119
+
+Number of iterations to convergence: 0 
+Achieved convergence tolerance: 1.929e-07</code></pre>
+</div>
+</div>
+<p>We now have four models which are backed by historical data. Additionally, all four of them seem feasible based on the criteria we noted in the Approach section of the Question chapter since clearly the lines we have fit are decreasing and <span class="math inline">\(&gt;0\)</span> for all <span class="math inline">\(i\)</span> (since <span class="math inline">\(\phi_{1,m} &gt;0\)</span> for all four models). Now that we know the models are all feasible, we check the model assumptions regarding independence, normality, and constant variance of the residuals.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nls_fitted_resid <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nls_pred_vals, all_data_scaled[,<span class="sc">-</span><span class="dv">1</span>] <span class="sc">-</span> nls_pred_vals[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(nls_fitted_resid) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"overall"</span>, <span class="st">"mean_ps"</span>, <span class="st">"mean_gp"</span>, <span class="st">"suc_rate"</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"mean_adj_ps"</span>, <span class="st">"resid_mean_ps"</span>, <span class="st">"resid_mean_gp"</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"resid_suc_rate"</span>, <span class="st">"resid_mean_adj_ps"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p>Probably will take the model with the lowest RSS.</p>
 </section>
 <section id="finishing-touches" class="level2" data-number="7.7">
 <h2 data-number="7.7" class="anchored" data-anchor-id="finishing-touches"><span class="header-section-number">7.7</span> Finishing Touches</h2>
-<p>Create value and pick functions.</p>
+<p>Rescale so first pick is worth exactly 1000 points Create value and pick functions.</p>
 
 
 </section>
