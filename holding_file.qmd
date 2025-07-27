@@ -10,14 +10,6 @@ source("functions.R")
 
 ## Visualize
 
-We choose PS over GP for a few reasons.
-
--   PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team.
-
--   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain time frame, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distinguishing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed earlier.
-
--   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
-
 ## Transform
 
 This will result in older drafts receiving more weight when we take the average of PS, which is unideal because we'd like all drafts to be equally weighted. To give more weight to more recent drafts, we will change our metric *slightly* for active players selected in drafts after 2015, and will instead use $p^{mod}_{ij} = \frac{ps_{ij}}{\sum_i ps_{ij}}C$, where $ps_{ij}$ is the PS of the player picked at selection $i$ in year $j$ and $C$ is the mean total point share of all drafts between 1996 and 2015. In other words, if draft $j$ were to be an average draft, and all players continued generating PS at their current rates, then player $i$ from draft $j$ would finish their career with a PS of $p^{mod}_{ij}$ To reiterate, this is still not a perfect fix because "late bloomers" drafted after 2015 may not have made any contributions yet, even if they will later on. This adjustment benefits active players drafted in 2016-2020 who have already made NHL contributions, but will make no difference for those who have not yet made the NHL. There is no reason to make this adjustment for players drafted between 2016 and 2020 who have retired.
@@ -217,13 +209,10 @@ Though not perfect, this curve is much smoother than the previous one, so we wil
 get_length <- function(len){ 
   all_data_adj |> 
     mutate(rem_career_len = to - year - len) |> 
-    summarize(mean = mean(rem_career_len)) |> 
-    pull(mean)
+    summarize(mean_SAMP = mean(rem_career_len)) |> 
+    pull(mean_SAMP)
 }
 
 est_yr <- data.frame(k = seq(1,10)) |> 
   mutate(yr = get_length(k)) 
-
-
-# How to cite stack overflow 
 ```
