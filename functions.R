@@ -27,10 +27,12 @@ tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
     filter(overall != "Overall" & overall != "" & # remove extra rows
              as.numeric(overall) < 225 & # remove players drafted after pick 224
-             !is.na(pos))  |> # remove forfeited picks
+             amateur_team != "()") |> # remove invalid/forfeited picks 
     type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
-           "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 
+           "gp" = coalesce(gp, 0), "to" = coalesce(to, year), 
+           "pos" = ifelse(str_count(pos, "G") == 1, "G", 
+                          ifelse(str_count(pos, "D") == 1, "D", "F"))) |> 
     select(year, overall, to, pos, gp, ps) # columns we care about
   draft_year_table
 }

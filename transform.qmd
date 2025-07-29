@@ -119,7 +119,7 @@ all_data_adj |>
   geom_point()
 ```
 
-A similar issue is that there are quite a few current players who can still generate additional PS in our dataset. This issue is related because it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is due to there being so many active players from those seasons.
+A similar issue is that there are quite a few current players in our dataset who can still generate additional PS because they are still playing. The issues are related because it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is at least partially due to there being so many active players from those seasons.
 
 ```{r}
 all_data_adj |> 

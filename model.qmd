@@ -173,14 +173,14 @@ for(i in 1:length(metrics)){
 (plot_nls_mean_ps + plot_nls_mean_gp) / (plot_nls_suc_rate + plot_nls_mean_adj_ps)
 ```
 
-These curves all seem to fit well and all seem to generally describe the data, so we seem to have found a correct function to model the data. We can also plot the curves on top of each other since they are on (roughly) the same scale. Note that the scales may not be exactly equal because the predicted value of the first pick may not be exactly 1000 points. When we pick a model we will rescale all the values so that this is the case but for the sake of comparing models this is good enough.
+These curves all seem to fit well and all seem to generally describe the data, so we seem to have found a correct function to model the data. We can also plot the curves on top of each other since they are on (roughly) the same scale, we make the green line a little bit thicker so it is easier to see. Note that the scales may not be exactly equal because the predicted value of the first pick may not be exactly 1000 points. When we pick a model we will rescale all the values so that this is the case but for the sake of comparing models this is good enough.
 
 ```{r}
 ggplot(nls_pred_vals, aes(x = overall)) + 
-  geom_line(aes(y = mean_ps), col = "salmon", lwd = 1.5, lty = 1) + 
+  geom_line(aes(y = mean_ps), col = "limegreen", lwd = 1.9, lty = 1) + 
   geom_line(aes(y = mean_gp), col = "dodgerblue", lwd = 0.85, lty = 2) +
-  geom_line(aes(y = suc_rate), col = "purple", lwd = 0.85, lty = 3) +
-  geom_line(aes(y = mean_adj_ps), col = "limegreen", lwd = 0.85, lty = 6)
+  geom_line(aes(y = suc_rate), col = "salmon", lwd = 0.85, lty = 3) +
+  geom_line(aes(y = mean_adj_ps), col = "purple", lwd = 0.85, lty = 6)
 ```
 
 The mean PS and mean Adjusted PS lines are almost perfectly on top of each other, indicating the adjustment we made to estimate the PS remaining in players' careers had a minimal impact on the estimate of pick value. Indeed:
@@ -266,3 +266,25 @@ With this in mind, we choose the model based on mean PS (not adjusted PS). As th
 ## Finishing Touches
 
 Scale pick 1 to 1000 points. Create value and pick functions.
+
+```{r}
+nls_ps <- nls(ps ~ SSlogis(log(overall), phi1, phi2, phi3), data = all_data_adj)
+
+nls_pred <- data.frame(pick = all_data_adj$overall, pred_ps = predict(nls_ps, all_data$overall))
+
+
+ggplot(all_data_adj, aes(x = overall, y = ps)) + 
+  geom_point() + 
+  geom_line(aes(x = nls_pred$pick, y = nls_pred$pred_ps), col = "red", lwd = 2)
+```
+
+```{r}
+suc_rate <- glm(reg ~ overall, family = "binomial", data = all_data_adj)
+
+overall <- all_data$overall
+pred <- predict(suc_rate, data.frame(pick = overall))
+
+prob <- exp(pred) / (1 + exp(pred))
+
+plot(x = overall, y = prob)
+```

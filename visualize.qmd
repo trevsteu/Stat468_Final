@@ -33,11 +33,11 @@ Recall that over the years the NHL has changed how many picks there are in each 
 all_data |> 
   group_by(year) |> 
   summarize(num_picks = n()) |> 
-  ggplot(aes(x = year, y = num_picks)) + # takes less space than gt()
+  ggplot(aes(x = year, y = num_picks)) +
   geom_point()
 ```
 
-Indeed the drafts after 2005 all have fewer than 224 selections. This is not a major problem since those picks aren't worth very much anyway, but it is worth noting that several picks from #211 onward have a smaller sample size than picks 1-210.
+Indeed the drafts after 2005 all have fewer than 224 selections. Note also that 2002 had an invalid pick and 2011 had a forfeited pick, neither is included in this. Some drafts having fewer pick is not a major problem since very late picks aren't worth very much anyway, but it is worth noting that several picks from #211 onward have a smaller sample size than picks 1-210.
 
 ### PS and GP Values
 
@@ -99,7 +99,20 @@ We may also guess that GP and PS are positively correlated, since better players
 cor(all_data$ps, all_data$gp)
 ```
 
-Because of this, we choose to only include one of GP and PS in each model to avoid multicollinearity concerns. As mentioned in the Approach section, we will use two GP-related metrics and two PS-related metrics. For each of these metrics we will fit a linear and non-linear regression model, for a total of 8 models. We now explore the GP and PS values in greater detail.
+The relationship is very clear when we split the points by position. The first plot is good because it makes comparing points easier, the other three are nice because they are less crowded.
+
+```{r, fig.asp=1}
+plot_comb <- ggplot(all_data, aes(x = gp, y = ps, col = pos)) + 
+  geom_point(alpha = 0.35)
+
+plot_facet <-  ggplot(all_data, aes(x = gp, y = ps)) + 
+  geom_point(alpha = 0.25) + 
+  facet_wrap(~pos)
+
+plot_comb / plot_facet
+```
+
+I suspect this strong correlation (especially for goalies) is largely because players who are good and get lots of PS play for longer and thus play in more GP. Because of this, we choose to only include one of GP and PS in each model to avoid multicollinearity concerns. As mentioned in the Approach section, we will use two GP-related metrics and two PS-related metrics. For each of these metrics we will fit a linear and non-linear regression model, for a total of 8 models. We now explore the GP and PS values in greater detail.
 
 ### GP and PS of Draft Classes
 
@@ -176,7 +189,7 @@ gp_plot_3 + ps_plot_3
 
 Though these plot are still quite busy, it shows a strange trend that there seems to be more players drafted around 200 overall that end up having successful careers, than drafted around 125. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.
 
-The plots above are not great because they are missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean GP and mean PS of the players selected at each pick. Given how skewed our data is, typically the median would be preferred over the mean to improve resistance to outliers. However in this context we don't really want to be resistant to outliers since the outliers represent elite players (those who had a lot of GP or PS), and ignoring those players would make our model underestimate the values of picks which have been used to select extremely successful players.
+The plots above are not great because they are missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean GP and mean PS of the players selected at each pick. We will use the non-aggregated PS and GP values when fitting a model, but the relationship between Overall and PS or GP is more clear when the values are averaged.
 
 ```{r, warning=FALSE}
 gp_plot_4 <- all_data |> 
@@ -218,8 +231,8 @@ Interestingly, points that appear to be outliers in mean GP may not be outliers 
 
 We take the following lessons from our EDA into our Transform and Model chapters:
 
--   We will only use one of GP or PS in each model to avoid multicollinearity-related issues.
+-   Each model should only use one of GP or PS to avoid multicollinearity-related issues.
 
 -   We will need to fit a curve or line to the data, since if we simply set $v_i$ to be the mean GP or PS of players selected at pick $i$ then we will fail the first fundamental requirement, that $v_i > v_{i+k}$ for all $i, k \in \mathbb Z^+$.
 
-The mean GP by pick number and mean PS by pick number metrics are two of the metrics we will use in the Model chapter.
+The GP by pick number and PS by pick number metrics are two of the metrics we will use in the Model chapter.

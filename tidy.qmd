@@ -54,6 +54,8 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Change `gp` and `ps` values to `0` for players who never played in the NHL or have a negative `ps`.
 
+-   Standardize position to either be F (forward, any combination of LW, RW, C), D (defenceman), or G (goalie). Note that Kaspars Astashenko has his position listed as "D/W", a quick search of the [NHL website](https://www.nhl.com/player/kaspars-astashenko-8468000) reveals he was a defenceman.
+
 -   If `is.na(to)`, then the player never played in the NHL, so set it to the draft year.
 
 -   Add a `year` column so we can adjust the stats of players drafted more recently.
@@ -75,10 +77,12 @@ tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> 
     filter(overall != "Overall" & overall != "" & # remove extra rows
              as.numeric(overall) < 225 & # remove players drafted after pick 224
-             !is.na(pos))  |> # remove forfeited picks
+             amateur_team != "()") |> # remove invalid/forfeited picks 
     type_convert() |> # fix types 
     mutate("year" = year, "ps" = pmax(coalesce(ps, 0), 0), 
-           "gp" = coalesce(gp, 0), "to" = coalesce(to, year)) |> 
+           "gp" = coalesce(gp, 0), "to" = coalesce(to, year), 
+           "pos" = ifelse(str_count(pos, "G") == 1, "G", 
+                          ifelse(str_count(pos, "D") == 1, "D", "F"))) |> 
     select(year, overall, to, pos, gp, ps) # columns we care about
   draft_year_table
 }
@@ -90,7 +94,7 @@ This is the form we will use for analysis later.
 
 ## Getting the Data
 
-We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes around 4 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.
+We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes 2-3 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will find a workaround for this shortly so we don't have to run this function any more than we have to.
 
 ```{r, warning=FALSE, message=FALSE, eval = FALSE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
