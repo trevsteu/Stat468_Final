@@ -1,5 +1,5 @@
 ---
-title: "Model2"
+title: "Model"
 author: "Trevor S"
 ---
 
@@ -99,7 +99,7 @@ Based on the plots above, all four of these linear models are inadequate. Moreov
 
 Given that none of the four linear models were appropriate, we will reattempt to fit a model using non-linear regression (ie the `nls` function, which stands for non-linear least squares). The resource [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) was very helpful when working on this section. In short, we will be fitting the model
 
-$$ v_{i,m} = \frac{\phi_{1, m}}{1+e^{(\phi_{2,m}- i)/\phi_{3,m}}} $$
+$$ v_{i,m} = \frac{\phi_{1, m}}{1+ (\frac{e^{\phi_{2,m}}}{i})^{1/\phi_{3,m}}} $$
 
 Where
 
@@ -111,7 +111,7 @@ Where
 
 -   $\phi_{1, m},\phi_{2, m},\phi_{3, m}$ are parameters we are estimating which depend on which metric we are using.
 
-We choose to use `nls` because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates so it makes interpretations significantly easier. We fit these models as follows, except we do not use the :
+We choose to use `nls` because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates so it makes interpretations significantly easier. We fit the models using the same metrics as before except for the model based on whether players become NHL regulars.
 
 ```{r}
 metrics <- c("ps", "gp", "adj_ps")
@@ -124,9 +124,8 @@ for(i in seq(1,3)){
 }
 
 nls_pred_vals <- lapply(seq(1,3), 
-                      \(i) predict(get(str_glue("nls_{metrics[i]}")), 
+                        \(i) predict(get(str_glue("nls_{metrics[i]}")), 
                                    data.frame(overall = seq(1,224))))
-
 nls_pred_vals <- data.frame(overall = seq(1, 224), 
                           ps = nls_pred_vals[[1]], 
                           gp = nls_pred_vals[[2]], 
@@ -147,6 +146,152 @@ for(i in seq(1,3)){
                      col = "red", lwd = 1.5))
 }
 
-
 plot_nls_ps / plot_nls_gp / plot_nls_adj_ps
 ```
+
+Now that we have fit the models, we plot the residual vs overall values. Note that typically we'd plot the residual vs fitted values, but this plot is impossible to make any inferences from because so many of the fitted values are relatively small, meaning they all get clumped together.
+
+```{r, fig.asp=1}
+all_resids <- data.frame(overall = all_data_adj$overall, 
+                         ps_resid = all_data_adj$ps - predict(nls_ps, overall) , 
+                         gp_resid =  all_data_adj$gp - predict(nls_gp, overall), 
+                         adj_ps_resid = all_data_adj$adj_ps - predict(nls_adj_ps, overall))
+
+for(i in seq(1,3)){
+  assign(str_glue("plot_resid_{metrics[i]}"), 
+         ggplot(all_resids, aes_string(x = "overall", y = str_glue("{metrics[i]}_resid"))) + 
+           geom_point(alpha = 0.3))
+}
+
+plot_resid_ps / plot_resid_gp / plot_resid_adj_ps
+```
+
+This clearly fails a number of the model assumptionts, most notably the assumption regarding a constant residual variance. This is not really that surprising, however, and is not a major cause for concern. First, there is no upper bound on our residuals since (in theory) players can play in infinitely many games or generate infinite PS. However, there is a lower bound on the residuals because if a player never plays in an NHL game and/or never generates any PS, then the associated residual will be the predicted value. That is, there is a limit to how much a player can underperform relative to draft position (since we don't allow negative PS and negative GP is not possible), but there is no limit to how much they can overperform. One other thing to note is that, generally speaking, there seems to be more variance among earlier picks than later picks because earlier picks can over or underperform a lot, while later picks can overperform a lot or underperform a little (because their expectations are lower, even if they do nothing they didn't underperform *that* much).
+
+We will look at a QQ Plot of the residuals. [This ggplot2 documentation page](https://ggplot2.tidyverse.org/reference/geom_qq.html) was very helpful for this part.
+
+```{r, fig.asp=1}
+for(i in seq(1,3)){
+  assign(str_glue("qq_{metrics[i]}"), 
+         ggplot(all_resids, aes_string(sample = str_glue("{metrics[i]}_resid"))) + 
+           stat_qq() + 
+           stat_qq_line(col = "red", lwd = 0.5))
+}
+
+qq_ps / qq_gp / qq_adj_ps
+```
+
+Clearly the residuals are not normally distributed. This is another result of the points mentioned above, that there is a lower bound on a player's underperformance, but no upper bound on how much they can overperform.
+
+The lesson to take from these plots is that deriving confidence intervals or calculating p-values is almost certainly a bad idea because the assumptions that those mechanisms rely on are clearly invalid. On the other hand, taking point estimates is probably okay since we effectively found a line of best fit which doesn't rely on any of the model assumptions. With this in mind, we will be relying on the point estimates given by this model for the remainder of this report.
+
+## Model Selection
+
+For convenience we replot the fitted values from the non-linear models we fit in the last section.
+
+```{r}
+plot_nls_ps + plot_nls_gp + plot_nls_adj_ps
+```
+
+One problem with these plots is that they're all on different scales, which makes comparing models very difficult. Recall from the Introduction chapter that we want to end up with a model which has $\hat v_1 = 1000$ "points" to maintain consistency with existing work. To do this, we set $C_m = \frac{1000}{v_{1,m}}$, and then multiply all of the other $\hat v_{i,m}$ values by $C_m$ for $i \not= 1$, and then use `reactable` to make sure it worked.
+
+```{r}
+C_m <- c(1, 1000 / nls_pred_vals[1,-1])
+
+scaled_vals <- nls_pred_vals * C_m
+
+reactable(round(scaled_vals, 4))
+```
+
+This seems to look good. Now that the predicted values are on the same scale, we can plot them on top of each other.
+
+```{r}
+ggplot(scaled_vals, aes(x = overall)) + 
+  geom_line(aes(y = ps), col = "blue", lwd = 1.2) + 
+  geom_line(aes(y = gp), col = "limegreen", lwd = 0.75) + 
+  geom_line(aes(y = adj_ps), col = "salmon", lwd = 0.8, lty = 4)
+```
+
+Interestingly, the PS and Adjusted PS lines are basically directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate \$C_m\$:
+
+$$RSS_m  = \sum^n_{i=1}(\hat v_{i,m} - v_i)^2 \Longrightarrow RSS \times C_m^2 = \sum^n_{i=1}(C_m\hat v_{i,m} - C_mv_i)^2 $$
+
+```{r}
+nls_ps
+nls_gp
+nls_adj_ps
+
+C_m
+```
+
+So the scaled sum of squares are:
+
+```{r}
+RSS <- c(1766572, 294601441, 2131610)
+RSS * unlist(C_m[-1])
+```
+
+Recall that since the correlation between PS and GP was $\approx$ 0.85, we will not use a model which incorporates both due to multicollinearity concerns. Given the choice, we prefer to use a metric based on PS rather than GP for a few reasons.
+
+-   PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team.
+
+-   The RSS associated with the model with GP is significantly higher than the RSS for both of the PS-related models.
+
+-   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain time frame, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distinguishing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed at the start of our EDA in the Visualize chapter.
+
+-   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
+
+Now that we've settled either using PS or Adjusted PS, we take a closer look at the difference between their predicted values. The mean disparity between the two predicted values is about 1.04, which indicates the metric we choose is unlikely to significantly impact our conclusion since picks are values out of 1000. Note that we need to take the absoute value since the since the scaled version of Adjusted PS may be smaller than the scaled PS values.
+
+```{r}
+mean(abs(scaled_vals$adj_ps - scaled_vals$ps))
+```
+
+We can also plot the percent differences.
+
+```{r}
+ggplot(scaled_vals, aes(x = overall)) + 
+  geom_line(aes(y = ps / adj_ps), col = "dodgerblue") + 
+  geom_line(aes(y = adj_ps / ps), col = "salmon")
+```
+
+We see that most of the variation between the PS and Adjusted PS values occurs late in the draft, but these picks are very close in raw point values since 3% of a relatively small number is a small number. With this in mind, we choose the model based on PS (not Adjusted PS). As the analysis in this section has showed, there is almost zero difference between the models based on PS and Adjusted PS models. Therefore we prefer to use the simpler model, which in this case is PS. The RSS values for both models are fairly close, but the PS model is also preferred because its RSS is smaller. This also removes any concerns regarding the adequacy of our estimations regarding remaining career length.
+
+## Finishing Touches
+
+We now create two functions which will be used in our R Shiny app. The first is `value`, which takes in a pick and returns the number of points (a more user-friendly version of `predict`), and the second is `pick`, which takes in a number of point and returns the closest pick to that number of points . Recall we fit the model $$ v_{i,m} = \frac{\phi_{1, m}}{1+ (\frac{e^{\phi_{2,m}}}{i})^{1/\phi_{3,m}}} $$and we found $\phi_{1,m} = 162.407, \phi_{2,m} = 0.4402, \phi_{3,m} = -1.2138$. Recall also that this model is based on the unscaled values, but that scaling it is simple and can be done by multiplying $\phi_{1,m}$ by $C_1$ which is $162.4072 \times 10.44172  = 1695.811$. Creating the `value` function is now straightforward.
+
+```{r}
+phi_1 <- 1695.811 
+phi_2 <- 0.44022
+phi_3 <- -1.21381
+
+value <- function(overall){
+  phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3))
+}
+
+# check it worked:
+value(1) # should be 1000 
+value(224) # should be approx 30
+```
+
+The `pick` function is more complex, we need to take the inverse of the value function. It's not a difficult computation and it's a few steps so we omit the steps, it turns out the inverse is given below:
+
+$$
+i = \frac{e^{\phi_{2,m}}}{(\frac{\phi_{1,m}}{v_{i,m}} - 1)^{\phi_{3,m}}}
+$$
+
+```{r}
+pick <- function(value){
+  round(exp(phi_2) / ((phi_1 / value - 1)^phi_3))
+}
+
+# check it worked:
+pick(1000) # should be 1 
+pick(27.76) # should be 224
+
+i <- seq(1, 224)
+all(pick(value(i)) == i)
+```
+
+Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue. We now proceed to the Communication chapter, which contains the key results from this report.
