@@ -10,23 +10,19 @@ value <- function(overall){
   phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3))
 }
 
+num_picks <- 5
+
 ui <- fluidPage(
   fluidRow(
-    column(6, titlePanel("Team A Acquires:"),
-           textInput("A1", "Pick 1"),
-           textInput("A2", "Pick 2"),
-           textInput("A3", "Pick 3"),
-           textInput("A4", "Pick 4"),
-           textInput("A5", "Pick 5")), 
-    column(6, titlePanel("Team B Acquires:"),
-           textInput("B1", "Pick 1"),
-           textInput("B2", "Pick 2"),
-           textInput("B3", "Pick 3"),
-           textInput("B4", "Pick 4"),
-           textInput("B5", "Pick 5"))),
-    actionButton("eval", "Evaluate Trade!", class = "btn-lg"))
+    lapply(c("A", "B"), \(t) column(6, titlePanel(str_glue("Team {t} Acquires:")),
+           lapply(seq(1,num_picks), \(i)
+                  textInput(str_glue("{t}_{i}"), str_glue("Pick {i}")))))),
+  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))))
 
-server <- function(input, output, session) {
+server <- function(input, output, session){
+  
+  
+  
 }
 
 shinyApp(ui, server)

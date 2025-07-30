@@ -28,3 +28,5 @@ Other things I need to do:
 -   Add references to .bib file
 
 -   remove unnecessary files from github (ie holding_file, model2, etc).
+
+3 team trades are incredibly rare in the NHL so they are not directly included in the app, though they could be analyzed by looking at what each team individually receives and gives up (ie look at it in terms of 3 two team trades)
