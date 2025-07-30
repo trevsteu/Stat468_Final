@@ -60,7 +60,7 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Add a `year` column so we can adjust the stats of players drafted more recently.
 
--   Select the columns we care about (`year`, `overall`, `pos`, `to`, `gp`, and `ps`) in that order.
+-   Select the columns we care about (`year`, `overall`, `pos`, `to`, `ps`, and `gp`) in that order.
 
 -   Remove any players selected after 224$^{\text{th}}$ overall.
 
@@ -83,7 +83,7 @@ tidy_draft <- function(year){
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year), 
            "pos" = ifelse(str_count(pos, "G") == 1, "G", 
                           ifelse(str_count(pos, "D") == 1, "D", "F"))) |> 
-    select(year, overall, to, pos, gp, ps) # columns we care about
+    select(year, overall, to, pos, ps, gp) # columns we care about
   draft_year_table
 }
 

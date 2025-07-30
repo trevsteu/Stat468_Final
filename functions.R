@@ -33,7 +33,7 @@ tidy_draft <- function(year){
            "gp" = coalesce(gp, 0), "to" = coalesce(to, year), 
            "pos" = ifelse(str_count(pos, "G") == 1, "G", 
                           ifelse(str_count(pos, "D") == 1, "D", "F"))) |> 
-    select(year, overall, to, pos, gp, ps) # columns we care about
+    select(year, overall, to, pos, ps, gp) # columns we care about
   draft_year_table
 }
 
@@ -43,60 +43,57 @@ all_data <- read.csv("all_data.csv")
 
 # ---------------------------------------------------------------------------------------
 
-get_threshold <- function(year){
-  ifelse(year <= 2017, 200, 82/3*(2025-year))
-}
-
-thresholds <- data.frame(year = seq(2015,2020)) |> 
-  mutate(t = get_threshold(year))
-
-# ---------------------------------------------------------------------------------------
-
-all_data_ret <- all_data |> 
-  filter(to != 2025) |> 
-  mutate(thresh = ifelse(pos == "G", 100, 200), 
-         reg = gp >= thresh) |> 
-  select(-thresh)
-
-all_data_act <- all_data |> 
-  filter(to == 2025) |> 
-  mutate(thresh = ifelse(pos == "G", get_threshold(year) / 2, 
-                         get_threshold(year)),
-         reg = gp >= thresh) |> 
-  select(-thresh)
-
-all_data_adj <- rbind(all_data_ret, all_data_act)
-
-# ---------------------------------------------------------------------------------------
-
-get_length <- function(len){ 
-  all_data_adj |> 
+get_length <- Vectorize(function(len){ 
+  all_data |> 
     mutate(rem_career_len = to - year - len) |> 
     filter(year %in% 1996:2004 & rem_career_len >= 0) |> 
     summarize(mean = mean(rem_career_len)) |> 
     pull(mean)
-}
+})
 
-est_yr <- data.frame(k = seq(1,22)) |> 
-  rowwise() |> 
-  mutate(yr = get_length(k)) |> 
-  ungroup()
+est_yr <- data.frame(k = seq(1,22)) |>
+  mutate(yr = get_length(k))
 
 # ---------------------------------------------------------------------------------------
 
-active_players <- all_data_adj |> 
+active_players <- all_data |> 
   filter(to == 2025) |> 
   mutate(career_len = to - year) |> 
-  rowwise() |> 
   mutate(adj_ps = ps + round(ps / career_len * get_length(career_len), 2)) |> 
-  ungroup() |> 
   select(-career_len)
 
-inactive_players <- all_data_adj |> 
+inactive_players <- all_data |> 
   filter(to != 2025) |> 
   mutate(adj_ps = ps)
 
+
 all_data_adj <- rbind(active_players, inactive_players)
+
+# ---------------------------------------------------------------------------------------
+
+get_threshold <- function(year){  
+  ifelse(year <= 2017, 200, 82/3*(2025-year)) 
+} 
+
+thresholds <- data.frame(year = seq(2015,2020)) |>    
+  mutate(t = get_threshold(year))  
+
+# ---------------------------------------------------------------------------------------
+
+all_data_ret <- all_data_adj |>    
+  filter(to != 2025) |>   
+  mutate(thresh = ifelse(pos == "G", 100, 200),           
+         reg = gp >= thresh) |>    
+  select(-thresh)  
+
+all_data_act <- all_data_adj |>    
+  filter(to == 2025) |>    
+  mutate(thresh = ifelse(pos == "G", get_threshold(year) / 2,                           
+                         get_threshold(year)),         
+         reg = gp >= thresh) |>    
+  select(-thresh)  
+
+all_data_adj <- rbind(all_data_ret, all_data_act)
 
 # ---------------------------------------------------------------------------------------
 
@@ -104,13 +101,13 @@ all_data_comb <- all_data_adj |>
   group_by(overall) |> 
   summarize(mean_ps = mean(ps), 
             mean_gp = mean(gp), 
-            suc_rate = mean(reg), 
-            mean_adj_ps = mean(adj_ps))
+            mean_adj_ps = mean(adj_ps),
+            suc_rate = mean(reg))
 
 # ---------------------------------------------------------------------------------------
 
-metrics <- c("mean_ps", "mean_gp", "suc_rate", "mean_adj_ps")
-names <- c("Mean PS", "Mean GP", "Success Rate", "Mean Adjusted PS")
+metrics <- c("mean_ps", "mean_gp", "mean_adj_ps", "suc_rate")
+names <- c("Mean PS", "Mean GP", "Mean Adjusted PS", "Success Rate")
 
 for(i in 1:length(metrics)){
   assign(str_glue("plot_{metrics[i]}"), 
