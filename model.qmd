@@ -228,7 +228,7 @@ So the scaled sum of squares are:
 
 ```{r}
 RSS <- c(1766572, 294601441, 2131610)
-RSS * unlist(C_m[-1])
+RSS * unlist(C_m[-1])^2
 ```
 
 Recall that since the correlation between PS and GP was $\approx$ 0.85, we will not use a model which incorporates both due to multicollinearity concerns. Given the choice, we prefer to use a metric based on PS rather than GP for a few reasons.
@@ -255,7 +255,7 @@ ggplot(scaled_vals, aes(x = overall)) +
   geom_line(aes(y = adj_ps / ps), col = "salmon")
 ```
 
-We see that most of the variation between the PS and Adjusted PS values occurs late in the draft, but these picks are very close in raw point values since 3% of a relatively small number is a small number. With this in mind, we choose the model based on PS (not Adjusted PS). As the analysis in this section has showed, there is almost zero difference between the models based on PS and Adjusted PS models. Therefore we prefer to use the simpler model, which in this case is PS. The RSS values for both models are fairly close, but the PS model is also preferred because its RSS is smaller. This also removes any concerns regarding the adequacy of our estimations regarding remaining career length.
+We see that most of the variation between the PS and Adjusted PS values occurs late in the draft, but these picks are very close in raw point values since 3% of a relatively small number is a small number. With this in mind, we choose the model based on PS (not Adjusted PS). As the analysis in this section has showed, there is almost zero difference between the models based on PS and Adjusted PS models. Therefore we prefer to use the simpler model, which in this case is PS. The RSS values for both models are fairly close, and even though the RSS is smaller for Adjusted PS we will chose the PS model due to it being a simpler model.
 
 ## Finishing Touches
 
@@ -272,7 +272,7 @@ value <- function(overall){
 
 # check it worked:
 value(1) # should be 1000 
-value(224) # should be approx 30
+value(224) # should be approx 27.762
 ```
 
 The `pick` function is more complex, we need to take the inverse of the value function. It's not a difficult computation and it's a few steps so we omit the steps, it turns out the inverse is given below:
@@ -294,4 +294,12 @@ i <- seq(1, 224)
 all(pick(value(i)) == i)
 ```
 
-Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue. We now proceed to the Communication chapter, which contains the key results from this report.
+Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue. As one final check, we see what the difference in values was for a [recent NHL trade in which the Philadelpha Flyers acquired the 12th overall selection from the Pittsburgh Penguins in exchange for the 22nd and 31st selections](https://www.sportsnet.ca/nhl/article/penguins-trade-12th-overall-pick-to-flyers-for-nos-22-and-31/). We can see that this difference is about 39 points, which is equivalent to Pittsburgh receiving a mid 5th round pick in surplus value. This seems about right, it is generally accepted that the team that acquires the highest pick almost always gives up more than they receive, which is why teams only trade up if they really like a player who is still available.
+
+```{r}
+value(12) - value(22) - value(31)
+
+pick(38.9271)
+```
+
+We now proceed to the Communication chapter, which contains the key results from this report.

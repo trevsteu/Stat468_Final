@@ -17,6 +17,14 @@ Other things I need to do:
 
 -   Make sure everything flows logically
 
+-   Make notation consistent
+
+-   make sure links work
+
 -   Make code more efficient
 
 -   Spell check
+
+-   Add references to .bib file
+
+-   remove unnecessary files from github (ie holding_file, model2, etc).
