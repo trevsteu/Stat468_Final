@@ -1,6 +1,14 @@
 # renv::install("shiny")
+# renv::install("shinyFeedback")
 
 library(shiny)
+library(shinyFeedback)
+
+num_picks <- 5
+
+phi_1 <- 1695.811 
+phi_2 <- 0.44022
+phi_3 <- -1.21381
 
 pick <- function(value){
   round(exp(phi_2) / ((phi_1 / value - 1)^phi_3))
@@ -10,8 +18,6 @@ value <- function(overall){
   phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3))
 }
 
-num_picks <- 5
-
 ui <- fluidPage(
   fluidRow(
     lapply(c("A", "B"), \(t) column(6, titlePanel(str_glue("Team {t} Acquires:")),
@@ -20,9 +26,6 @@ ui <- fluidPage(
   fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))))
 
 server <- function(input, output, session){
-  
-  
-  
 }
 
 shinyApp(ui, server)

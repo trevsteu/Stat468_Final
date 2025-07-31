@@ -11,10 +11,16 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("patchwork")
 # renv::install("stringr")
 # renv::install("reactable")
+# renv::install("pins")
+# renv::install("vetiver")
+# renv::install("plumber")
 
 library(patchwork)
 library(stringr)
 library(reactable)
+library(pins)
+library(vetiver)
+library(plumber)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -212,14 +218,14 @@ ggplot(scaled_vals, aes(x = overall)) +
   geom_line(aes(y = adj_ps), col = "salmon", lwd = 0.8, lty = 4)
 ```
 
-Interestingly, the PS and Adjusted PS lines are basically directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate \$C_m\$:
+Interestingly, the PS and Adjusted PS lines are basically directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate $C_m$: Why doesn't this work???
 
 $$RSS_m  = \sum^n_{i=1}(\hat v_{i,m} - v_i)^2 \Longrightarrow RSS \times C_m^2 = \sum^n_{i=1}(C_m\hat v_{i,m} - C_mv_i)^2 $$
 
 ```{r}
-nls_ps
-nls_gp
-nls_adj_ps
+summary(nls_ps)
+summary(nls_gp)
+summary(nls_adj_ps)
 
 C_m
 ```
@@ -227,8 +233,8 @@ C_m
 So the scaled sum of squares are:
 
 ```{r}
-RSS <- c(1766572, 294601441, 2131610)
-RSS * unlist(C_m[-1])^2
+RSS <- c(18.05, 233.1, 19.83)
+RSS * unlist(C_m[-1])
 ```
 
 Recall that since the correlation between PS and GP was $\approx$ 0.85, we will not use a model which incorporates both due to multicollinearity concerns. Given the choice, we prefer to use a metric based on PS rather than GP for a few reasons.
@@ -259,12 +265,23 @@ We see that most of the variation between the PS and Adjusted PS values occurs l
 
 ## Finishing Touches
 
-We now create two functions which will be used in our R Shiny app. The first is `value`, which takes in a pick and returns the number of points (a more user-friendly version of `predict`), and the second is `pick`, which takes in a number of point and returns the closest pick to that number of points . Recall we fit the model $$ v_{i,m} = \frac{\phi_{1, m}}{1+ (\frac{e^{\phi_{2,m}}}{i})^{1/\phi_{3,m}}} $$and we found $\phi_{1,m} = 162.407, \phi_{2,m} = 0.4402, \phi_{3,m} = -1.2138$. Recall also that this model is based on the unscaled values, but that scaling it is simple and can be done by multiplying $\phi_{1,m}$ by $C_1$ which is $162.4072 \times 10.44172  = 1695.811$. Creating the `value` function is now straightforward.
+To make the rest of this report and shiny app simpler, we will refit the model with scaled PS values:
 
 ```{r}
-phi_1 <- 1695.811 
-phi_2 <- 0.44022
-phi_3 <- -1.21381
+scal_ps <- all_data_adj$ps * C_m[[2]]
+
+nls_scal_ps <- nls(scal_ps ~ SSlogis(log(overall), phi1, phi2, phi3))
+
+summary(nls_scal_ps)
+```
+
+We now create two functions which will be used in our R Shiny app. The first is `value`, which takes in a pick and returns the number of points (a more user-friendly version of `predict`), and the second is `pick`, which takes in a number of point and returns the closest pick to that number of points. Recall we fit the model $$ v_{i,m} = \frac{\phi_{1, m}}{1+ (\frac{e^{\phi_{2,m}}}{i})^{1/\phi_{3,m}}} $$and we found $\phi_{1,m} = 1695.81038, \phi_{2,m} = 0.4402, \phi_{3,m} = -1.21381$. Creating the `value` function is now straightforward.
+
+```{r}
+phis <- unname(coef(nls_scal_ps))
+phi_1 <- phis[1]
+phi_2 <- phis[2]
+phi_3 <- phis[3]
 
 value <- function(overall){
   phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3))
@@ -302,4 +319,22 @@ value(12) - value(22) - value(31)
 pick(38.9271)
 ```
 
-We now proceed to the Communication chapter, which contains the key results from this report.
+We now proceed to the Communication chapter, which contains the key results from this report. Note that the steps given on DevOps for Data Science were in Python, I found equivalent steps in R [here](https://vetiver.posit.co/get-started/deploy.html).
+
+```{r, eval = FALSE}
+# I couldn't find any info online about the error I was getting so I used 
+#   ChatGPT, it turns out vetiver does not work with nls objects, so for
+#   now I'm using one of the lms 
+
+# v <- vetiver_model(nls_scal_ps, "ps_value_model")
+
+v <- vetiver_model(lin_models[[1]], "lm_test")
+
+model_board <- board_folder("/data/model", versioned = TRUE)
+model_board |>
+  vetiver_pin_write(v)
+
+pr() |>
+  vetiver_api(v) |> 
+  pr_run(port = 8080)
+```

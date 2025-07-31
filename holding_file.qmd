@@ -201,18 +201,4 @@ ggplot(combined_data, aes(x = overall, y = value_ps, col = mod)) +
 
 Though not perfect, this curve is much smoother than the previous one, so we will use this when fitting a curve.
 
-## Questions for David:
-
-```{r}
-
-# why does this not work 
-get_length <- function(len){ 
-  all_data_adj |> 
-    mutate(rem_career_len = to - year - len) |> 
-    summarize(mean_SAMP = mean(rem_career_len)) |> 
-    pull(mean_SAMP)
-}
-
-est_yr <- data.frame(k = seq(1,10)) |> 
-  mutate(yr = get_length(k)) 
-```
+# 

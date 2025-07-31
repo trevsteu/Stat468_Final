@@ -12,12 +12,16 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("tidyverse")
 # renv::install("gt")
 # renv::install("reactable")
+# renv::install("DBI")
+# renv::install("duckdb")
 
 library(rvest)
 library(tidyverse)
 library(stringr)
 library(gt)
 library(reactable)
+library(DBI)
+library(duckdb)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -133,3 +137,30 @@ write.csv(all_data, "all_data.csv", row.names = FALSE)
 ```
 
 In future chapters, we will import data from this csv file to speed up the run and rendering times (instead of importing it from Hockey Reference every time we simply load it from the csv). Now we proceed to the Visualize step.
+
+## Storing the Data II
+
+Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in AWS S3 so future chapters don't have to import the data from Hockey Reference, making this report render significantly faster.
+
+```{r}
+con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "trevor-stat468.duckdb")
+DBI::dbWriteTable(con, "all_data", all_data, overwrite = TRUE)
+DBI::dbDisconnect(con)
+```
+
+In this and future chapters, we still start by loading in all of the functions from functions.R, which includes all the functions and global constants defined in all chapters, in addition to pulling the data from the AWS S3 bucket using `duckdb`. The functions.R file is included in this project's GitHub repo, the part of it loads `all_data` is also given below (here we load it into `all_data_test` to show that it actually works).
+
+```{r}
+con <- DBI::dbConnect(
+  duckdb::duckdb(), 
+  dbdir = "trevor-stat468.duckdb"
+  )
+
+sql <- "SELECT * FROM all_data"
+all_data_test <- as.data.frame(dbGetQuery(con, sql))
+DBI::dbDisconnect(con)
+
+all_data_test
+```
+
+Now we proceed to the Visualize chapter.

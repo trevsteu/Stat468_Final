@@ -3,6 +3,9 @@ library(tidyverse)
 library(janitor)
 library(dplyr)
 library(stringr)
+library(DBI)
+library(duckdb)
+
 
 start_year <- 1996
 end_year <- 2020
@@ -39,7 +42,18 @@ tidy_draft <- function(year){
 
 # ---------------------------------------------------------------------------------------
 
-all_data <- read.csv("all_data.csv")
+# This is a little bit circular. In order to create the table in the database we need
+#   to first have the data in a csv (for the sake of rendering time). We then run the  
+#   same code as in the Tidy chapter. 
+
+all_data <- read.csv("all_data.csv") 
+
+con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "trevor-stat468.duckdb")
+DBI::dbWriteTable(con, "all_data", all_data, overwrite = TRUE)
+
+sql <- "SELECT * FROM all_data"
+all_data <- as.data.frame(dbGetQuery(con, sql))
+DBI::dbDisconnect(con)
 
 # ---------------------------------------------------------------------------------------
 
