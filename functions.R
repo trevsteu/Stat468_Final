@@ -43,7 +43,7 @@ tidy_draft <- function(year){
 # ---------------------------------------------------------------------------------------
 
 # This is a little bit circular. In order to create the table in the database we need
-#   to first have the data in a csv (for the sake of rendering time). We then run the  
+#   to first read the data from a csv (for the sake of rendering time). We then run the  
 #   same code as in the Tidy chapter. 
 
 all_data <- read.csv("all_data.csv") 
@@ -51,7 +51,7 @@ all_data <- read.csv("all_data.csv")
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "trevor-stat468.duckdb")
 DBI::dbWriteTable(con, "all_data", all_data, overwrite = TRUE)
 
-sql <- "SELECT * FROM all_data"
+sql <- 'SELECT * FROM "trevor-stat468"."all_data"'
 all_data <- as.data.frame(dbGetQuery(con, sql))
 DBI::dbDisconnect(con)
 

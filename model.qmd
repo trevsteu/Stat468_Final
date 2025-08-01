@@ -311,7 +311,7 @@ i <- seq(1, 224)
 all(pick(value(i)) == i)
 ```
 
-Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue. As one final check, we see what the difference in values was for a [recent NHL trade in which the Philadelpha Flyers acquired the 12th overall selection from the Pittsburgh Penguins in exchange for the 22nd and 31st selections](https://www.sportsnet.ca/nhl/article/penguins-trade-12th-overall-pick-to-flyers-for-nos-22-and-31/). We can see that this difference is about 39 points, which is equivalent to Pittsburgh receiving a mid 5th round pick in surplus value. This seems about right, it is generally accepted that the team that acquires the highest pick almost always gives up more than they receive, which is why teams only trade up if they really like a player who is still available.
+Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue. As one final check, we see what the difference in values was for a [recent NHL trade in which the Philadelpha Flyers acquired the 12th overall selection from the Pittsburgh Penguins in exchange for the 22nd and 31st selections](https://www.sportsnet.ca/nhl/article/penguins-trade-12th-overall-pick-to-flyers-for-nos-22-and-31/). We can see that this difference is about 39 points, which is equivalent to Pittsburgh receiving a mid 5th round pick in surplus value. This seems about right, it is widely accepted that the team that acquires the highest pick almost always gives up more than they receive. This is why teams only trade up if they really like a player who is available at the current pick, but that the team thinks will not be available at their next pick.
 
 ```{r}
 value(12) - value(22) - value(31)
@@ -319,22 +319,35 @@ value(12) - value(22) - value(31)
 pick(38.9271)
 ```
 
-We now proceed to the Communication chapter, which contains the key results from this report. Note that the steps given on DevOps for Data Science were in Python, I found equivalent steps in R [here](https://vetiver.posit.co/get-started/deploy.html).
+## Storing the Model
 
-```{r, eval = FALSE}
+We now store the model so we can access it from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html).
+
+```{r}
 # I couldn't find any info online about the error I was getting so I used 
 #   ChatGPT, it turns out vetiver does not work with nls objects, so for
 #   now I'm using one of the lms 
 
-# v <- vetiver_model(nls_scal_ps, "ps_value_model")
+lm_test <- lm(ps ~ overall, data = all_data_adj)
+id <- Sys.getenv("AWS_ACCESS_KEY_ID")
+key <- Sys.getenv("AWS_SECRET_ACCESS_KEY")
 
-v <- vetiver_model(lin_models[[1]], "lm_test")
+board <- board_s3(bucket = "trevor-stat468", region = "us-east-2")
 
-model_board <- board_folder("/data/model", versioned = TRUE)
-model_board |>
-  vetiver_pin_write(v)
+v <- vetiver_model(lm_test, "lm_test")
+vetiver_pin_write(board, v)
+```
 
+We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, there is a screenshot of the popup below:
+
+```{r, eval = FALSE}
 pr() |>
   vetiver_api(v) |> 
   pr_run(port = 8080)
 ```
+
+Here is a screenshot of the popup that opens when the above code is run:
+
+\![Running vetiver_api with our model](vetiver_api_ss)
+
+We now proceed to the Communication chapter, which contains the key results from this report.

@@ -130,16 +130,6 @@ These checks all returned what they should.
 
 ## Storing the Data
 
-Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we create a csv file to store the data so future chapters can pull data from the csv file instead of having to get it from Hockey Reference again.
-
-```{r}
-write.csv(all_data, "all_data.csv", row.names = FALSE)
-```
-
-In future chapters, we will import data from this csv file to speed up the run and rendering times (instead of importing it from Hockey Reference every time we simply load it from the csv). Now we proceed to the Visualize step.
-
-## Storing the Data II
-
 Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in AWS S3 so future chapters don't have to import the data from Hockey Reference, making this report render significantly faster.
 
 ```{r}
@@ -156,11 +146,12 @@ con <- DBI::dbConnect(
   dbdir = "trevor-stat468.duckdb"
   )
 
-sql <- "SELECT * FROM all_data"
+sql <- 'SELECT * FROM "trevor-stat468"."all_data"'
 all_data_test <- as.data.frame(dbGetQuery(con, sql))
 DBI::dbDisconnect(con)
 
-all_data_test
+dim(all_data_test)
+gt(head(all_data_test, 10))
 ```
 
 Now we proceed to the Visualize chapter.
