@@ -14,6 +14,9 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("reactable")
 # renv::install("DBI")
 # renv::install("duckdb")
+# renv::install("aws.s3")
+# renv::install("paws")
+# renv::install("arrow")
 
 library(rvest)
 library(tidyverse)
@@ -22,6 +25,9 @@ library(gt)
 library(reactable)
 library(DBI)
 library(duckdb)
+library(aws.s3)
+library(paws)
+library(arrow)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -128,30 +134,33 @@ gt(all_data[23:30,])
 
 These checks all returned what they should.
 
-## Storing the Data
+## Storing the Data 
 
-Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in AWS S3 so future chapters don't have to import the data from Hockey Reference, making this report render significantly faster.
+Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in an AWS S3 bucket so future chapters can get the data from the S3 bucket instead of from Hockey Reference, making this report render significantly faster. We do this by following the instructions given [here](https://medium.com/@som028/how-to-read-and-write-data-from-and-to-s3-bucket-using-r-3fed7e686844), which writes `all_data` to a parquet file and then saves it in our S3 bucket.
 
 ```{r}
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "trevor-stat468.duckdb")
-DBI::dbWriteTable(con, "all_data", all_data, overwrite = TRUE)
-DBI::dbDisconnect(con)
+Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
+           "AWS_DEFAULT_REGION" = "us-east-2")
+bucket = "trevor-stat468"
+
+s3write_using(all_data, FUN = write_parquet, 
+              bucket = bucket, object = "all_data.parquet")
 ```
 
-In this and future chapters, we still start by loading in all of the functions from functions.R, which includes all the functions and global constants defined in all chapters, in addition to pulling the data from the AWS S3 bucket using `duckdb`. The functions.R file is included in this project's GitHub repo, the part of it loads `all_data` is also given below (here we load it into `all_data_test` to show that it actually works).
+In this and future chapters, we still start by loading in all of the functions from functions.R, which includes all the functions and global constants defined in all chapters, in addition to querying the data from the AWS S3 bucket using duckdb. The functions.R file is included in this project's GitHub repo, the part of it loads `all_data` is also given below (here we load it into `all_data_test` to show that it actually works). I also used this [blog post](https://francoismichonneau.net/2023/06/duckdb-r-remote-data/) to help me write the below code.
 
 ```{r}
-con <- DBI::dbConnect(
-  duckdb::duckdb(), 
-  dbdir = "trevor-stat468.duckdb"
-  )
+con <- dbConnect(duckdb())
 
-sql <- 'SELECT * FROM "trevor-stat468"."all_data"'
-all_data_test <- as.data.frame(dbGetQuery(con, sql))
-DBI::dbDisconnect(con)
+dbExecute(con, "INSTALL httpfs;")
+dbExecute(con, "LOAD httpfs;")
+
+all_data_test <- dbGetQuery(con, "SELECT * 
+                            FROM read_parquet('s3://trevor-stat468/all_data.parquet');")
 
 dim(all_data_test)
 gt(head(all_data_test, 10))
 ```
 
-Now we proceed to the Visualize chapter.
+In future chapters we will edit this data and will put the new version in the same S3 bucket. We proceed to the Visualize chapter.

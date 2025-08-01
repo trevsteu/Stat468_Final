@@ -14,6 +14,7 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("pins")
 # renv::install("vetiver")
 # renv::install("plumber")
+# renv::install("aws.s3")
 
 library(patchwork)
 library(stringr)
@@ -21,6 +22,7 @@ library(reactable)
 library(pins)
 library(vetiver)
 library(plumber)
+library(aws.s3)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -327,12 +329,13 @@ We now store the model so we can access it from within our Shiny app. Note that 
 # I couldn't find any info online about the error I was getting so I used 
 #   ChatGPT, it turns out vetiver does not work with nls objects, so for
 #   now I'm using one of the lms 
-
 lm_test <- lm(ps ~ overall, data = all_data_adj)
+
+Sys.setenv("AWS_DEFAULT_REGION" = "us-east-2")
 id <- Sys.getenv("AWS_ACCESS_KEY_ID")
 key <- Sys.getenv("AWS_SECRET_ACCESS_KEY")
 
-board <- board_s3(bucket = "trevor-stat468", region = "us-east-2")
+board <- board_s3(bucket = "trevor-stat468") #, region = "us-east-2")
 
 v <- vetiver_model(lm_test, "lm_test")
 vetiver_pin_write(board, v)
@@ -348,6 +351,6 @@ pr() |>
 
 Here is a screenshot of the popup that opens when the above code is run:
 
-\![Running vetiver_api with our model](vetiver_api_ss)
+\![Running vetiver_api with our model](images/vetiver_api_ss.png)
 
 We now proceed to the Communication chapter, which contains the key results from this report.
