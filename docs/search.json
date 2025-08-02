@@ -210,16 +210,6 @@
     ]
   },
   {
-    "objectID": "visualize.html#test-test",
-    "href": "visualize.html#test-test",
-    "title": "5  Visualize",
-    "section": "5.5 TEST TEST",
-    "text": "5.5 TEST TEST",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Visualize</span>"
-    ]
-  },
-  {
     "objectID": "transform.html",
     "href": "transform.html",
     "title": "6  Transform",
@@ -344,7 +334,7 @@
     "href": "model.html#storing-the-model",
     "title": "7  Model",
     "section": "7.7 Storing the Model",
-    "text": "7.7 Storing the Model\nWe now store the model so we can access it from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps here.\n\n\nCode\n# I couldn't find any info online about the error I was getting so I used \n#   ChatGPT, it turns out vetiver does not work with nls objects, so for\n#   now I'm using one of the lms \nlm_test &lt;- lm(ps ~ overall, data = all_data_adj)\n\nSys.setenv(\"AWS_DEFAULT_REGION\" = \"us-east-2\")\nid &lt;- Sys.getenv(\"AWS_ACCESS_KEY_ID\")\nkey &lt;- Sys.getenv(\"AWS_SECRET_ACCESS_KEY\")\n\nboard &lt;- board_s3(bucket = \"trevor-stat468\") #, region = \"us-east-2\")\n\nv &lt;- vetiver_model(lm_test, \"lm_test\")\nvetiver_pin_write(board, v)\n\n\nCreating new version '20250802T021526Z-c4f2b'\nWriting to pin 'lm_test'\n\nCreate a Model Card for your published model\n• Model Cards provide a framework for transparent, responsible reporting\n• Use the vetiver `.Rmd` template as a place to start\n\n\nWe can also interface with the model using vetiver_api. Note I have set eval = FALSE for this chunk because the report won’t render otherwise, I’ve included a screenshot of the popup instead.\n\n\nCode\npr() |&gt;\n  vetiver_api(v) |&gt; \n  pr_run(port = 8080)\n\n\nHere is a screenshot of the popup that opens when the above code is run. We now proceed to the Communication chapter, which contains the key results from this report.",
+    "text": "7.7 Storing the Model\nWe now store the model so we can access it from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps here.\n\n\nCode\n# I couldn't find any info online about the error I was getting so I used \n#   ChatGPT, it turns out vetiver does not work with nls objects, so for\n#   now I'm using one of the lms \nlm_test &lt;- lm(ps ~ overall, data = all_data_adj)\n\nSys.setenv(\"AWS_DEFAULT_REGION\" = \"us-east-2\")\nid &lt;- Sys.getenv(\"AWS_ACCESS_KEY_ID\")\nkey &lt;- Sys.getenv(\"AWS_SECRET_ACCESS_KEY\")\n\nboard &lt;- board_s3(bucket = \"trevor-stat468\") #, region = \"us-east-2\")\n\nv &lt;- vetiver_model(lm_test, \"lm_test\")\nvetiver_pin_write(board, v)\n\n\nCreating new version '20250802T033838Z-c4f2b'\nWriting to pin 'lm_test'\n\nCreate a Model Card for your published model\n• Model Cards provide a framework for transparent, responsible reporting\n• Use the vetiver `.Rmd` template as a place to start\n\n\nWe can also interface with the model using vetiver_api. Note I have set eval = FALSE for this chunk because the report won’t render otherwise, I’ve included a screenshot of the popup instead.\n\n\nCode\npr() |&gt;\n  vetiver_api(v) |&gt; \n  pr_run(port = 8080)\n\n\nHere is a screenshot of the popup that opens when the above code is run. We now proceed to the Communication chapter, which contains the key results from this report.",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Model</span>"
     ]
