@@ -28,6 +28,9 @@ jobs:
       - name: Restore renv environment
         run: Rscript -e 'renv::restore()'
 
+      - name: Force install reactR from source
+        run: Rscript -e 'install.packages("reactR", type = "source")'
+  
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
