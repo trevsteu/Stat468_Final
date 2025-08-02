@@ -126,7 +126,7 @@ all_data_test <- dbGetQuery(con, "SELECT *
 
 ## Verification
 
-We can check that this data has loaded correctly, there should be between 5250 and 5600 rows (the number of picks in a draft has changed over the years in our dataset as we will see, but is always between 210 and 224 so 25 drafts will be between ) and 6 columns:
+We can check that we loaded the data correctly, there should be between 5250 and 5600 rows (the number of picks in a draft has changed over the years in our dataset as we will see, but is always between 210 and 224 so 25 drafts will be between ) and 6 columns:
 
 ```{r}
 dim(all_data) # confirm there are 5250-5600 rows and 6 columns
