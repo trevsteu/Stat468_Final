@@ -270,9 +270,10 @@ We see that most of the variation between the PS and Adjusted PS values occurs l
 To make the rest of this report and shiny app simpler, we will refit the model with scaled PS values:
 
 ```{r}
-scal_ps <- all_data_adj$ps * C_m[[2]]
+scal_ps <- data.frame(overall, ps = all_data_adj$ps * C_m[[2]])
 
-nls_scal_ps <- nls(scal_ps ~ SSlogis(log(overall), phi1, phi2, phi3))
+nls_scal_ps <- nls(ps ~ SSlogis(log(overall), phi1, phi2, phi3), 
+                   data = scal_ps)
 
 summary(nls_scal_ps)
 ```
@@ -338,7 +339,7 @@ bucket = "trevor-stat468"
 
 board <- board_s3(bucket = bucket) 
 
-s3write_using(as.data.frame(scal_ps), FUN = write_parquet, 
+s3write_using(scal_ps, FUN = write_parquet, 
               bucket = bucket, object = "scal_ps.parquet")
 
 
