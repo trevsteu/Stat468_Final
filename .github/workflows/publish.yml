@@ -26,8 +26,7 @@ jobs:
         
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
-        
-              - name: Restore R packages with renv
+      - name: Restore R packages with renv
         run: |
           Rscript -e 'install.packages("renv")'
           Rscript -e 'renv::restore()'
