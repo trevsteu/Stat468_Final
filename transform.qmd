@@ -291,5 +291,3 @@ s3write_using(all_data_adj, FUN = write_parquet,
 s3write_using(all_data_comb, FUN = write_parquet, 
               bucket = bucket, object = "all_data_comb.parquet")
 ```
-
-# Test

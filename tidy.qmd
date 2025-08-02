@@ -112,7 +112,13 @@ all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
-all_data <- read.csv("all_data.csv")
+con <- dbConnect(duckdb())
+
+dbExecute(con, "INSTALL httpfs;")
+dbExecute(con, "LOAD httpfs;")
+
+all_data_test <- dbGetQuery(con, "SELECT * 
+                            FROM read_parquet('s3://trevor-stat468/all_data.parquet');")
 
 # I'm cheating here because I don't want to run the chunk above since 
 #   tidy_draft takes such a llong time to run and render
@@ -134,7 +140,7 @@ gt(all_data[23:30,])
 
 These checks all returned what they should.
 
-## Storing the Data 
+## Storing the Data
 
 Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in an AWS S3 bucket so future chapters can get the data from the S3 bucket instead of from Hockey Reference, making this report render significantly faster. We do this by following the instructions given [here](https://medium.com/@som028/how-to-read-and-write-data-from-and-to-s3-bucket-using-r-3fed7e686844), which writes `all_data` to a parquet file and then saves it in our S3 bucket.
 

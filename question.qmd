@@ -11,17 +11,21 @@ This report will estimate value of pick $i$ (ie find $\hat v_i$) by fitting seve
 
 The first two methods of evaluating player quality are similar to approaches taken by Moreau (2022), and will take the average PS (or GP) of all players taken at pick $i$. Next, will consider a similar metric which adjusts the PS values for active players based on what we estimate their PS will be in the remainder of their career. The final approach is from Luo (2024) and will define an indicator random variable $Z_{ij} = 1$ iff the player selected at pick $i$ of draft $j$ has played or will play in 200 career NHL games. We then take the average value of this indicator for each $i$, which will be our estimate of the probability that a player selected at pick $i$ will play in 200 NHL games. Thus in total we have four measures of the quality of players drafted at pick $i$ (mean PS, mean GP, adjusted mean PS, and mean proportion of players who play in $\ge$ 200 games.
 
-To maintain some consistency with previous related work, this report will define $v_i$ to be "true" value of the $i^{\text{th}}$ selection, and this value will be in terms of unitless "points", which are aimed at making comparing the value of picks easier. That is, instead of saying $v_i = \frac{a}{b} v_1$ for $i > 1$ where $a < b$, we will say $v_1 \approx 1000$ points, $v_i = c$ points for $0 < c < 1000$.
+To maintain some consistency with previous related work, this report will define $v_i$ to be "true" value of the $i^{\text{th}}$ selection, and this value will be in terms of unitless "points", which are aimed at making comparing the value of picks easier. That is, instead of saying $v_i = \frac{a}{b} v_1$ for $i > 1$ where $a < b$, we will say $v_1 = 1000$ points, $v_i = c$ points for $0 < c < 1000$.
 
 ## Considerations
 
-We will fit 12 models in the Model chapter, so we need some criteria for what a feasible model looks like. The following are basic rules to make sure our model has the potential of being good.
+We will fit 7 models in the Model chapter, so we need some criteria for what a feasible model looks like. We define a feasible model to be a model which satisfies [**both**]{.underline} of the following:
 
--   Clearly we must have that $v_i > v_{i+k}$ for all $i, k \in \mathbb Z^+$, so that later draft picks are not considered more valuable than picks earlier in the draft. This should intuitively make sense because the players available at pick $i+k$ are a proper subset of the players available at pick $i$, so there is no reason for a later pick to be more valuable in a trade context than an earlier pick. Thus for a model to have any chance of being accurate, it must satisfy $v_i > v_{i+k}$ for all $k \in \mathbb Z^+$.
+-   $v_i > v_{i+k}$ for all $i, k \in \mathbb Z^+$
 
--   $v_i > 0$ for all $i$. That is, every pick is worth a positive number of points, since there is no real negative impact to picking a bad player (other than the opportunity cost of the "wasted" draft pick).
+    -   This ensures later draft picks are not considered more valuable than picks earlier in the draft. This should intuitively make sense because the players available at pick $i+k$ are a proper subset of the players available at pick $i$, so there is no reason for a later pick to be more valuable in a trade context than an earlier pick.
 
--   It is common knowledge in ice hockey circles and confirmed by the previous work listed below is that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, $v_i$ decreases quickly in $i$, so the difference in value pick 1 and 30 is much greater than between pick 101 and 130 (ie $v_1 - v_{30} >>> v_{101} - v_{130}$). In the Model chapter we will fit this model and perform a statistical test to show that this model is not appropriate, before quickly moving on to non-linear models.
+-   $v_i > 0$ for all $i \in \mathbb Z^+$.
+
+    -   Every pick is worth a positive number of points, since there is no real negative impact to picking a bad player (other than the opportunity cost of the "wasted" draft pick).
+
+While we will not include this in the definition of a feasible model, it is common knowledge in ice hockey circles (and confirmed by the previous work listed below) that NHL draft picks do [**not**]{.underline} decrease in value linearly. In particular, $v_i$ decreases quickly in $i$, so the difference in value pick 1 and 30 is much greater than between pick 101 and 130 (ie $v_1 - v_{30} >>> v_{101} - v_{130}$). In the Model chapter we will fit this model and show that it is not appropriate, before quickly moving on to non-linear models.
 
 Note that if picks did decrease linearly in value linearly then it would be very easy to create a model of draft pick value since we would have
 
