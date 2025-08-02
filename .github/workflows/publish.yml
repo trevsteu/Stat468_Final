@@ -21,13 +21,18 @@ jobs:
         with:
           r-version: '4.3'
           
+      - name: Install recommended R packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y r-base-core r-recommended
+          
       - name: Restore R packages (with caching)
         uses: r-lib/actions/setup-renv@v2
         
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         
-      - name: Render and Publish
+      - name: Render and Publish Book
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: main
