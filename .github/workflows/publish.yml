@@ -25,11 +25,18 @@ jobs:
       - name: Install renv
         run: Rscript -e 'install.packages("renv")'
         
-      - name: Restore renv environment
-        run: Rscript -e 'renv::restore()'
+      - name: Restore R packages (force rebuild)
+        run: |
+              Rscript -e 'install.packages("renv")'
+              Rscript -e 'renv::restore(repos = c(CRAN = "https://cloud.r-project.org"), rebuild = TRUE)'
 
-      - name: Force install reactR from source
-        run: Rscript -e 'install.packages("reactR", type = "source")'
+      - name: Remove Windows cached reactR
+        run: |
+          Rscript -e 'remove.packages("reactR") || TRUE'
+
+      - name: Install reactR from source on Linux
+        run: |
+          Rscript -e 'install.packages("reactR", type = "source")'
   
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
