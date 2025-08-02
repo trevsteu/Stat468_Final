@@ -4,11 +4,27 @@
 library(shiny)
 library(shinyFeedback)
 
+# ------------------------------------------------------------------------------------------------
+
+con <- dbConnect(duckdb())
+
+dbExecute(con, "INSTALL httpfs;")
+dbExecute(con, "LOAD httpfs;")
+
+all_data_adj <- dbGetQuery(con, "SELECT * 
+                            FROM read_parquet('s3://trevor-stat468/all_data_adj.parquet');")
+
+
+scal_ps <- all_data_adj$ps * C_m[[2]]
+
+nls_scal_ps <- nls(scal_ps ~ SSlogis(log(overall), phi1, phi2, phi3))
+
 num_picks <- 5
 
-phi_1 <- 1695.811 
-phi_2 <- 0.44022
-phi_3 <- -1.21381
+phis <- unname(coef(nls_scal_ps))
+phi_1 <- phis[1]
+phi_2 <- phis[2]
+phi_3 <- phis[3]
 
 pick <- function(value){
   round(exp(phi_2) / ((phi_1 / value - 1)^phi_3))
@@ -17,6 +33,10 @@ pick <- function(value){
 value <- function(overall){
   phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3))
 }
+
+
+# ------------------------------------------------------------------------------------------------
+
 
 ui <- fluidPage(
   fluidRow(

@@ -331,11 +331,16 @@ We now store the model so we can access it from within our Shiny app. Note that 
 #   now I'm using one of the lms 
 lm_test <- lm(ps ~ overall, data = all_data_adj)
 
-Sys.setenv("AWS_DEFAULT_REGION" = "us-east-2")
-id <- Sys.getenv("AWS_ACCESS_KEY_ID")
-key <- Sys.getenv("AWS_SECRET_ACCESS_KEY")
+Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
+           "AWS_DEFAULT_REGION" = "us-east-2")
+bucket = "trevor-stat468"
 
-board <- board_s3(bucket = "trevor-stat468") #, region = "us-east-2")
+board <- board_s3(bucket = bucket) 
+
+s3write_using(as.data.frame(scal_ps), FUN = write_parquet, 
+              bucket = bucket, object = "scal_ps.parquet")
+
 
 v <- vetiver_model(lm_test, "lm_test")
 vetiver_pin_write(board, v)
