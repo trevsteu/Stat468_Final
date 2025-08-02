@@ -36,7 +36,7 @@ This is all the code that I think might be useful but that I currently don't kno
 ```{r, eval = FALSE}
 # I couldn't find any info online about the error I was getting so I used 
 #   ChatGPT, it turns out vetiver does not work with nls objects, so for
-#   now I'm using one of the lms 
+#   now I'm using one of the linear models
 
 # v <- vetiver_model(nls_scal_ps, "ps_value_model")
 
