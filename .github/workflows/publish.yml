@@ -24,12 +24,13 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         
-      - name: Install R Dependencies
-        uses: r-lib/actions/setup-renv@v2
       - name: Restore R packages with renv
         run: |
           Rscript -e 'install.packages("renv")'
           Rscript -e 'renv::restore()'
+          
+      - name: Install R Dependencies
+        uses: r-lib/actions/setup-renv@v2
         
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
