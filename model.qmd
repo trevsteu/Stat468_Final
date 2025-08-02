@@ -341,7 +341,7 @@ v <- vetiver_model(lm_test, "lm_test")
 vetiver_pin_write(board, v)
 ```
 
-We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, there is a screenshot of the popup below:
+We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, I've included a screenshot of the popup instead.
 
 ```{r, eval = FALSE}
 pr() |>
@@ -349,8 +349,4 @@ pr() |>
   pr_run(port = 8080)
 ```
 
-Here is a screenshot of the popup that opens when the above code is run:
-
-\![Running vetiver_api with our model](images/vetiver_api_ss.png)
-
-We now proceed to the Communication chapter, which contains the key results from this report.
+[Here](images/vetiver_api_ss.png) is a screenshot of the popup that opens when the above code is run. We now proceed to the Communication chapter, which contains the key results from this report.
