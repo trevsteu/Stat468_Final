@@ -22,10 +22,10 @@ jobs:
         with:
           r-version: '4.4'
 
-      - name: Install R Dependencies
-        uses: r-lib/actions/setup-renv@v2
-        with:
-          cache-version: 1
+      - name: Restore R packages (rebuild for Linux)
+        run: |
+          Rscript -e 'install.packages("renv")'
+          Rscript -e 'renv::restore(repos = c(CRAN = "https://cloud.r-project.org"), rebuild = TRUE)'
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
