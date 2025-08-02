@@ -276,7 +276,7 @@ for(i in 1:length(metrics)){
 
 These plots all have the same general shape, though some of them are on different scale. In the next chapter we will fit a model to the raw data, put the models on the same scale, and evaluate the models.
 
-## Storing our Transformations
+## Storing the Transformations
 
 As touched on at the very end of the Tidy chapter, we will be storing our data frames in our S3 bucket. We use the same code to add `all_data_adj` and `all_data_comb` to our S3 bucket within AWS. In functions.R we get these data frames by querying the S3 bucket using duckdb.
 
@@ -291,3 +291,5 @@ s3write_using(all_data_adj, FUN = write_parquet,
 s3write_using(all_data_comb, FUN = write_parquet, 
               bucket = bucket, object = "all_data_comb.parquet")
 ```
+
+# Test
