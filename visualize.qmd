@@ -236,3 +236,5 @@ We take the following lessons from our EDA into our Transform and Model chapters
 -   We will need to fit a curve or line to the data, since if we simply set $v_i$ to be the mean GP or PS of players selected at pick $i$ then we will fail the first fundamental requirement, that $v_i > v_{i+k}$ for all $i, k \in \mathbb Z^+$.
 
 The GP by pick number and PS by pick number metrics are two of the metrics we will use in the Model chapter.
+
+## TEST TEST 
