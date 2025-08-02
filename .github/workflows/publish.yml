@@ -30,6 +30,9 @@ jobs:
           Rscript -e 'install.packages("renv")'
           Rscript -e 'renv::restore()'
         
+      - name: Force reinstall reactR
+        run: Rscript -e 'install.packages("reactR")'
+        
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
