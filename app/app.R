@@ -50,10 +50,11 @@ last_pick_val <- value(224)
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "darkly"),
   fluidRow(
-    lapply(c("A", "B"), \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
-           lapply(seq(1,num_picks), \(i)
-                  numericInput(str_glue("{t}{i}"), str_glue("Pick {i}"), 
-                               min = 1, max = 224, step = 1, value = NA))))),
+    lapply(c("A", "B"), 
+           \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
+                       lapply(seq(1,num_picks), \(i)
+                              numericInput(str_glue("{t}{i}"), str_glue("Pick {i}"), 
+                                           min = 1, max = 224, step = 1, value = NA))))),
   fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))), 
   br(),
   textOutput("A_points"),
@@ -71,15 +72,15 @@ server <- function(input, output, session){
     value(input$A1) + value(input$A2) + 
       value(input$A3) + value(input$A4) + value(input$A5)
   })
-    
+  
   val_B <- eventReactive(
     input$eval, {
       value(input$B1) + value(input$B2) + 
-      value(input$B3) + value(input$B4) + value(input$B5)})
+        value(input$B3) + value(input$B4) + value(input$B5)})
   
   output$A_points <- renderText({
     str_glue("Team A trades away {round(val_A(), 3)} points")
-    })
+  })
   output$B_points <- renderText(
     {str_glue("Team B trades away {round(val_B(), 3)} points")
     })
@@ -88,16 +89,22 @@ server <- function(input, output, session){
     diff <- val_A() - val_B()
     team <- ifelse(diff > 0, "A", "B")
     if(abs(diff) < last_pick_val){
-      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it receives, which is 
-             less than the value of the last pick in the draft ({round(last_pick_val, 3)} points).")
+      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it 
+      receives, which is less than the value of the last pick in the draft 
+               ({round(last_pick_val, 3)} points).")
     }
     else{
       diff_pick <- pick(abs(diff))
-      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it receives. This trade is 
-             roughly equivalent to Team {team} giving up pick {diff_pick} in surplus value.")
-      }
+      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it 
+      receives. This trade is roughly equivalent to Team {team} giving up pick 
+               {diff_pick} in surplus value.")
+    }
   })
-  output$pred_gt <- render_gt(pred_vals_gt)
+  output$pred_gt <- pred_vals |> 
+    mutate(pts = round(pts, 3)) |> 
+    gt() |> 
+    cols_label(overall= "Pick #", pts = "Points") |> 
+    render_gt()
 }
 
 shinyApp(ui, server)
