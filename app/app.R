@@ -24,13 +24,6 @@ scal_ps <- dbGetQuery(con, "SELECT *
 pred_vals <- dbGetQuery(con, "SELECT * 
                             FROM read_parquet('s3://trevor-stat468/pred_vals.parquet');")
 
-pred_vals_gt <- pred_vals |> 
-  mutate(points = round(points, 3)) |> 
-  gt() |> 
-  cols_label(overall = "Pick #", 
-             points = "Points")
-
-
 nls_scal_ps <- nls(ps ~ SSlogis(log(overall), phi1, phi2, phi3), data = scal_ps)
 
 num_picks <- 5
@@ -74,11 +67,14 @@ ui <- fluidPage(
 
 server <- function(input, output, session){
   
-  val_A <- eventReactive(input$eval, {value(input$A1) + value(input$A2) + 
+  val_A <- eventReactive(input$eval, {
+    value(input$A1) + value(input$A2) + 
       value(input$A3) + value(input$A4) + value(input$A5)
   })
     
-  val_B <- eventReactive(input$eval, {value(input$B1) + value(input$B2) + 
+  val_B <- eventReactive(
+    input$eval, {
+      value(input$B1) + value(input$B2) + 
       value(input$B3) + value(input$B4) + value(input$B5)})
   
   output$A_points <- renderText({
@@ -97,7 +93,7 @@ server <- function(input, output, session){
     }
     else{
       diff_pick <- pick(abs(diff))
-      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it receives, this is 
+      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it receives. This trade is 
              roughly equivalent to Team {team} giving up pick {diff_pick} in surplus value.")
       }
   })
@@ -107,3 +103,10 @@ server <- function(input, output, session){
 shinyApp(ui, server)
 
 
+# To do 
+# - allow any # of picks
+# - require picks are integers %in% seq(1,224), and don't allow the same pick to be included on both sides
+# - widen gt() object
+# - colour gt() cells included in trade by team
+# - use dev ops stuff 
+# - add logging stuff
