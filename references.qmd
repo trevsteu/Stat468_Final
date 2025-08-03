@@ -30,6 +30,6 @@
 
 -   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name) (in the Transform chapter)
 
--   [GitHub Pages](https://quarto.org/docs/publishing/github-pages.html#github-action)
+-   [Create a gt display table output element for Shiny](https://gt.rstudio.com/reference/gt_output.html) (for the shiny app)
 
 For now this is just a list of links. Later I will formalize it.
