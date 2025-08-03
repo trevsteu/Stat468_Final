@@ -29,9 +29,11 @@ pick <- function(value){
 }
 
 value <- function(overall){
-  ifelse(overall == 0, 0, 
+  ifelse(is.na(overall) | overall == 0, 0, 
          phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3)))
 }
+
+last_pick_val <- value(224)
 
 # ------------------------------------------------------------------------------------------------
 
@@ -40,17 +42,42 @@ ui <- fluidPage(
   fluidRow(
     lapply(c("A", "B"), \(t) column(6, titlePanel(str_glue("Team {t} Sends:")),
            lapply(seq(1,num_picks), \(i)
-                  numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"), 
-                               min = 0, max = 224, step = 1, value = 0))))),
-  "Use Pick = 0 to indicate there is no pick\n",
-  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))))
-
+                  numericInput(str_glue("{t}{i}"), str_glue("Pick {i}"), 
+                               min = 1, max = 224, step = 1, value = NA))))),
+  "Use Pick = 0 to indicate there is no pick",
+  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))), 
+  br(),
+  br(),
+  textOutput("A_points"),
+  textOutput("B_points"),
+  br(),
+  textOutput("equiv")
+)
 
 server <- function(input, output, session){
-  lapply(c("A", "B"), \(t) lapply(seq(1,num_picks), \(i) 
-                                  assign(str_glue("val_{t}{i}"), 
-                                         eventReactive(input$eval, {
-                                           value(get(str_glue("input${t}{i}")))}))))
+  val_A <- reactive(value(input$A1) + value(input$A2) + value(input$A3) + value(input$A4) + value(input$A5))
+  val_B <- reactive(value(input$B1) + value(input$B2) + value(input$B3) + value(input$B4) + value(input$B5))
+  
+  output$A_points <- renderText({
+    str_glue("Team A trades away {round(val_A(), 3)} points")
+    })
+  output$B_points <- renderText({
+    str_glue("Team B trades away {round(val_B(), 3)} points")
+    })
+  
+  output$equiv <- renderText({
+    diff <- val_A() - val_B()
+    team <- ifelse(diff > 0, "A", "B")
+    if(diff < last_pick_val){
+      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it receives, which is 
+             less than the last pick in the draft in surplus value")
+    }
+    else{
+      diff_pick <- pick(abs(diff))
+      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it receives, which is 
+             equivalent to Team {team} giving up pick {diff_pick} in surplus value")
+    }
+  })
 }
 
 shinyApp(ui, server)
