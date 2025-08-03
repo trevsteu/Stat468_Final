@@ -323,7 +323,7 @@ pick(38.9271)
 
 ## Storing the Model
 
-We now store the model so we can access it from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html).
+We now store the model and data in an S3 bucket so we can access them from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html).
 
 ```{r}
 # I couldn't find any info online about the error I was getting so I used 

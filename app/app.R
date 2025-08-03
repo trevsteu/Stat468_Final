@@ -109,7 +109,6 @@ server <- function(input, output, session){
 
 shinyApp(ui, server)
 
-
 # To do 
 # - allow any # of picks
 # - require picks are integers %in% seq(1,224), and don't allow the same pick to be included on both sides
