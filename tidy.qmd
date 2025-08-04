@@ -111,7 +111,7 @@ all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
                    \(x) tidy_draft(x)))
 ```
 
-```{r, message=FALSE, echo=FALSE, warning=FALSE}
+```{r, message=FALSE, echo=FALSE, include=FALSE, warning=FALSE}
 con <- dbConnect(duckdb())
 
 dbExecute(con, "INSTALL httpfs;")
@@ -121,7 +121,7 @@ all_data_test <- dbGetQuery(con, "SELECT *
                             FROM read_parquet('s3://trevor-stat468/all_data.parquet');")
 
 # I'm cheating here because I don't want to run the chunk above since 
-#   tidy_draft takes such a llong time to run and render
+#   tidy_draft takes such a long time to run and render
 ```
 
 ## Verification

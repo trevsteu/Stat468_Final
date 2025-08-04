@@ -32,6 +32,6 @@
 
 -   [Create a gt display table output element for Shiny](https://gt.rstudio.com/reference/gt_output.html) (for the shiny app)
 
--   [Working with Data - Publishing your Shiny App](https://www.youtube.com/watch?v=LozOoIq0RjE)
+-   [Read/Write parquet file from s3 using R](https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r)
 
 For now this is just a list of links. Later I will formalize it.

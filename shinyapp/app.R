@@ -65,6 +65,7 @@ ui <- fluidPage(
                        lapply(seq(1,num_picks), \(i)
                               numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"), 
                                            min = 1, max = 224, step = 1, value = NA))))),
+  
   fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))), 
   br(),
   textOutput("A_points"),
@@ -72,8 +73,7 @@ ui <- fluidPage(
   br(),
   textOutput("equiv"), 
   br(), 
-  "A table of predicted values included is given below. The picks highlighted in red are givem 
-  up by Team A, the ones highlighted in blue are given up by Team B.",
+  textOutput("table_ins"),
   fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B")))
 )
 
@@ -85,10 +85,12 @@ server <- function(input, output, session){
         pick <- str_glue("{t}_{i}")
         shinyFeedback::feedbackWarning(pick, !valid(input[[pick]]), 
                                        "Please ensure this pick is an integer between 1 and 224 (inclusive)")}})
+  
   A_picks <- reactive({
-    valid_A <- valid(c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5))
+    temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
+    valid_A <- valid(temp_A)
     req(valid_A)
-    c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)})
+    temp_A})
   B_picks <- reactive({
     valid_B <- valid(c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5))
     req(valid_B)
@@ -103,7 +105,7 @@ server <- function(input, output, session){
   output$B_points <- renderText({
       str_glue("Team B trades away {value_B()} points")
     })
-  
+
   output$equiv <- renderText({
     diff <- round(value_A() - value_B(), 3)
     team <- ifelse(diff > 0, "A", "B")
@@ -124,6 +126,11 @@ server <- function(input, output, session){
                {diff_pick} in surplus value.")
     }
   })
+  
+  output$table_ins <- renderText({"A table of the picks is given below (it 
+  populates as the user types). The picks highlighted in red are givem 
+  up by Team A, the ones highlighted in blue are given up by Team B."})
+  
   output$pred_gt_A <- pred_vals |> 
     mutate(pts = round(as.numeric(pts), 3)) |> 
     filter(overall %in% A_picks()) |> 
@@ -148,7 +155,5 @@ shinyApp(ui, server)
 # - allow any # of picks
 # - ban diff > 1000 
 # - don't allow the same pick to be included on both sides (or twice on the same side)
-# - widen gt() object
-# - reactively colour gt() cells included in trade by team
 # - use dev ops stuff 
 # - add logging stuff
