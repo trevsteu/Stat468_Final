@@ -72,9 +72,9 @@ ui <- fluidPage(
   br(),
   textOutput("equiv"), 
   br(), 
-  "A full table of predicted values is given below. The picks highlighted in red are givem 
+  "A table of predicted values included is given below. The picks highlighted in red are givem 
   up by Team A, the ones highlighted in blue are given up by Team B.",
-  gt_output("pred_gt")
+  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B")))
 )
 
 
@@ -112,6 +112,11 @@ server <- function(input, output, session){
       receives, which is less than the value of the last pick in the draft 
                ({last_pick_val} points).")
     }
+    else if(abs(diff) > 1000){
+      str_glue("Team {team} gives up {abs(diff)} more points than it 
+      receives, which is more than the value of the first pick in the draft 
+               (1000 points).")
+    }
     else{
       diff_pick <- pick(abs(diff))
       str_glue("Team {team} gives up {abs(diff)} more points than it 
@@ -119,21 +124,29 @@ server <- function(input, output, session){
                {diff_pick} in surplus value.")
     }
   })
-  output$pred_gt <- pred_vals |> 
+  output$pred_gt_A <- pred_vals |> 
     mutate(pts = round(as.numeric(pts), 3)) |> 
+    filter(overall %in% A_picks()) |> 
     gt() |>   
-    data_color(rows = which(overall %in% A_picks()), palette = "salmon") |> 
-    data_color(rows = which(overall %in% B_picks()), palette = "dodgerblue") |> 
-    data_color(rows = which(overall %in% B_picks() & overall %in% A_picks()), palette = "purple") |> 
+    cols_label(overall = "Pick #", pts = "Points") |> 
+    data_color(palette = "salmon") |> 
+    render_gt()
+  
+  output$pred_gt_B <- pred_vals |> 
+    mutate(pts = round(as.numeric(pts), 3)) |> 
+    filter(overall %in% B_picks()) |> 
+    gt() |>   
+    cols_label(overall = "Pick #", pts = "Points") |> 
+    data_color(palette = "dodgerblue") |> 
     render_gt()
 }
-
 
 shinyApp(ui, server)
 
 # To do 
 # use rsconnect::deployApp('shinyapp') to deploy
 # - allow any # of picks
+# - ban diff > 1000 
 # - don't allow the same pick to be included on both sides (or twice on the same side)
 # - widen gt() object
 # - reactively colour gt() cells included in trade by team

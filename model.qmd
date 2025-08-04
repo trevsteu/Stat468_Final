@@ -318,7 +318,7 @@ Note that the `value` and `pick` functions we implemented in R are not perfect i
 ```{r}
 value(12) - value(22) - value(31)
 
-pick(38.9271)
+pick(value(12) - value(22) - value(31))
 ```
 
 ## Storing the Model
@@ -344,12 +344,14 @@ s3write_using(data.frame(overall = all_data_adj$overall,
 
 v <- vetiver_model(lm_test, "lm_test")
 vetiver_pin_write(board, v)
+
+# vetiver_prepare_docker()
 ```
 
 We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, I've included a screenshot of the popup instead.
 
 ```{r, eval = FALSE}
-pr() |>
+pr() |> # goes in dockerfile
   vetiver_api(v) |> 
   pr_run(port = 8080)
 ```
