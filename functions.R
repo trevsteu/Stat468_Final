@@ -9,7 +9,6 @@ library(aws.s3)
 library(paws)
 library(arrow)
 
-
 start_year <- 1996
 end_year <- 2020
 
@@ -59,8 +58,6 @@ all_data_comb <- dbGetQuery(con, "SELECT *
                             FROM read_parquet('s3://trevor-stat468/all_data_comb.parquet');")
 scal_ps <- dbGetQuery(con, "SELECT * 
                             FROM read_parquet('s3://trevor-stat468/scal_ps.parquet');")
-pred_vals <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/pred_vals.parquet');")
 
 # ---------------------------------------------------------------------------------------
 

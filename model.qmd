@@ -341,10 +341,6 @@ board <- board_s3(bucket = bucket)
 s3write_using(data.frame(overall = all_data_adj$overall, 
                             ps = scal_ps), FUN = write_parquet, 
               bucket = bucket, object = "scal_ps.parquet")
-s3write_using(data.frame(overall = seq(1,224), 
-                         pts = value(seq(1,224))), 
-              FUN = write_parquet, bucket = bucket, object = "pred_vals.parquet")
-
 
 v <- vetiver_model(lm_test, "lm_test")
 vetiver_pin_write(board, v)

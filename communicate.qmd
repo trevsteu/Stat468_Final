@@ -19,9 +19,9 @@ Other things I need to do:
 
 -   Make notation consistent
 
--   make sure links work
+-   make sure links work, make sure links are in bibliography
 
--   Make code more efficient
+-   Make code more efficient, add comments to it
 
 -   Spell check
 

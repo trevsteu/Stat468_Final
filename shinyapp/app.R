@@ -4,6 +4,7 @@
 # renv::install("duckdb")
 # renv::install("gt")
 # renv::install("tidyverse")
+# renv::install("rsconnect")
 
 library(shiny)
 library(shinyFeedback)
@@ -11,8 +12,13 @@ library(DBI)
 library(duckdb)
 library(gt)
 library(tidyverse)
+library(rsconnect)
+library(aws.s3)
 
 # ------------------------------------------------------------------------------------------------
+
+# since I can't store an nls object with vetiver, we load the data from the S3 bucket and refit
+#   the model using the exact same code as in the Model chapter. 
 
 con <- dbConnect(duckdb())
 
@@ -21,8 +27,6 @@ dbExecute(con, "LOAD httpfs;")
 
 scal_ps <- dbGetQuery(con, "SELECT * 
                             FROM read_parquet('s3://trevor-stat468/scal_ps.parquet');")
-pred_vals <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/pred_vals.parquet');")
 
 nls_scal_ps <- nls(ps ~ SSlogis(log(overall), phi1, phi2, phi3), data = scal_ps)
 
@@ -42,6 +46,15 @@ value <- function(overall){
   ifelse(is.na(overall), 0, 
          phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3)))
 }
+
+valid <- function(overalls){
+  all(overalls %in% c(NA, seq(1,224)))
+}
+
+valA <- TRUE
+valB <- TRUE
+
+pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
 
 last_pick_val <- value(224)
 
@@ -67,22 +80,18 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session){
-  
   val_A <- eventReactive(input$eval, {
     value(input$A1) + value(input$A2) + 
-      value(input$A3) + value(input$A4) + value(input$A5)
-  })
-  
-  val_B <- eventReactive(
-    input$eval, {
-      value(input$B1) + value(input$B2) + 
+      value(input$A3) + value(input$A4) + value(input$A5)})
+  val_B <- eventReactive(input$eval, {
+    value(input$B1) + value(input$B2) + 
         value(input$B3) + value(input$B4) + value(input$B5)})
   
   output$A_points <- renderText({
     str_glue("Team A trades away {round(val_A(), 3)} points")
   })
-  output$B_points <- renderText(
-    {str_glue("Team B trades away {round(val_B(), 3)} points")
+  output$B_points <- renderText({
+      str_glue("Team B trades away {round(val_B(), 3)} points")
     })
   
   output$equiv <- renderText({
@@ -101,18 +110,22 @@ server <- function(input, output, session){
     }
   })
   output$pred_gt <- pred_vals |> 
-    mutate(pts = round(pts, 3)) |> 
-    gt() |> 
-    cols_label(overall= "Pick #", pts = "Points") |> 
+    mutate(pts = round(as.numeric(pts), 3)) |> 
+    gt() |>   
+    data_color(rows = which(overall %in% c(input$A1, input$A2, input$A3, input$A4, input$A5)), palette = "salmon") |> 
+    data_color(rows = which(overall %in% c(input$B1, input$B2, input$B3, input$B4, input$B5)), palette = "dodgerblue") |> 
+    cols_label("overall" = "Pick #", pts = "Points") |> 
     render_gt()
 }
 
 shinyApp(ui, server)
 
 # To do 
+# use rsconnect::deployApp('shinyapp') to deploy
 # - allow any # of picks
-# - require picks are integers %in% seq(1,224), and don't allow the same pick to be included on both sides
+# - require picks are integers %in% seq(1,224), 
+# - don't allow the same pick to be included on both sides
 # - widen gt() object
-# - colour gt() cells included in trade by team
+# - reactively colour gt() cells included in trade by team
 # - use dev ops stuff 
 # - add logging stuff
