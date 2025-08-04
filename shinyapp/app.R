@@ -54,6 +54,12 @@ valid <- function(picks){
 valid_A <- TRUE
 valid_B <- TRUE 
 
+pred_vals <- list()
+for(i in 1:8){
+  pred_vals[[i]] <- data.frame(overall = seq(1+28*(i-1), 28*i), 
+                               pts = cbind(lapply(seq(1+28*(i-1), 28*i), value)))
+}
+
 pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
 
 last_pick_val <- round(value(224), 3)
@@ -76,24 +82,28 @@ ui <- fluidPage(
   br(),
   textOutput("equiv"), 
   br(), 
-  "A full table of predicted values is given below:",
+  "A full table of predicted values is given below. The picks highlighted in red are givem 
+  up by Team A, the ones highlighted in blue are given up by Team B.",
   gt_output("pred_gt")
 )
 
+
 server <- function(input, output, session){
+  observe(
+    for(t in c("A", "B")){
+      for(i in seq(1, num_picks)){
+        pick <- str_glue("{t}_{i}")
+        shinyFeedback::feedbackWarning(pick, !valid(input[[pick]]), 
+                                       "Please ensure this pick is an integer between 1 and 224 (inclusive)")}})
   A_picks <- reactive({
     valid_A <- valid(c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5))
-    shinyFeedback::feedbackWarning("A_1", !valid_A, 
-                                   "Please ensure all picks are integers between 1 and 224")
-    req(valid_A & valid_B)
+    req(valid_A)
     c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)})
   B_picks <- reactive({
     valid_B <- valid(c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5))
-    shinyFeedback::feedbackWarning("B_1", !valid_B, 
-                                   "Please ensure all picks are integers between 1 and 224")
-    req(valid_A & valid_B)
+    req(valid_B)
     c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)})
-
+  
   value_A <- eventReactive(input$eval, {round(sum(value(A_picks())), 3)})
   value_B <- eventReactive(input$eval, {round(sum(value(B_picks())), 3)})
   
@@ -105,7 +115,7 @@ server <- function(input, output, session){
     })
   
   output$equiv <- renderText({
-    diff <- value_A() - value_B()
+    diff <- round(value_A() - value_B(), 3)
     team <- ifelse(diff > 0, "A", "B")
     if(abs(diff) < last_pick_val){
       str_glue("Team {team} gives up {abs(diff)} more points than it 
@@ -124,6 +134,7 @@ server <- function(input, output, session){
     gt() |>   
     data_color(rows = which(overall %in% A_picks()), palette = "salmon") |> 
     data_color(rows = which(overall %in% B_picks()), palette = "dodgerblue") |> 
+    data_color(rows = which(overall %in% B_picks() & overall %in% A_picks()), palette = "purple") |> 
     render_gt()
 }
 
@@ -133,8 +144,7 @@ shinyApp(ui, server)
 # To do 
 # use rsconnect::deployApp('shinyapp') to deploy
 # - allow any # of picks
-# - require picks are integers %in% seq(1,224), 
-# - don't allow the same pick to be included on both sides
+# - don't allow the same pick to be included on both sides (or twice on the same side)
 # - widen gt() object
 # - reactively colour gt() cells included in trade by team
 # - use dev ops stuff 
