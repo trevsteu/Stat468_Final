@@ -1,32 +1,22 @@
 # renv::install("shiny")
 # renv::install("shinyFeedback")
-# renv::install("DBI")
-# renv::install("duckdb")
 # renv::install("gt")
 # renv::install("tidyverse")
 # renv::install("rsconnect")
 
 library(shiny)
 library(shinyFeedback)
-library(DBI)
-library(duckdb)
 library(gt)
 library(tidyverse)
 library(rsconnect)
-library(aws.s3)
 
 # ------------------------------------------------------------------------------------------------
 
-# since I can't store an nls object with vetiver, we load the data from the S3 bucket and refit
-#   the model using the exact same code as in the Model chapter. 
+# since I can't store an nls object with vetiver and the S3 credentials aren't working, 
+#   we load the data from a CSV file and refit the model using the exact same code as 
+#   in the Model chapter. 
 
-con <- dbConnect(duckdb())
-
-dbExecute(con, "INSTALL httpfs;")
-dbExecute(con, "LOAD httpfs;")
-
-scal_ps <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/scal_ps.parquet');")
+scal_ps <- read.csv("scal_ps.csv")
 
 nls_scal_ps <- nls(ps ~ SSlogis(log(overall), phi1, phi2, phi3), data = scal_ps)
 
