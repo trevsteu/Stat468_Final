@@ -3,12 +3,14 @@
 # renv::install("gt")
 # renv::install("tidyverse")
 # renv::install("rsconnect")
+# renv::install("ggplot2")
 
 library(shiny)
 library(shinyFeedback)
 library(gt)
 library(tidyverse)
 library(rsconnect)
+library(ggplot2)
 
 # ------------------------------------------------------------------------------------------------
 
@@ -34,7 +36,7 @@ pick <- function(value){
 
 value <- function(overall){
   ifelse(is.na(overall), 0, 
-         phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3)))
+         round(phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3)), 3))
 }
 
 valid <- function(picks){
@@ -73,8 +75,12 @@ ui <- fluidPage(
   br(),
   textOutput("equiv"), 
   br(), 
-  textOutput("table_ins"),
-  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B")))
+  "A table of the picks is given below (it 
+  populates as the user types). The picks highlighted in red are givem 
+  up by Team A, the ones highlighted in blue are given up by Team B.",
+  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))), 
+  br(),
+  plotOutput("plot", width = "950px")
 )
 
 
@@ -127,10 +133,6 @@ server <- function(input, output, session){
     }
   })
   
-  output$table_ins <- renderText({"A table of the picks is given below (it 
-  populates as the user types). The picks highlighted in red are givem 
-  up by Team A, the ones highlighted in blue are given up by Team B."})
-  
   output$pred_gt_A <- pred_vals |> 
     mutate(pts = round(as.numeric(pts), 3)) |> 
     filter(overall %in% A_picks()) |> 
@@ -146,6 +148,15 @@ server <- function(input, output, session){
     cols_label(overall = "Pick #", pts = "Points") |> 
     data_color(palette = "dodgerblue") |> 
     render_gt()
+  
+  output$plot <- renderPlot({
+    temp_A <- filter(pred_vals, overall %in% A_picks())
+    temp_B <- filter(pred_vals, overall %in% B_picks())
+    ggplot(pred_vals, aes(x = overall, y = as.numeric(pts))) + 
+      geom_point(alpha = 0.3) + 
+      geom_point(data = temp_A, aes(x = overall, y = as.numeric(pts)), col = "salmon", size = 3) + 
+      geom_point(data = temp_B, aes(x = overall, y = as.numeric(pts)), col = "dodgerblue", size = 3)
+  })
 }
 
 shinyApp(ui, server)
