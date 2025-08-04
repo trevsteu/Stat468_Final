@@ -47,26 +47,27 @@ value <- function(overall){
          phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3)))
 }
 
-valid <- function(overalls){
-  all(overalls %in% c(NA, seq(1,224)))
+valid <- function(picks){
+  all(picks %in% c(NA, seq(1,224)))
 }
 
-valA <- TRUE
-valB <- TRUE
+valid_A <- TRUE
+valid_B <- TRUE 
 
 pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
 
-last_pick_val <- value(224)
+last_pick_val <- round(value(224), 3)
 
 # ------------------------------------------------------------------------------------------------
 
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "darkly"),
+  useShinyFeedback(),
   fluidRow(
     lapply(c("A", "B"), 
            \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
                        lapply(seq(1,num_picks), \(i)
-                              numericInput(str_glue("{t}{i}"), str_glue("Pick {i}"), 
+                              numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"), 
                                            min = 1, max = 224, step = 1, value = NA))))),
   fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))), 
   br(),
@@ -80,31 +81,40 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session){
-  val_A <- eventReactive(input$eval, {
-    value(input$A1) + value(input$A2) + 
-      value(input$A3) + value(input$A4) + value(input$A5)})
-  val_B <- eventReactive(input$eval, {
-    value(input$B1) + value(input$B2) + 
-        value(input$B3) + value(input$B4) + value(input$B5)})
+  A_picks <- reactive({
+    valid_A <- valid(c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5))
+    shinyFeedback::feedbackWarning("A_1", !valid_A, 
+                                   "Please ensure all picks are integers between 1 and 224")
+    req(valid_A & valid_B)
+    c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)})
+  B_picks <- reactive({
+    valid_B <- valid(c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5))
+    shinyFeedback::feedbackWarning("B_1", !valid_B, 
+                                   "Please ensure all picks are integers between 1 and 224")
+    req(valid_A & valid_B)
+    c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)})
+
+  value_A <- eventReactive(input$eval, {round(sum(value(A_picks())), 3)})
+  value_B <- eventReactive(input$eval, {round(sum(value(B_picks())), 3)})
   
   output$A_points <- renderText({
-    str_glue("Team A trades away {round(val_A(), 3)} points")
+    str_glue("Team A trades away {value_A()} points")
   })
   output$B_points <- renderText({
-      str_glue("Team B trades away {round(val_B(), 3)} points")
+      str_glue("Team B trades away {value_B()} points")
     })
   
   output$equiv <- renderText({
-    diff <- val_A() - val_B()
+    diff <- value_A() - value_B()
     team <- ifelse(diff > 0, "A", "B")
     if(abs(diff) < last_pick_val){
-      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it 
+      str_glue("Team {team} gives up {abs(diff)} more points than it 
       receives, which is less than the value of the last pick in the draft 
-               ({round(last_pick_val, 3)} points).")
+               ({last_pick_val} points).")
     }
     else{
       diff_pick <- pick(abs(diff))
-      str_glue("Team {team} gives up {abs(round(diff,3))} more points than it 
+      str_glue("Team {team} gives up {abs(diff)} more points than it 
       receives. This trade is roughly equivalent to Team {team} giving up pick 
                {diff_pick} in surplus value.")
     }
@@ -112,11 +122,11 @@ server <- function(input, output, session){
   output$pred_gt <- pred_vals |> 
     mutate(pts = round(as.numeric(pts), 3)) |> 
     gt() |>   
-    data_color(rows = which(overall %in% c(input$A1, input$A2, input$A3, input$A4, input$A5)), palette = "salmon") |> 
-    data_color(rows = which(overall %in% c(input$B1, input$B2, input$B3, input$B4, input$B5)), palette = "dodgerblue") |> 
-    cols_label("overall" = "Pick #", pts = "Points") |> 
+    data_color(rows = which(overall %in% A_picks()), palette = "salmon") |> 
+    data_color(rows = which(overall %in% B_picks()), palette = "dodgerblue") |> 
     render_gt()
 }
+
 
 shinyApp(ui, server)
 
