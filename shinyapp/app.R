@@ -42,10 +42,7 @@ value <- function(overall){
 valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
 }
-
-valid_A <- TRUE
-valid_B <- TRUE 
-
+0
 pred_vals <- list()
 for(i in 1:8){
   pred_vals[[i]] <- data.frame(overall = seq(1+28*(i-1), 28*i), 
@@ -86,13 +83,28 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session){
-  observe(
+  observe({
+    temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
+    temp_B <- c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)
+    temp_A <- temp_A[!is.na(temp_A)]
+    temp_B <- temp_B[!is.na(temp_B)]
     for(t in c("A", "B")){
       for(i in seq(1, num_picks)){
         pick <- str_glue("{t}_{i}")
-        shinyFeedback::feedbackWarning(pick, !valid(input[[pick]]), 
-                                       "Ensure this pick is an integer between 1 and 224 (inclusive)")}})
-  
+        in_range <- valid(input[[pick]])
+        is_dup <- sum(input[[pick]] == c(temp_A, temp_B)) > 1
+        message <- ""
+        errors <- FALSE
+        if(!in_range){
+          message <- "Ensure this pick is an integer between 1 and 224 (inclusive)."
+          errors <- TRUE
+        }
+        if(!is.na(input[[pick]]) & is_dup){
+          message <- str_glue("{message} \nThis pick is included more than once in the trade.")
+          errors <- TRUE
+        }
+        shinyFeedback::feedbackWarning(pick, errors, message)}}})
+
   A_picks <- reactive({
     temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
     valid_A <- valid(temp_A)
@@ -116,7 +128,11 @@ server <- function(input, output, session){
   output$equiv <- renderText({
     diff <- round(value_A() - value_B(), 3)
     team <- ifelse(diff > 0, "A", "B")
-    if(abs(diff) < last_pick_val){
+    if(abs(diff) < 0.001){
+      str_glue("The point difference is less than 0.001 points, which is
+               effectively nothing")
+    }
+    else if(abs(diff) < last_pick_val){
       str_glue("Team {team} gives up {abs(diff)} more points than it 
       receives, which is less than the value of the last pick in the draft 
                ({last_pick_val} points).")
@@ -164,7 +180,6 @@ shinyApp(ui, server)
 
 # To do 
 # use rsconnect::deployApp('shinyapp') to deploy
-# - don't allow the same pick to be included on both sides (or twice on the same side)
 # - use dev ops stuff 
 # - add logging 
 # - redo app with lm
