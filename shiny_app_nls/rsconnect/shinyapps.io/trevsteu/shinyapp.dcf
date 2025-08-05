@@ -1,0 +1,10 @@
+name: shinyapp
+title: shinyapp
+username: trevsteu
+account: trevsteu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15156585
+bundleId: 10728037
+url: https://trevsteu.shinyapps.io/shinyapp/
+version: 1

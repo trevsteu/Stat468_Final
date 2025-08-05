@@ -318,18 +318,15 @@ Note that the `value` and `pick` functions we implemented in R are not perfect i
 ```{r}
 value(12) - value(22) - value(31)
 
-pick(value(12) - value(22) - value(31))
+pick(abs(value(12) - value(22) - value(31)))
 ```
 
 ## Storing the Model
 
-We now store the model and data in an S3 bucket so we can access them from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html).
+We now store the model and data in an S3 bucket so we can access them from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html). Since `vetiver` cannot be used for `nls` objects, we will use it on the logistic model using success rate to show that I know how to do it. There will then be 2 versions of the app, one using the logistic model and one using the nls model.
 
 ```{r}
-# I couldn't find any info online about the error I was getting so I used 
-#   ChatGPT, it turns out vetiver does not work with nls objects, so for
-#   now I'm using one of the lms 
-lm_test <- lm(ps ~ overall, data = all_data_adj)
+logist_model <- glm(all_data_adj$reg ~ overall, family = "binomial")
 
 Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
            "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
@@ -338,11 +335,10 @@ bucket = "trevor-stat468"
 
 board <- board_s3(bucket = bucket) 
 
-s3write_using(data.frame(overall = all_data_adj$overall, 
-                            ps = scal_ps), FUN = write_parquet, 
-              bucket = bucket, object = "scal_ps.parquet")
+s3write_using(data.frame(overall = all_data_adj$overall, ps = scal_ps), 
+              FUN = write_parquet, bucket = bucket, object = "scal_ps.parquet")
 
-v <- vetiver_model(lm_test, "lm_test")
+v <- vetiver_model(logist_model, "logist_model")
 vetiver_pin_write(board, v)
 
 # vetiver_prepare_docker()

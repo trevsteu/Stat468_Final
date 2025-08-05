@@ -1,3 +1,14 @@
+# renv::install("rvest")
+# renv::install("tidyverse")
+# renv::install("janitor")
+# renv::install("dplyr")
+# renv::install("stringr")
+# renv::install("DBI")
+# renv::install("duckdb")
+# renv::install("aws.s3")
+# renv::install("paws")
+# renv::install("arrow")
+
 library(rvest)
 library(tidyverse)
 library(janitor)
@@ -46,6 +57,10 @@ tidy_draft <- function(year){
 
 # We don't need to add the files to the bucket since they're already there. 
 con <- dbConnect(duckdb())
+
+Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
+           "AWS_DEFAULT_REGION" = "us-east-2")
 
 dbExecute(con, "INSTALL httpfs;")
 dbExecute(con, "LOAD httpfs;")

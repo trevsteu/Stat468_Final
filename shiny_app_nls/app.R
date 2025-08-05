@@ -95,12 +95,17 @@ server <- function(input, output, session){
         is_dup <- sum(input[[pick]] == c(temp_A, temp_B)) > 1
         message <- ""
         errors <- FALSE
-        if(!in_range){
+        if(! in_range & !is.na(input[[pick]]) & is_dup){
+          message <- str_glue("Ensure this pick is an integer between 1 and 224 (inclusive). \n
+                   This pick is also included more than once in the trade.")
+          errors <- TRUE
+        }
+        else if(!in_range){
           message <- "Ensure this pick is an integer between 1 and 224 (inclusive)."
           errors <- TRUE
         }
-        if(!is.na(input[[pick]]) & is_dup){
-          message <- str_glue("{message} \nThis pick is included more than once in the trade.")
+        else if(!is.na(input[[pick]]) & is_dup){
+          message <- "This pick is included more than once in the trade."
           errors <- TRUE
         }
         shinyFeedback::feedbackWarning(pick, errors, message)}}})

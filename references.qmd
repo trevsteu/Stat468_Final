@@ -34,4 +34,6 @@
 
 -   [Read/Write parquet file from s3 using R](https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r)
 
+-   [Show different feedback warnings depending on single user input R Shiny](https://forum.posit.co/t/show-different-feedback-warnings-depending-on-single-user-input-r-shiny/176582)
+
 For now this is just a list of links. Later I will formalize it.
