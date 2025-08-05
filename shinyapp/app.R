@@ -61,6 +61,7 @@ last_pick_val <- round(value(224), 3)
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "darkly"),
   useShinyFeedback(),
+  titlePanel("Draft Pick Trade Evaluator"),
   fluidRow(
     lapply(c("A", "B"), 
            \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
@@ -90,7 +91,7 @@ server <- function(input, output, session){
       for(i in seq(1, num_picks)){
         pick <- str_glue("{t}_{i}")
         shinyFeedback::feedbackWarning(pick, !valid(input[[pick]]), 
-                                       "Please ensure this pick is an integer between 1 and 224 (inclusive)")}})
+                                       "Ensure this pick is an integer between 1 and 224 (inclusive)")}})
   
   A_picks <- reactive({
     temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
@@ -163,8 +164,7 @@ shinyApp(ui, server)
 
 # To do 
 # use rsconnect::deployApp('shinyapp') to deploy
-# - allow any # of picks
-# - ban diff > 1000 
 # - don't allow the same pick to be included on both sides (or twice on the same side)
 # - use dev ops stuff 
-# - add logging stuff
+# - add logging 
+# - redo app with lm
