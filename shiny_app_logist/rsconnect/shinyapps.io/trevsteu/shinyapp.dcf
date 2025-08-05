@@ -5,6 +5,6 @@ account: trevsteu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15156585
-bundleId: 10728037
+bundleId: 10728112
 url: https://trevsteu.shinyapps.io/shinyapp/
 version: 1

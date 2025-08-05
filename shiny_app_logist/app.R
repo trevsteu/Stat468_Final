@@ -12,7 +12,24 @@ library(tidyverse)
 library(rsconnect)
 library(ggplot2)
 
+## THIS IS MY APP USING THE LOGISTIC MODEL
+
 # ------------------------------------------------------------------------------------------------
+
+num_picks <- 5
+
+api_url <- "http://127.0.0.1:8080/predict"
+
+
+pred <- eventReactive(
+  input$predict,
+  httr2::request(api_url) |>
+    httr2::req_body_json(vals()) |>
+    httr2::req_perform() |>
+    httr2::resp_body_json(),
+  ignoreInit = TRUE
+)
+
 
 pick <- function(value){
   round(ifelse(value >= 0, exp(phi_2) / ((phi_1 / value - 1)^phi_3), 
@@ -26,12 +43,6 @@ value <- function(overall){
 
 valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
-}
-0
-pred_vals <- list()
-for(i in 1:8){
-  pred_vals[[i]] <- data.frame(overall = seq(1+28*(i-1), 28*i), 
-                               pts = cbind(lapply(seq(1+28*(i-1), 28*i), value)))
 }
 
 pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
@@ -94,7 +105,7 @@ server <- function(input, output, session){
           errors <- TRUE
         }
         shinyFeedback::feedbackWarning(pick, errors, message)}}})
-
+  
   A_picks <- reactive({
     temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
     valid_A <- valid(temp_A)
@@ -112,9 +123,9 @@ server <- function(input, output, session){
     str_glue("Team A trades away {value_A()} points")
   })
   output$B_points <- renderText({
-      str_glue("Team B trades away {value_B()} points")
-    })
-
+    str_glue("Team B trades away {value_B()} points")
+  })
+  
   output$equiv <- renderText({
     diff <- round(value_A() - value_B(), 3)
     team <- ifelse(diff > 0, "A", "B")

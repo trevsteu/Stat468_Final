@@ -340,11 +340,9 @@ s3write_using(data.frame(overall = all_data_adj$overall, ps = scal_ps),
 
 v <- vetiver_model(logist_model, "logist_model")
 vetiver_pin_write(board, v)
-
-# vetiver_prepare_docker()
 ```
 
-We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, I've included a screenshot of the popup instead.
+We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, I've included a screenshot of the popup [here](images/vetiver_api_ss.png) instead.
 
 ```{r, eval = FALSE}
 pr() |> # goes in dockerfile
@@ -352,4 +350,14 @@ pr() |> # goes in dockerfile
   pr_run(port = 8080)
 ```
 
-[Here](images/vetiver_api_ss.png) is a screenshot of the popup that opens when the above code is run. We now proceed to the Communication chapter, which contains the key results from this report.
+We also run the following to create the files necessary to build a Dockerfile image.
+
+```{r}
+vetiver_prepare_docker(
+    board, 
+    "logist_model", 
+    docker_args = list(port = 8080)
+)
+```
+
+We now proceed to the Communication chapter, which contains the key results from this report.

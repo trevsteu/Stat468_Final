@@ -1,0 +1,10 @@
+name: nls_model_app
+title:
+username: trevsteu
+account: trevsteu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15161884
+bundleId: 10728134
+url: https://trevsteu.shinyapps.io/nls_model_app/
+version: 1

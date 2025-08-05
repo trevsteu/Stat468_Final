@@ -12,11 +12,12 @@ library(tidyverse)
 library(rsconnect)
 library(ggplot2)
 
+## THIS IS MY APP USING THE NLS MODEL
+
 # ------------------------------------------------------------------------------------------------
 
-# since I can't store an nls object with vetiver and the S3 credentials aren't working, 
-#   we load the data from a CSV file and refit the model using the exact same code as 
-#   in the Model chapter. 
+# since I can't store an nls object with vetiver, we load the data from a CSV file 
+# refit and the model using the exact same code as in the Model chapter. 
 
 scal_ps <- read.csv("scal_ps.csv")
 
@@ -41,12 +42,6 @@ value <- function(overall){
 
 valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
-}
-0
-pred_vals <- list()
-for(i in 1:8){
-  pred_vals[[i]] <- data.frame(overall = seq(1+28*(i-1), 28*i), 
-                               pts = cbind(lapply(seq(1+28*(i-1), 28*i), value)))
 }
 
 pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
@@ -185,6 +180,5 @@ shinyApp(ui, server)
 
 # To do 
 # use rsconnect::deployApp('shinyapp') to deploy
-# - use dev ops stuff 
 # - add logging 
-# - redo app with lm
+# - pull data from S3 instead of the csv
