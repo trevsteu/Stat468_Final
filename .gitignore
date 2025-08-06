@@ -5,3 +5,4 @@
 shinyapp/.Renviron
 /.quarto/
 .Rprofile
+_freeze/
