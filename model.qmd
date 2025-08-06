@@ -352,7 +352,7 @@ pr() |> # goes in dockerfile
 
 We also run the following to create the files necessary to build a Dockerfile image.
 
-```{r}
+```{r, eval = FALSE}
 vetiver_prepare_docker(
     board, 
     "logist_model", 
