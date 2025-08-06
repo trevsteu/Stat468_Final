@@ -18,9 +18,6 @@ book:
     - references.qmd
 
 bibliography: references.bib
-
-execute:
-  freeze: auto
   
 format:
   html:
