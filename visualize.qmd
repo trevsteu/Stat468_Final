@@ -150,7 +150,7 @@ gp_plot_2 <- all_data |>
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of GP",
        subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
-       x = "GP", y = "Number of Players")
+       x = "Pick Number", y = "GP")
 
 ps_plot_2 <- all_data |> 
   filter(gp > 0) |> 
@@ -158,7 +158,7 @@ ps_plot_2 <- all_data |>
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of PS",
        subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
-       x = "PS", y = "Number of Players")
+       x = "Pick Number", y = "PS")
 
 gp_plot_2 + ps_plot_2
 ```
@@ -174,7 +174,7 @@ gp_plot_3 <- all_data |>
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of GP for 5 Drafts",
        subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
-       x = "GP", y = "Number of Players")
+       x = "Pick Number", y = "GP")
 
 ps_plot_3 <- all_data |> 
   filter(gp > 0 & year %in% years) |> 
@@ -182,7 +182,7 @@ ps_plot_3 <- all_data |>
   geom_point(alpha = 0.5) + 
   labs(title = "Distribution of PS for 5 Drafts",
        subtitle = "Players with ≥ 1 game only; \nnote the plots have different scales", 
-       x = "PS", y = "Number of Players")
+       x = "Pick Number", y = "PS")
 
 gp_plot_3 + ps_plot_3 
 ```
