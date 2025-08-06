@@ -73,6 +73,7 @@ all_data_comb <- dbGetQuery(con, "SELECT *
                             FROM read_parquet('s3://trevor-stat468/all_data_comb.parquet');")
 scal_ps <- dbGetQuery(con, "SELECT * 
                             FROM read_parquet('s3://trevor-stat468/scal_ps.parquet');")
+DBI::dbDisconnect(con)
 
 # ---------------------------------------------------------------------------------------
 

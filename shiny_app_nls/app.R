@@ -53,7 +53,7 @@ last_pick_val <- round(value(224), 3)
 ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "darkly"),
   useShinyFeedback(),
-  titlePanel("Draft Pick Trade Evaluator"),
+  titlePanel("Draft Pick Trade Evaluator (NLS Version)"),
   fluidRow(
     lapply(c("A", "B"), 
            \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
@@ -68,11 +68,13 @@ ui <- fluidPage(
   br(),
   textOutput("equiv"), 
   br(), 
-  "A table of the picks is given below (it 
-  populates as the user types). The picks highlighted in red are givem 
-  up by Team A, the ones highlighted in blue are given up by Team B.",
+  "Two tables of the picks included in the trade are given below (they populate 
+  as the user types). The picks highlighted in red are givem up by Team A, the 
+  ones highlighted in blue are given up by Team B.",
   fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))), 
   br(),
+  "A plot of the value of all picks in the draft is includedd below. The colour
+  scheme is the same as in the above. Picks not included in the trade are in grey",
   plotOutput("plot", width = "950px")
 )
 
