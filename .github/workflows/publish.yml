@@ -21,10 +21,31 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            # Crypto & security
             libsodium-dev \
             libssl-dev \
+            # Networking
             libcurl4-openssl-dev \
-            libxml2-dev
+            # XML & HTML parsing
+            libxml2-dev \
+            # Fonts & text rendering
+            libfreetype6-dev \
+            libfontconfig1-dev \
+            libharfbuzz-dev \
+            libfribidi-dev \
+            # Images & raster
+            libpng-dev \
+            libjpeg-dev \
+            libtiff5-dev \
+            # Cairo & graphics
+            libcairo2-dev \
+            libglib2.0-dev \
+            # Pandoc / Quarto text shaping helpers
+            libicu-dev \
+            # For R spatial packages (just in case)
+            libgeos-dev \
+            libproj-dev \
+            libgdal-dev
             
       - name: Install R
         uses: r-lib/actions/setup-r@v2
