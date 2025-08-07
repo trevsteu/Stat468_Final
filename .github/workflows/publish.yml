@@ -60,6 +60,9 @@ jobs:
         env:
           RENV_CONFIG_REPOS_OVERRIDE: https://packagemanager.rstudio.com/all/latest
 
+      - name: List installed R packages
+        run: Rscript -e 'installed.packages()[, c("Package", "Version")]'
+
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
