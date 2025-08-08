@@ -1,4 +1,4 @@
-# renv::install("shiny")
+renv::install("shiny")
 # renv::install("shinyFeedback")
 # renv::install("gt")
 # renv::install("tidyverse")
@@ -20,34 +20,37 @@ num_picks <- 5
 
 api_url <- "http://127.0.0.1:8080/predict"
 
-
-pred <- eventReactive(
-  input$predict,
-  httr2::request(api_url) |>
-    httr2::req_body_json(vals()) |>
-    httr2::req_perform() |>
-    httr2::resp_body_json(),
-  ignoreInit = TRUE
-)
-
-
 pick <- function(value){
   round(ifelse(value >= 0, exp(phi_2) / ((phi_1 / value - 1)^phi_3), 
                -exp(phi_2) / ((phi_1 / (-value) - 1)^phi_3)))
 }
 
-value <- function(overall){
-  ifelse(is.na(overall), 0, 
-         round(phi_1 / (1 + (exp(phi_2) / overall)^(1 / phi_3)), 3))
+new_value <- function(val){ 
+  # this function is needed to convert the predicted logistic value to a percentage
+  #   and deal with NAs
+  if(is.na(val$.pred)){
+    0
+  }
+  round(1/(1 + exp(-val$.pred)), 3)
 }
 
 valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
 }
 
-pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
+pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), new_value)))
 
-last_pick_val <- round(value(224), 3)
+last_pick_val <- new_value(httr2::request(api_url) |>
+  httr2::req_body_json(list(list(overall = 224))) |>
+  httr2::req_perform() |>
+  httr2::resp_body_json())
+
+pred_vals <- data.frame(overall = seq(1,224), 
+                        pts = cbind(lapply(seq(1,224), 
+                                           \(x) new_value(httr2::request(api_url) |>
+                                                                   httr2::req_body_json(list(list(overall = x))) |>
+                                                                   httr2::req_perform() |>
+                                                                   httr2::resp_body_json()))))
 
 # ------------------------------------------------------------------------------------------------
 
@@ -183,6 +186,7 @@ shinyApp(ui, server)
 
 # To do 
 # use rsconnect::deployApp('shinyapp') to deploy
+# - remake pick function
+# - add titles to gts
 # - use dev ops stuff 
-# - add logging 
-# - redo app with lm
+# - add logging

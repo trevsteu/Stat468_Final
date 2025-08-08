@@ -3,6 +3,38 @@ title: "Communicate"
 author: "Trevor S"
 ---
 
+## Setup 
+
+We install and load the necessary packages, along with functions from prior chapters.
+
+```{r,  message = FALSE, warning = FALSE}
+# renv::install(patchwork)
+# renv::install(reactable)
+
+library(patchwork)
+library(reactable)
+
+source("functions.R") # load functions defined in prior chapters
+```
+
+## Shiny Apps 
+
+As mentioned in the Model chapter, there are two shiny apps associated with this project. The first, linked [here](https://trevsteu.shinyapps.io/nls_model_app/), uses non-linear regression to make predictions based on the PS of future picks. If I was advising a team, this is the model I would suggest using. The second app, linked [here](https://trevsteu.shinyapps.io/logist_model_app/), uses logistic regression to make predictions based on the probability of future picks becoming NHL regulars. [**Disclaimer: adding probabilities in this manner is dubious at best from a statistical perspective,**]{.underline} but `vetiver` does not support `nls` objects as mentioned in the Model chapter, so I needed to use a model from `lm` or `glm`, in order to satisfy many of the the devops requirements for this app.
+
+The apps differ only in the models they are based on (and their underlying code to access predictions). Thus the instructions for both apps are exactly the same, though the included screenshots are only for the app based on the model fit via non-linear regression.
+
+## Summary of Results 
+
+We also present two other summaries of the results. First, we have a plot of the value of each pick, note that a `geom_point()` version of these exact plots are used in the shiny apps
+
+```{r}
+ggplot(pred_vals_nls, aes(x = overall, y = as.numeric(pts))) + 
+  geom_line()
+
+ggplot(pred_vals_logist, aes(x = overall, y = 1/(1+exp(-as.numeric(pts))))) + 
+  geom_line()
+```
+
 This is a placeholder for my communicate chapter and will eventually have plots, tables, etc.
 
 This chapter will contain my table, graph, value + pick functions, and instructions for and a link to my shiny app. In my RShiny app, I plan to allow users to enter potential trades, click "evaluate", and then see the point gain/loss. Additionally, I'd like to put the point difference into context "this is equivalent to team A giving up the 174th overall pick".

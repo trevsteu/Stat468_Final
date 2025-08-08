@@ -68,8 +68,8 @@ lm_pred_vals <- data.frame(overall = seq(1, 224),
                           ps = lm_pred_vals[[1]], 
                           gp = lm_pred_vals[[2]], 
                           adj_ps = lm_pred_vals[[3]], 
-                          p_reg = exp(logist_pred_vals) / 
-                            (1 + exp(logist_pred_vals)))
+                          p_reg = 1 / 
+                            (1 + exp(-logist_pred_vals)))
 
 reactable(round(lm_pred_vals, 4))
 ```
@@ -321,6 +321,23 @@ value(12) - value(22) - value(31)
 pick(abs(value(12) - value(22) - value(31)))
 ```
 
+Finally, we create a data frame of predicted values and store it in our S3 bucket:
+
+```{r}
+Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
+           "AWS_DEFAULT_REGION" = "us-east-2")
+bucket = "trevor-stat468"
+
+pred_vals <- data.frame(overall = seq(1,224), 
+                        pts = cbind(lapply(seq(1,224), value)))
+
+s3write_using(data.frame(overall = all_data_adj$overall, ps = scal_ps), 
+              FUN = write_parquet, bucket = bucket, object = "scal_ps.parquet")
+s3write_using(pred_vals, FUN = write_parquet, 
+              bucket = bucket, object = "pred_vals_nls.parquet")
+```
+
 ## Storing a Model
 
 We now store the model and data in an S3 bucket so we can access them from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html). Since `vetiver` cannot be used for `nls` objects, we will use it on the logistic model using success rate to show that I know how to do it. There will be 2 versions of the app, one using the logistic model (which satisfies the devops requirements) and one using the nls model (which has objectively better predictions, as explained earlier in this chapter).
@@ -328,36 +345,16 @@ We now store the model and data in an S3 bucket so we can access them from withi
 ```{r}
 logist_model <- glm(all_data_adj$reg ~ overall, family = "binomial")
 
-Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
-           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
-           "AWS_DEFAULT_REGION" = "us-east-2")
-bucket = "trevor-stat468"
-
-board <- board_s3(bucket = bucket) 
-
-s3write_using(data.frame(overall = all_data_adj$overall, ps = scal_ps), 
-              FUN = write_parquet, bucket = bucket, object = "scal_ps.parquet")
+s3write_using(data.frame(overall = seq(1,224), 
+                         pts = predict(logist_model, 
+                                       data.frame(overall = seq(1,224)))), 
+              FUN = write_parquet, 
+              bucket = bucket, object = "pred_vals_logist.parquet")
 
 v <- vetiver_model(logist_model, "logist_model")
+
+board <- board_s3(bucket = bucket) 
 vetiver_pin_write(board, v)
-```
-
-We can also interface with the model using `vetiver_api`. Note I have set `eval = FALSE` for this chunk because the report won't render otherwise, I've included a screenshot of the popup [here](images/vetiver_api_ss.png) instead.
-
-```{r, eval = FALSE}
-pr() |> # goes in dockerfile
-  vetiver_api(v) |> 
-  pr_run(port = 8080)
-```
-
-We also run the following to create the files necessary to build a Dockerfile image.
-
-```{r, eval = FALSE}
-vetiver_prepare_docker(
-    board, 
-    "logist_model", 
-    docker_args = list(port = 8080)
-)
 ```
 
 We now proceed to the Communication chapter, which contains the key results from this report.
