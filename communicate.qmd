@@ -3,7 +3,7 @@ title: "Communicate"
 author: "Trevor S"
 ---
 
-## Setup 
+## Setup
 
 We install and load the necessary packages, along with functions from prior chapters.
 
@@ -17,29 +17,33 @@ library(reactable)
 source("functions.R") # load functions defined in prior chapters
 ```
 
-## Shiny Apps 
+## Shiny Apps
 
 As mentioned in the Model chapter, there are two shiny apps associated with this project. The first, linked [here](https://trevsteu.shinyapps.io/nls_model_app/), uses non-linear regression to make predictions based on the PS of future picks. If I was advising a team, this is the model I would suggest using. The second app, linked [here](https://trevsteu.shinyapps.io/logist_model_app/), uses logistic regression to make predictions based on the probability of future picks becoming NHL regulars. [**Disclaimer: adding probabilities in this manner is dubious at best from a statistical perspective,**]{.underline} but `vetiver` does not support `nls` objects as mentioned in the Model chapter, so I needed to use a model from `lm` or `glm`, in order to satisfy many of the the devops requirements for this app.
 
 The apps differ only in the models they are based on (and their underlying code to access predictions). Thus the instructions for both apps are exactly the same, though the included screenshots are only for the app based on the model fit via non-linear regression.
 
-## Summary of Results 
+3 team trades are incredibly rare in the NHL so they are not directly included in the app, though they could be analyzed by looking at what each team individually receives and gives up (ie look at it in terms of 3 two team trades).
+
+## Summary of Results
 
 We also present two other summaries of the results. First, we have a plot of the value of each pick, note that a `geom_point()` version of these exact plots are used in the shiny apps
 
 ```{r}
 ggplot(pred_vals_nls, aes(x = overall, y = as.numeric(pts))) + 
-  geom_line()
-
+  geom_line() + 
 ggplot(pred_vals_logist, aes(x = overall, y = 1/(1+exp(-as.numeric(pts))))) + 
   geom_line()
 ```
 
-This is a placeholder for my communicate chapter and will eventually have plots, tables, etc.
+We also provide a table of all predicted pick values based on the models.
 
-This chapter will contain my table, graph, value + pick functions, and instructions for and a link to my shiny app. In my RShiny app, I plan to allow users to enter potential trades, click "evaluate", and then see the point gain/loss. Additionally, I'd like to put the point difference into context "this is equivalent to team A giving up the 174th overall pick".
+```{r}
+reactable(data.frame(cbind(pred_vals_nls, 
+                           1/(1+exp(-pred_vals_logist[2])))))
+```
 
-Other things I need to do:
+## Note to Self
 
 -   Read thru instructions to see if I'm missing anything
 
@@ -60,43 +64,3 @@ Other things I need to do:
 -   Add references to .bib file
 
 -   remove unnecessary files from github (ie holding_file, model2, etc).
-
-3 team trades are incredibly rare in the NHL so they are not directly included in the app, though they could be analyzed by looking at what each team individually receives and gives up (ie look at it in terms of 3 two team trades)
-
-This is all the code that I think might be useful but that I currently don't know what it is for.
-
-```{r, eval = FALSE}
-# I couldn't find any info online about the error I was getting so I used 
-#   ChatGPT, it turns out vetiver does not work with nls objects, so for
-#   now I'm using one of the linear models
-
-# v <- vetiver_model(nls_scal_ps, "ps_value_model")
-
-v <- vetiver_model(lin_models[[1]], "lm_test")
-
-model_board <- board_folder("/data/model")
-model_board |>
-  vetiver_pin_write(v)
-
-model_board |> 
-  vetiver_pin_read("lm_test")
-
-
-
-
-test_lm <- lm(ps ~ overall, data = all_data_adj)
-v <- vetiver_model(test_lm, "test_lm")
-
-
-
-
-model_board <- board_temp(versioned = TRUE)
-model_board |> 
-  vetiver_pin_write(v)
-
-
-
-pr() |>
-  vetiver_api(v) |> 
-  pr_run(port = 8080)
-```

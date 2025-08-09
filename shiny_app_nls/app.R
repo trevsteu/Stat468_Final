@@ -17,7 +17,7 @@ library(ggplot2)
 # ------------------------------------------------------------------------------------------------
 
 # since I can't store an nls object with vetiver, we load the data from a CSV file 
-# refit and the model using the exact same code as in the Model chapter. 
+#   refit and the model using the exact same code as in the Model chapter. 
 
 scal_ps <- read.csv("scal_ps.csv")
 
@@ -181,6 +181,6 @@ server <- function(input, output, session){
 shinyApp(ui, server)
 
 # To do 
-# use rsconnect::deployApp('shinyapp') to deploy
+# use rsconnect::deployApp('shiny_app_nls/') to deploy
 # - add logging 
 # - pull data from S3 instead of the csv

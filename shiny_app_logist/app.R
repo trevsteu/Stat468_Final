@@ -1,4 +1,4 @@
-renv::install("shiny")
+# renv::install("shiny")
 # renv::install("shinyFeedback")
 # renv::install("gt")
 # renv::install("tidyverse")
@@ -20,37 +20,48 @@ num_picks <- 5
 
 api_url <- "http://127.0.0.1:8080/predict"
 
-pick <- function(value){
-  round(ifelse(value >= 0, exp(phi_2) / ((phi_1 / value - 1)^phi_3), 
-               -exp(phi_2) / ((phi_1 / (-value) - 1)^phi_3)))
-}
-
-new_value <- function(val){ 
-  # this function is needed to convert the predicted logistic value to a percentage
-  #   and deal with NAs
-  if(is.na(val$.pred)){
-    0
-  }
-  round(1/(1 + exp(-val$.pred)), 3)
-}
-
 valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
 }
 
-pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), new_value)))
+get_val <- function(selection){
+  # this function is needed to convert the predicted logistic value to a percentage,
+  #   deal with NAs, and round the prediction
+  temp_val <- httr2::request(api_url) |>
+    httr2::req_body_json(list(list(overall = selection))) |>
+    httr2::req_perform() |>
+    httr2::resp_body_json()
+  if(is.na(temp_val$.pred)){
+    0
+  }
+  round(1/(1 + exp(-temp_val$.pred)), 7)
+}
 
-last_pick_val <- new_value(httr2::request(api_url) |>
-  httr2::req_body_json(list(list(overall = 224))) |>
+pred_vals <- data.frame(overall = seq(1,224), xnhls = cbind(lapply(seq(1,224), get_val)))
+# So we can get predicted values from this df instead of calling the API every time
+
+first_pick_val <- pred_vals[1, 2]
+last_pick_val <- pred_vals[224, 2]
+
+# We need to find the parameters for our logistic model in order to
+#   calculate and use its inverse
+b0_plus_b1 <- httr2::request(api_url) |>
+  httr2::req_body_json(list(list(overall = 1))) |>
   httr2::req_perform() |>
-  httr2::resp_body_json())
+  httr2::resp_body_json()
 
-pred_vals <- data.frame(overall = seq(1,224), 
-                        pts = cbind(lapply(seq(1,224), 
-                                           \(x) new_value(httr2::request(api_url) |>
-                                                                   httr2::req_body_json(list(list(overall = x))) |>
-                                                                   httr2::req_perform() |>
-                                                                   httr2::resp_body_json()))))
+b0_plus2b1 <- httr2::request(api_url) |>
+  httr2::req_body_json(list(list(overall = 2))) |>
+  httr2::req_perform() |>
+  httr2::resp_body_json()
+
+beta1 <- b0_plus2b1[[1]] - b0_plus_b1[[1]]
+beta0 <- b0_plus_b1[[1]] - beta1
+
+pick <- function(xnhlers){
+  # Inverse of the get_val function
+  round(-1/beta1 * (log(1/xnhlers - 1) + beta0))
+}
 
 # ------------------------------------------------------------------------------------------------
 
@@ -59,23 +70,23 @@ ui <- fluidPage(
   useShinyFeedback(),
   titlePanel("Draft Pick Trade Evaluator (Logistic Version)"),
   fluidRow(
-    lapply(c("A", "B"), 
+    lapply(c("A", "B"),
            \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
                        lapply(seq(1,num_picks), \(i)
-                              numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"), 
+                              numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"),
                                            min = 1, max = 224, step = 1, value = NA))))),
   
-  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))), 
+  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))),
   br(),
   textOutput("A_points"),
   textOutput("B_points"),
   br(),
-  textOutput("equiv"), 
-  br(), 
-  "Two tables of the picks included in the trade are given below (they populate 
-  as the user types). The picks highlighted in red are givem up by Team A, the 
+  textOutput("equiv"),
+  br(),
+  "Two tables of the picks included in the trade are given below (they populate
+  as the user types). The picks highlighted in red are givem up by Team A, the
   ones highlighted in blue are given up by Team B.",
-  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))), 
+  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
   br(),
   "A plot of the value of all picks in the draft is includedd below. The colour
   scheme is the same as in the above. Picks not included in the trade are in grey",
@@ -120,73 +131,74 @@ server <- function(input, output, session){
     valid_B <- valid(c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5))
     req(valid_B)
     c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)})
-  
-  value_A <- eventReactive(input$eval, {round(sum(value(A_picks())), 3)})
-  value_B <- eventReactive(input$eval, {round(sum(value(B_picks())), 3)})
+
+  value_A <- eventReactive(input$eval, 
+                           {round(sum(unlist(filter(pred_vals, overall %in% A_picks())[,2])), 7)})  
+  value_B <- eventReactive(input$eval, 
+                           {round(sum(unlist(filter(pred_vals, overall %in% B_picks())[,2])), 7)})  
   
   output$A_points <- renderText({
-    str_glue("Team A trades away {value_A()} points")
+    str_glue("Team A trades away {value_A()} expected NHLers")
   })
   output$B_points <- renderText({
-    str_glue("Team B trades away {value_B()} points")
+    str_glue("Team B trades away {value_B()} expected NHLers")
   })
   
   output$equiv <- renderText({
     diff <- round(value_A() - value_B(), 3)
     team <- ifelse(diff > 0, "A", "B")
     if(abs(diff) < 0.001){
-      str_glue("The point difference is less than 0.001 points, which is
+      str_glue("The point difference is less than 0.001 expected NHLers, which is
                effectively nothing")
     }
     else if(abs(diff) < last_pick_val){
-      str_glue("Team {team} gives up {abs(diff)} more points than it 
-      receives, which is less than the value of the last pick in the draft 
-               ({last_pick_val} points).")
+      str_glue("Team {team} gives up {abs(diff)} more expected NHLers than it
+      receives, which is less than the value of the last pick in the draft
+               ({last_pick_val} expected NHLers).")
     }
-    else if(abs(diff) > 1000){
-      str_glue("Team {team} gives up {abs(diff)} more points than it 
-      receives, which is more than the value of the first pick in the draft 
-               (1000 points).")
+    else if(abs(diff) > first_pick_val){
+      str_glue("Team {team} gives up {abs(diff)} more expected NHLers than it
+      receives, which is more than the value of the first pick in the draft
+      ({first_pick_val} expected NHLers).")
     }
     else{
       diff_pick <- pick(abs(diff))
-      str_glue("Team {team} gives up {abs(diff)} more points than it 
-      receives. This trade is roughly equivalent to Team {team} giving up pick 
+      str_glue("Team {team} gives up {abs(diff)} more expected NHLers than it
+      receives. This trade is roughly equivalent to Team {team} giving up pick
                {diff_pick} in surplus value.")
     }
   })
   
-  output$pred_gt_A <- pred_vals |> 
-    mutate(pts = round(as.numeric(pts), 3)) |> 
-    filter(overall %in% A_picks()) |> 
-    gt() |>   
-    cols_label(overall = "Pick #", pts = "Points") |> 
-    data_color(palette = "salmon") |> 
+  output$pred_gt_A <- pred_vals |>
+    mutate(xnhls = round(as.numeric(xnhls), 7)) |>
+    filter(overall %in% A_picks()) |>
+    gt() |>  
+    cols_label(overall = "Pick #", xnhls = "Expected NHLers") |>
+    data_color(palette = "salmon") |>
     render_gt()
   
-  output$pred_gt_B <- pred_vals |> 
-    mutate(pts = round(as.numeric(pts), 3)) |> 
-    filter(overall %in% B_picks()) |> 
-    gt() |>   
-    cols_label(overall = "Pick #", pts = "Points") |> 
-    data_color(palette = "dodgerblue") |> 
+  output$pred_gt_B <- pred_vals |>
+    mutate(xnhls = round(as.numeric(xnhls), 7)) |>
+    filter(overall %in% B_picks()) |>
+    gt() |>  
+    cols_label(overall = "Pick #", xnhls = "Expected NHLers") |>
+    data_color(palette = "dodgerblue") |>
     render_gt()
   
   output$plot <- renderPlot({
     temp_A <- filter(pred_vals, overall %in% A_picks())
     temp_B <- filter(pred_vals, overall %in% B_picks())
-    ggplot(pred_vals, aes(x = overall, y = as.numeric(pts))) + 
-      geom_point(alpha = 0.3) + 
-      geom_point(data = temp_A, aes(x = overall, y = as.numeric(pts)), col = "salmon", size = 3) + 
-      geom_point(data = temp_B, aes(x = overall, y = as.numeric(pts)), col = "dodgerblue", size = 3)
+    ggplot(pred_vals, aes(x = overall, y = as.numeric(xnhls))) +
+      geom_point(alpha = 0.3) +
+      geom_point(data = temp_A, aes(x = overall, y = as.numeric(xnhls)), col = "salmon", size = 3) +
+      geom_point(data = temp_B, aes(x = overall, y = as.numeric(xnhls)), col = "dodgerblue", size = 3)
   })
 }
 
 shinyApp(ui, server)
 
-# To do 
-# use rsconnect::deployApp('shinyapp') to deploy
-# - remake pick function
+# To do
+# use rsconnect::deployApp('shiny_app_logist/') to deploy
 # - add titles to gts
-# - use dev ops stuff 
 # - add logging
+# - frame this as expected NHLers in report
