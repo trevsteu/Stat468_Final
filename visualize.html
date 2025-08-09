@@ -484,7 +484,7 @@ window.Quarto = {
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of GP"</span>,</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Players with ≥ 1 game only; </span><span class="sc">\n</span><span class="st">note the plots have different scales"</span>, </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"GP"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"GP"</span>)</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>ps_plot_2 <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
@@ -492,7 +492,7 @@ window.Quarto = {
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of PS"</span>,</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Players with ≥ 1 game only; </span><span class="sc">\n</span><span class="st">note the plots have different scales"</span>, </span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"PS"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"PS"</span>)</span>
 <span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>gp_plot_2 <span class="sc">+</span> ps_plot_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -516,7 +516,7 @@ window.Quarto = {
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of GP for 5 Drafts"</span>,</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Players with ≥ 1 game only; </span><span class="sc">\n</span><span class="st">note the plots have different scales"</span>, </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"GP"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"GP"</span>)</span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>ps_plot_3 <span class="ot">&lt;-</span> all_data <span class="sc">|&gt;</span> </span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> year <span class="sc">%in%</span> years) <span class="sc">|&gt;</span> </span>
@@ -524,7 +524,7 @@ window.Quarto = {
 <span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of PS for 5 Drafts"</span>,</span>
 <span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Players with ≥ 1 game only; </span><span class="sc">\n</span><span class="st">note the plots have different scales"</span>, </span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"PS"</span>, <span class="at">y =</span> <span class="st">"Number of Players"</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Pick Number"</span>, <span class="at">y =</span> <span class="st">"PS"</span>)</span>
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>gp_plot_3 <span class="sc">+</span> ps_plot_3 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
