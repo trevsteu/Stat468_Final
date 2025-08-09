@@ -4,6 +4,7 @@
 # renv::install("tidyverse")
 # renv::install("rsconnect")
 # renv::install("ggplot2")
+# renv::install("log4r")
 
 library(shiny)
 library(shinyFeedback)
@@ -11,10 +12,13 @@ library(gt)
 library(tidyverse)
 library(rsconnect)
 library(ggplot2)
+library(log4r)
 
 ## THIS IS MY APP USING THE LOGISTIC MODEL
 
 # ------------------------------------------------------------------------------------------------
+
+log <- log4r::logger()
 
 num_picks <- 5
 
@@ -24,9 +28,12 @@ valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
 }
 
+loading_opts <- c("\\", "|", "/", "-") # This allows us to create a loading circle for the log
+
 get_val <- function(selection){
   # this function is needed to convert the predicted logistic value to a percentage,
   #   deal with NAs, and round the prediction
+  log4r::info(log, str_glue("({loading_opts[selection %% 4 + 1]}) Creating pick {selection}"))
   temp_val <- httr2::request(api_url) |>
     httr2::req_body_json(list(list(overall = selection))) |>
     httr2::req_perform() |>
@@ -34,11 +41,14 @@ get_val <- function(selection){
   if(is.na(temp_val$.pred)){
     0
   }
-  round(1/(1 + exp(-temp_val$.pred)), 7)
+  else{round(1/(1 + exp(-temp_val$.pred)), 7)}
 }
 
+log4r::info(log, "Creating pred_vals data frame...")
 pred_vals <- data.frame(overall = seq(1,224), xnhls = cbind(lapply(seq(1,224), get_val)))
-# So we can get predicted values from this df instead of calling the API every time
+# Note that the geom_point() that shows up at the end needs all 224 predicted values, so
+#   it makes the most sense to load them all at once and then just get them from the df.
+log4r::info(log, "pred_vals data frame created successfully!")
 
 first_pick_val <- pred_vals[1, 2]
 last_pick_val <- pred_vals[224, 2]
@@ -93,8 +103,8 @@ ui <- fluidPage(
   plotOutput("plot", width = "950px")
 )
 
-
 server <- function(input, output, session){
+  log4r::info(log, "App Started")
   observe({
     temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
     temp_B <- c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)
@@ -110,14 +120,18 @@ server <- function(input, output, session){
         if(! in_range & !is.na(input[[pick]]) & is_dup){
           message <- str_glue("Ensure this pick is an integer between 1 and 224 (inclusive). \n
                    This pick is also included more than once in the trade.")
+          log4r::warn(log, "Duplicated picks which are outside acceptable values 
+                      (evaluations are not allowed)")
           errors <- TRUE
         }
         else if(!in_range){
           message <- "Ensure this pick is an integer between 1 and 224 (inclusive)."
+          log4r::warn(log, "Pick outside acceptable values (evaluations are not allowed)")
           errors <- TRUE
         }
         else if(!is.na(input[[pick]]) & is_dup){
           message <- "This pick is included more than once in the trade."
+          log4r::info(log, "Duplicated picks (evaluations are still allowed)")
           errors <- TRUE
         }
         shinyFeedback::feedbackWarning(pick, errors, message)}}})
@@ -133,9 +147,13 @@ server <- function(input, output, session){
     c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)})
 
   value_A <- eventReactive(input$eval, 
-                           {round(sum(unlist(filter(pred_vals, overall %in% A_picks())[,2])), 7)})  
+                           {
+                           round(sum(unlist(filter(pred_vals, overall %in% A_picks())[,2])), 7)
+                           })
   value_B <- eventReactive(input$eval, 
-                           {round(sum(unlist(filter(pred_vals, overall %in% B_picks())[,2])), 7)})  
+                           {
+                           round(sum(unlist(filter(pred_vals, overall %in% B_picks())[,2])), 7)
+                           })  
   
   output$A_points <- renderText({
     str_glue("Team A trades away {value_A()} expected NHLers")
@@ -145,26 +163,25 @@ server <- function(input, output, session){
   })
   
   output$equiv <- renderText({
-    diff <- round(value_A() - value_B(), 3)
+    diff <- round(value_A() - value_B(), 7)
     team <- ifelse(diff > 0, "A", "B")
+    winner_stat <- str_glue("Team {team} loses the trade since they give up {abs(diff)} more 
+      expected NHLers than they receive")
     if(abs(diff) < 0.001){
       str_glue("The point difference is less than 0.001 expected NHLers, which is
                effectively nothing")
     }
     else if(abs(diff) < last_pick_val){
-      str_glue("Team {team} gives up {abs(diff)} more expected NHLers than it
-      receives, which is less than the value of the last pick in the draft
-               ({last_pick_val} expected NHLers).")
+      str_glue("{winner_stat}, which is less than the value of the last 
+      pick in the draft ({last_pick_val} expected NHLers).")
     }
     else if(abs(diff) > first_pick_val){
-      str_glue("Team {team} gives up {abs(diff)} more expected NHLers than it
-      receives, which is more than the value of the first pick in the draft
-      ({first_pick_val} expected NHLers).")
+      str_glue("{winner_stat}, which is more than the value of the first 
+      pick in the draft ({first_pick_val} expected NHLers).")
     }
     else{
       diff_pick <- pick(abs(diff))
-      str_glue("Team {team} gives up {abs(diff)} more expected NHLers than it
-      receives. This trade is roughly equivalent to Team {team} giving up pick
+      str_glue("{winner_stat}. This trade is roughly equivalent to Team {team} giving up pick
                {diff_pick} in surplus value.")
     }
   })
@@ -197,8 +214,6 @@ server <- function(input, output, session){
 
 shinyApp(ui, server)
 
-# To do
-# use rsconnect::deployApp('shiny_app_logist/') to deploy
+# To deploy do rsconnect::deployApp('shiny_app_logist/') 
 # - add titles to gts
-# - add logging
 # - frame this as expected NHLers in report

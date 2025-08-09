@@ -55,23 +55,23 @@ ui <- fluidPage(
   useShinyFeedback(),
   titlePanel("Draft Pick Trade Evaluator (NLS Version)"),
   fluidRow(
-    lapply(c("A", "B"), 
+    lapply(c("A", "B"),
            \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
                        lapply(seq(1,num_picks), \(i)
-                              numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"), 
+                              numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"),
                                            min = 1, max = 224, step = 1, value = NA))))),
   
-  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))), 
+  fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))),
   br(),
   textOutput("A_points"),
   textOutput("B_points"),
   br(),
-  textOutput("equiv"), 
-  br(), 
-  "Two tables of the picks included in the trade are given below (they populate 
-  as the user types). The picks highlighted in red are givem up by Team A, the 
+  textOutput("equiv"),
+  br(),
+  "Two tables of the picks included in the trade are given below (they populate
+  as the user types). The picks highlighted in red are givem up by Team A, the
   ones highlighted in blue are given up by Team B.",
-  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))), 
+  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
   br(),
   "A plot of the value of all picks in the draft is includedd below. The colour
   scheme is the same as in the above. Picks not included in the trade are in grey",
@@ -130,24 +130,23 @@ server <- function(input, output, session){
   output$equiv <- renderText({
     diff <- round(value_A() - value_B(), 3)
     team <- ifelse(diff > 0, "A", "B")
+    winner_stat <- str_glue("Team {team} loses the trade since they give up {abs(diff)} more 
+      points than they receive")
     if(abs(diff) < 0.001){
       str_glue("The point difference is less than 0.001 points, which is
                effectively nothing")
     }
     else if(abs(diff) < last_pick_val){
-      str_glue("Team {team} gives up {abs(diff)} more points than it 
-      receives, which is less than the value of the last pick in the draft 
-               ({last_pick_val} points).")
+      str_glue("{winner_stat}, which is less than the value of the last 
+      pick in the draft ({last_pick_val} points).")
     }
-    else if(abs(diff) > 1000){
-      str_glue("Team {team} gives up {abs(diff)} more points than it 
-      receives, which is more than the value of the first pick in the draft 
-               (1000 points).")
+    else if(abs(diff) > first_pick_val){
+      str_glue("{winner_stat}, which is more than the value of the first 
+      pick in the draft ({first_pick_val} expected NHLers).")
     }
     else{
       diff_pick <- pick(abs(diff))
-      str_glue("Team {team} gives up {abs(diff)} more points than it 
-      receives. This trade is roughly equivalent to Team {team} giving up pick 
+      str_glue("{winner_stat}. This trade is roughly equivalent to Team {team} giving up pick
                {diff_pick} in surplus value.")
     }
   })
@@ -180,7 +179,5 @@ server <- function(input, output, session){
 
 shinyApp(ui, server)
 
-# To do 
-# use rsconnect::deployApp('shiny_app_nls/') to deploy
-# - add logging 
-# - pull data from S3 instead of the csv
+# use rsconnect::deployApp('shiny_app_nls/') 
+# - add titles to gts
