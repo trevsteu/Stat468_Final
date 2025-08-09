@@ -18,7 +18,7 @@ library(ggplot2)
 
 num_picks <- 5
 
-api_url <- "http://127.0.0.1:8080/predict"
+api_url <- "http://18.223.111.213:8080/predict"
 
 valid <- function(picks){
   all(picks %in% c(NA, seq(1,224)))
