@@ -43,7 +43,15 @@ reactable(data.frame(cbind(pred_vals_nls,
                            1/(1+exp(-pred_vals_logist[2])))))
 ```
 
-## Note to Self
+## Things to do: 
+
+-   Add logging to app
+
+-   Github Actions
+
+-   Add references to .bib file
+
+<!-- -->
 
 -   Read thru instructions to see if I'm missing anything
 
@@ -51,16 +59,12 @@ reactable(data.frame(cbind(pred_vals_nls,
 
 -   Remove unnecessary library calls
 
--   Make sure everything flows logically
-
--   Make notation consistent
+-   Make sure everything flows logically, make notation consistent
 
 -   make sure links work, make sure links are in bibliography
 
--   Make code more efficient, add comments to it
+-   Add comments to code
 
 -   Spell check
-
--   Add references to .bib file
 
 -   remove unnecessary files from github (ie holding_file, model2, etc).
