@@ -43,7 +43,7 @@ reactable(data.frame(cbind(pred_vals_nls,
                            1/(1+exp(-pred_vals_logist[2])))))
 ```
 
-## Things to do: 
+## Things to do:
 
 -   Add logging to app
 
