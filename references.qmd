@@ -10,13 +10,13 @@ The following is a list of all sources used to complete this report. The resourc
 
 -   [Calculating Point Shares](https://www.hockey-reference.com/about/point_shares.html) (throughout the report)
 
--   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
+-   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/) (for background info on previous work)
 
--   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
+-   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/) (for background info on previous work)
 
--   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model chapter)
+-   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (to create the non-linear regression models)
 
--   [The Ultimate Guide to Deploying a Shiny App on AWS](https://www.charlesbordet.com/en/guide-shiny-aws/?utm_source=chatgpt.com#)
+-   [The Ultimate Guide to Deploying a Shiny App on AWS](https://www.charlesbordet.com/en/guide-shiny-aws/?utm_source=chatgpt.com#) (massively helpful with the Dev Ops-related components of the Shiny app)
 
 ## Books 
 
@@ -24,38 +24,38 @@ The following is a list of all sources used to complete this report. The resourc
 
 -   [Happy Git and GitHub for the useR](https://happygitwithr.com/) (throughout the report)
 
--   [Mastering Shiny](https://mastering-shiny.org/index.html) (for the RShiny app)
+-   [Mastering Shiny](https://mastering-shiny.org/index.html) (for the Shiny app)
 
 -   [R for Data Science (2e)](https://r4ds.hadley.nz/) (throughout the report)
 
 ## Papers 
 
--   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf)
+-   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf) (for the criteria used in the logistic model)
 
--   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf) (for background info on previous work; this report also took a very similar approach to the one taken in this paper)
 
 ## Miscellaneous 
 
--   [Create a gt display table output element for Shiny](https://gt.rstudio.com/reference/gt_output.html) (for the shiny app)
+-   [Create a gt display table output element for Shiny](https://gt.rstudio.com/reference/gt_output.html) (for the Shiny app)
 
 <!-- -->
 
--   [HockeyReference](https://www.hockey-reference.com/draft/) (for the data used in the report)
+-   [Hockey Reference](https://www.hockey-reference.com/draft/) (for the data used in the report)
 
--   [NHL Draft Eligibility](https://www.nhl.com/info/hockey-operations-guidelines) (in the Import chapter)
+-   [NHL Draft Eligibility](https://www.nhl.com/info/hockey-operations-guidelines) (for the rules of the NHL Entry Draft, was used in the Import chapter)
 
--   [The R Installation Manager](https://github.com/r-lib/rig?tab=readme-ov-file#id-windows)
+-   [The R Installation Manager](https://github.com/r-lib/rig?tab=readme-ov-file#id-windows) (for installing R in the EC2 instance)
 
 ## Stack Overflow/Forum Posts
 
--   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r) (in the Transform chapter)
+-   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r) (used to create variables within `for` loops, starting in the Transform chapter)
 
 <!-- -->
 
--   [Read/Write parquet file from s3 using R](https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r)
+-   [Read/Write parquet file from s3 using R](https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r) (to store the data in S3)
 
 <!-- -->
 
--   [Show different feedback warnings depending on single user input R Shiny](https://forum.posit.co/t/show-different-feedback-warnings-depending-on-single-user-input-r-shiny/176582)
+-   [Show different feedback warnings depending on single user input R Shiny](https://forum.posit.co/t/show-different-feedback-warnings-depending-on-single-user-input-r-shiny/176582) (for the Shiny app)
 
--   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name) (in the Transform chapter)
+-   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name) (used to access specific columns within `for` loops, starting in the Transform chapter)

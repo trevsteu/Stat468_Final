@@ -98,8 +98,8 @@ ui <- fluidPage(
   ones highlighted in blue are given up by Team B.",
   fluidRow(column(4, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
   br(),
-  "A plot of the value of all picks in the draft is includedd below. The colour
-  scheme is the same as in the above. Picks not included in the trade are in grey",
+  "A plot of the value of all picks in the draft is included below. The colour
+  scheme is the same as in the tables above. Picks not included in the trade are in grey.",
   plotOutput("plot", width = "950px")
 )
 
