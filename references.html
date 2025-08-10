@@ -164,8 +164,19 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#ai" id="toc-ai" class="nav-link active" data-scroll-target="#ai">AI</a></li>
+  <li><a href="#articlesblog-posts" id="toc-articlesblog-posts" class="nav-link" data-scroll-target="#articlesblog-posts">Articles/Blog Posts</a></li>
+  <li><a href="#books" id="toc-books" class="nav-link" data-scroll-target="#books">Books</a></li>
+  <li><a href="#papers" id="toc-papers" class="nav-link" data-scroll-target="#papers">Papers</a></li>
+  <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous">Miscellaneous</a></li>
+  <li><a href="#stack-overflowforum-posts" id="toc-stack-overflowforum-posts" class="nav-link" data-scroll-target="#stack-overflowforum-posts">Stack Overflow/Forum Posts</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -189,30 +200,59 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>The following is a list of all sources used to complete this report. The resources are organized by the type of source, note that a more formal bibliography is given in my <code>references.bib</code> file.</p>
+<section id="ai" class="level2">
+<h2 class="anchored" data-anchor-id="ai">AI</h2>
 <ul>
-<li><p>ChatGPT Usage (will add link when done)</p></li>
-<li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a></p></li>
-<li><p><a href="https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf">Improving NHL Draft Outcome Predictions using Scouting Reports</a></p></li>
-<li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a></p></li>
-<li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a></p></li>
-<li><p><a href="https://www.hockey-reference.com/draft/">HockeyReference</a> (for the data used in the report)</p></li>
-<li><p><a href="https://r4ds.hadley.nz/">R for Data Science (2e)</a> (throughout the report)</p></li>
+<li>ChatGPT Usage (will add link when done)</li>
+</ul>
+</section>
+<section id="articlesblog-posts" class="level2">
+<h2 class="anchored" data-anchor-id="articlesblog-posts">Articles/Blog Posts</h2>
+<ul>
+<li><p><a href="https://www.hockey-reference.com/about/point_shares.html">Calculating Point Shares</a> (throughout the report)</p></li>
+<li><p><a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/">Examining the value of NHL Draft picks</a> (for background info on previous work)</p></li>
+<li><p><a href="https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/">NHL draft: What does it cost to trade up?</a> (for background info on previous work)</p></li>
+<li><p><a href="https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html">Non-linear Regression in R</a> (to create the non-linear regression models)</p></li>
+<li><p><a href="https://www.charlesbordet.com/en/guide-shiny-aws/?utm_source=chatgpt.com#">The Ultimate Guide to Deploying a Shiny App on AWS</a> (massively helpful with the Dev Ops-related components of the Shiny app)</p></li>
+</ul>
+</section>
+<section id="books" class="level2">
+<h2 class="anchored" data-anchor-id="books">Books</h2>
+<ul>
 <li><p><a href="https://do4ds.com/">DevOps for Data Science</a> (throughout the report)</p></li>
 <li><p><a href="https://happygitwithr.com/">Happy Git and GitHub for the useR</a> (throughout the report)</p></li>
-<li><p><a href="https://mastering-shiny.org/index.html">Mastering Shiny</a> (for the RShiny app)</p></li>
-<li><p><a href="https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html">Non-linear Regression in R</a> (in the Model chapter)</p></li>
-<li><p><a href="https://www.nhl.com/info/hockey-operations-guidelines">NHL Draft Eligibility</a> (in the Import chapter)</p></li>
-<li><p><a href="https://www.hockey-reference.com/about/point_shares.html">Calculating Point Shares</a> (throughout the report)</p></li>
-<li><p><a href="https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r">Dynamic Variable naming in r</a> (in the Transform chapter)</p></li>
-<li><p><a href="https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name">Specifying column with its index rather than name</a> (in the Transform chapter)</p></li>
-<li><p><a href="https://gt.rstudio.com/reference/gt_output.html">Create a gt display table output element for Shiny</a> (for the shiny app)</p></li>
-<li><p><a href="https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r">Read/Write parquet file from s3 using R</a></p></li>
-<li><p><a href="https://forum.posit.co/t/show-different-feedback-warnings-depending-on-single-user-input-r-shiny/176582">Show different feedback warnings depending on single user input R Shiny</a></p></li>
-<li><p><a href="https://github.com/r-lib/rig?tab=readme-ov-file#id-windows" class="uri">https://github.com/r-lib/rig?tab=readme-ov-file#id-windows</a></p></li>
+<li><p><a href="https://mastering-shiny.org/index.html">Mastering Shiny</a> (for the Shiny app)</p></li>
+<li><p><a href="https://r4ds.hadley.nz/">R for Data Science (2e)</a> (throughout the report)</p></li>
 </ul>
-<p>For now this is just a list of links. Later I will formalize it.</p>
+</section>
+<section id="papers" class="level2">
+<h2 class="anchored" data-anchor-id="papers">Papers</h2>
+<ul>
+<li><p><a href="https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf">Improving NHL Draft Outcome Predictions using Scouting Reports</a> (for the criteria used in the logistic model)</p></li>
+<li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a> (for background info on previous work; this report also took a very similar approach to the one taken in this paper)</p></li>
+</ul>
+</section>
+<section id="miscellaneous" class="level2">
+<h2 class="anchored" data-anchor-id="miscellaneous">Miscellaneous</h2>
+<ul>
+<li><a href="https://gt.rstudio.com/reference/gt_output.html">Create a gt display table output element for Shiny</a> (for the Shiny app)</li>
+<li><a href="https://www.hockey-reference.com/draft/">Hockey Reference</a> (for the data used in the report)</li>
+<li><a href="https://www.nhl.com/info/hockey-operations-guidelines">NHL Draft Eligibility</a> (for the rules of the NHL Entry Draft, was used in the Import chapter)</li>
+<li><a href="https://github.com/r-lib/rig?tab=readme-ov-file#id-windows">The R Installation Manager</a> (for installing R in the EC2 instance)</li>
+</ul>
+</section>
+<section id="stack-overflowforum-posts" class="level2">
+<h2 class="anchored" data-anchor-id="stack-overflowforum-posts">Stack Overflow/Forum Posts</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r">Dynamic Variable naming in r</a> (used to create variables within <code>for</code> loops, starting in the Transform chapter)</li>
+<li><a href="https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r">Read/Write parquet file from s3 using R</a> (to store the data in S3)</li>
+<li><a href="https://forum.posit.co/t/show-different-feedback-warnings-depending-on-single-user-input-r-shiny/176582">Show different feedback warnings depending on single user input R Shiny</a> (for the Shiny app)</li>
+<li><a href="https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name">Specifying column with its index rather than name</a> (used to access specific columns within <code>for</code> loops, starting in the Transform chapter)</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
