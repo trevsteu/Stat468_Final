@@ -7,37 +7,43 @@ author: "Trevor S"
 
 ## Abstract
 
-In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use player contribution data to determine the relative value of selections in the NHL Entry Draft. To do this, data will be imported from [Hockey Reference](https://www.hockey-reference.com/draft/), and several potential models will be fit to the data with the goal of predicting the value of each pick based on historical outcomes. The R Shiny app component of this project allows users to interactively check the fairness of potential trades.
+In the days of and leading up to the 2025 NHL Entry Draft there were a total of 18 trades which only included draft picks. This report aims to use historical data to determine the relative value of selections in the NHL Entry Draft. To do this, data will be imported from [Hockey Reference](https://www.hockey-reference.com/draft/), and several potential models will be fit to the data with the goal of predicting the value of each pick based on historical outcomes. The Shiny app component of this project allows users to interactively check the fairness of potential trades.
 
-Knowing the relative value of picks allows NHL teams to both determine whether they should accept trade offers they have received as well as propose favourable trades to other teams. That is, this project makes contributions to both asset valuation as well as trade analysis, both in the context of selections in the NHL Entry Draft.
+Knowing the relative value of picks allows NHL teams to both propose favourable trades to other teams as well as evaluate incoming trade offers. That is, this project makes contributions to both asset valuation as well as trade analysis, both in the context of selections in the NHL Entry Draft.
 
 ## Data
 
-The data used by this report is imported from [Hockey Reference](https://www.hockey-reference.com/draft/), which has data on the NHL Draft and player games played and point share counts dating back to 1963. Each row on Hockey Reference is one player selected, and the columns included on the site are:
+The data used by this report is imported from [Hockey Reference](https://www.hockey-reference.com/draft/), which has data on NHL drafts dating back to 1963. Each row on Hockey Reference is one player selected, and the columns included on the site are:
 
 -   `Overall`: the selection number where the player was selected.
 -   `Team`: the team that selected the player.
--   `Name`, `Nat`, `Pos`, `Age`: the player's name, nationality, position, at age at the time of the draft.
--   `To`: the last year a player played in the NHL. For players who never played in the NHL this will be the empty string, for those who are still playing it will be `2025`.
--   `Amateur Team`: the team the player was drafted from (confusingly this could be a pro European team).
--   `GP`, `G`, `A`, `PTS`, `+/-`, `PIM`: the player's career games played, goals, assists, points (goals plus assists), plus minus, and penalty minutes. For players who never played in the NHL this will be empty strings. For goalies, this `GP` column will match the next `GP` column for goalies, and values are not necessarily the empty string for goalies (eg a goalie could have gotten an assist). Note that I will abbreviate games played to GP in this report.
+-   `Player`, `Nat`, `Pos`, `Age`: the player's name, nationality, position, at age at the time of the draft.
+-   `To`: the last year a player played in the NHL. For players who never played in the NHL this will be the empty string, for active players it will be `2025`.
+-   `Amateur Team`: the team the player was drafted from (confusingly this is not necessarily an amateur team, a large number of players have been drafted from professional European teams).
+-   `GP`, `G`, `A`, `PTS`, `+/-`, `PIM`: the player's career games played, goals, assists, points (goals plus assists), plus minus, and penalty minutes. For players who never played in the NHL these will all be empty strings. For goalies, this `GP` column will match the next `GP` column for goalies, and values are not necessarily the empty string for goalies (eg a goalie could have gotten an assist). Note that I will abbreviate games played to GP throughout this report.
 -   `GP`, `W`, `L`, `T/O`, `SV%`, `GAA`: the goalie's career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For goalies who never played in the NHL and all skaters, these columns will all be empty strings.
--   `PS`: the player's estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, [**NOT**]{.underline} goals and assists). There is more info on point shares [here](https://www.hockey-reference.com/about/point_shares.html). Note that I abbreviate point share to PS in this report.
+-   `PS`: the player's estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, [**NOT**]{.underline} goals and assists). There is more info on point shares [here](https://www.hockey-reference.com/about/point_shares.html). Note that I abbreviate point share to PS throughout this report.
 
-All stats listed are for regular season games only, as we do not want to put players who played on bad teams at a disadvantage more than they already are (it's harder to get a high PS if your team rarely wins). Note that we will only use a subset of the years between 1963 and 2025 and of the attributes listed above, as will be explained in the Import and Tidy chapters.
+All stats listed only pertain to regular season games, which is preferable anyway since we do not want to put players who played on bad teams at a disadvantage more than they already are (it's harder to get a high PS if your team rarely wins). Note that we will only use a subset of the years between 1963 and 2025 and of the attributes listed above, as will be explained in the Import and Tidy chapters.
 
 ## Constraints
 
 There are a number of technical and practical constraints at play. Here are some of them:
 
--   There have only been 63 drafts in NHL history, but drafts which occurred too long ago are likely not relevant and drafts which occurred too recently are difficult to evaluate. This will be discussed further in the Import chapter.
+-   There have only been 63 drafts in NHL history, but drafts which occurred too long ago are likely not relevant and drafts which occurred very recently are difficult to evaluate. This will be discussed further in the Import chapter.
 
--   Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into don't ever play in a game for the team. Accounting for this is very difficult or even impossible, and we will not attempt to remedy it.
+-   Players drafted earlier in a draft (ie with a better pick) typically get more opportunities than players selected in the later rounds. In particular, teams often fall victim to the sunk cost fallacy because scouts and management look bad when players who they invested a high pick into never makes it to the NHL. Accounting for this is very difficult or even impossible, and we will not attempt to remedy it.
 
--   Estimating the value of a player's career is not a trivial task. One approach we will use is called point share. Point share is calculated by Hockey Reference and incorperates several stats, but it is still not a perfect metric as it can still be dependent on external factors, such as the quality of the player's team the opportunities the player was given. Additionally, we will have to estimate what the career point share *will be* for players who have not yet retired. This issue, and an adjustment for it, will be discussed further in the Transform step.
+-   Estimating the value of a player's career is not a trivial task. One approach we will use is called point share. Point share is calculated by Hockey Reference and incorporates several stats, but it is still not a perfect metric as it can still be dependent on external factors, such as the quality of the player's team the opportunities the player was given.
+
+-   The full value of an active player's career is not currently known. This leaves us with three options, which will be discussed further in the Transform chapter.
+
+    1.  Ignore the issue and act as if all active players retired today.
+    2.  AVoid the problem by only using data from draft classes in which all players have retired.
+    3.  Try to estimate the what the value of a player's career *will be* when they retire and use that instead.
 
 -   We are interested in using historical data to predict the value of a draft pick from the team's perspective. One slight problem with this is that the value of the pick from the team's perspective depends on how long the player stayed on their team and what (if anything) the team got when the player left the team (via trade, free agency, or retirement). We will ignore this because it is nearly impossible to take these factors into account.
 
 -   Every draft has strong portions and weak portions. For example, one draft might have a very strong second round (by that we mean the prospects drafted in the second round in that particular draft are of higher quality than those typically drafted in the second round). Though this seems like an obvious point, it is crucial to mention because it is a significant asterisk on this report, which will assume all drafts have equal value structures (ie the quality of a prospect #27 overall of draft A is the same as the quality of a prospect drafted at \# 27 of draft B).
 
--   Similarly, if a team really likes a player he might be worth more than the historical value of the pick.
+-   Similarly, if a team really likes a player, they might think he is worth more than the historical value of the pick used to select him. This is commonly seen in real life, as teams often trade significantly more than a pick is worth in order to select a particular player.

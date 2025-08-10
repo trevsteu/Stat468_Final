@@ -96,7 +96,7 @@ ui <- fluidPage(
   "Two tables of the picks included in the trade are given below (they populate
   as the user types). The picks highlighted in red are givem up by Team A, the
   ones highlighted in blue are given up by Team B.",
-  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
+  fluidRow(column(4, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
   br(),
   "A plot of the value of all picks in the draft is includedd below. The colour
   scheme is the same as in the above. Picks not included in the trade are in grey",
@@ -120,18 +120,18 @@ server <- function(input, output, session){
         if(! in_range & !is.na(input[[pick]]) & is_dup){
           message <- str_glue("Ensure this pick is an integer between 1 and 224 (inclusive). \n
                    This pick is also included more than once in the trade.")
-          log4r::warn(log, "Duplicated picks which are outside acceptable values 
+          log4r::error(log, "Duplicated picks which are outside acceptable values 
                       (evaluations are not allowed)")
           errors <- TRUE
         }
         else if(!in_range){
           message <- "Ensure this pick is an integer between 1 and 224 (inclusive)."
-          log4r::warn(log, "Pick outside acceptable values (evaluations are not allowed)")
+          log4r::error(log, "Pick outside acceptable values (evaluations are not allowed)")
           errors <- TRUE
         }
         else if(!is.na(input[[pick]]) & is_dup){
           message <- "This pick is included more than once in the trade."
-          log4r::info(log, "Duplicated picks (evaluations are still allowed)")
+          log4r::warn(log, "Duplicated picks (evaluations are still allowed)")
           errors <- TRUE
         }
         shinyFeedback::feedbackWarning(pick, errors, message)}}})
@@ -190,6 +190,7 @@ server <- function(input, output, session){
     mutate(xnhls = round(as.numeric(xnhls), 7)) |>
     filter(overall %in% A_picks()) |>
     gt() |>  
+    tab_header("Picks Team A Gives Away") |> 
     cols_label(overall = "Pick #", xnhls = "Expected NHLers") |>
     data_color(palette = "salmon") |>
     render_gt()
@@ -198,6 +199,7 @@ server <- function(input, output, session){
     mutate(xnhls = round(as.numeric(xnhls), 7)) |>
     filter(overall %in% B_picks()) |>
     gt() |>  
+    tab_header("Picks Team B Gives Away") |> 
     cols_label(overall = "Pick #", xnhls = "Expected NHLers") |>
     data_color(palette = "dodgerblue") |>
     render_gt()
@@ -208,12 +210,15 @@ server <- function(input, output, session){
     ggplot(pred_vals, aes(x = overall, y = as.numeric(xnhls))) +
       geom_point(alpha = 0.3) +
       geom_point(data = temp_A, aes(x = overall, y = as.numeric(xnhls)), col = "salmon", size = 3) +
-      geom_point(data = temp_B, aes(x = overall, y = as.numeric(xnhls)), col = "dodgerblue", size = 3)
+      geom_point(data = temp_B, aes(x = overall, y = as.numeric(xnhls)), col = "dodgerblue", size = 3) + 
+      theme_minimal(base_size = 16) + 
+      labs(title = "Predicted Value of NHL Draft Picks", 
+           subtitle = "Picks given away by Team A in red; picks given away by Team B in blue", 
+           y = "Expected NHLers", x = "Pick #", 
+           caption = "Values predicted using a logistic regression model")
   })
 }
 
 shinyApp(ui, server)
 
-# To deploy do rsconnect::deployApp('shiny_app_logist/') 
-# - add titles to gts
-# - frame this as expected NHLers in report
+# rsconnect::deployApp('shiny_app_logist/') 

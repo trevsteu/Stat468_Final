@@ -71,7 +71,7 @@ ui <- fluidPage(
   "Two tables of the picks included in the trade are given below (they populate
   as the user types). The picks highlighted in red are givem up by Team A, the
   ones highlighted in blue are given up by Team B.",
-  fluidRow(column(3, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
+  fluidRow(column(4, gt_output("pred_gt_A")), column(8, gt_output("pred_gt_B"))),
   br(),
   "A plot of the value of all picks in the draft is includedd below. The colour
   scheme is the same as in the above. Picks not included in the trade are in grey",
@@ -155,6 +155,7 @@ server <- function(input, output, session){
     mutate(pts = round(as.numeric(pts), 3)) |> 
     filter(overall %in% A_picks()) |> 
     gt() |>   
+    tab_header("Picks Team A Gives Away") |> 
     cols_label(overall = "Pick #", pts = "Points") |> 
     data_color(palette = "salmon") |> 
     render_gt()
@@ -162,7 +163,8 @@ server <- function(input, output, session){
   output$pred_gt_B <- pred_vals |> 
     mutate(pts = round(as.numeric(pts), 3)) |> 
     filter(overall %in% B_picks()) |> 
-    gt() |>   
+    gt() |>  
+    tab_header("Picks Team B Gives Away") |> 
     cols_label(overall = "Pick #", pts = "Points") |> 
     data_color(palette = "dodgerblue") |> 
     render_gt()
@@ -173,11 +175,15 @@ server <- function(input, output, session){
     ggplot(pred_vals, aes(x = overall, y = as.numeric(pts))) + 
       geom_point(alpha = 0.3) + 
       geom_point(data = temp_A, aes(x = overall, y = as.numeric(pts)), col = "salmon", size = 3) + 
-      geom_point(data = temp_B, aes(x = overall, y = as.numeric(pts)), col = "dodgerblue", size = 3)
+      geom_point(data = temp_B, aes(x = overall, y = as.numeric(pts)), col = "dodgerblue", size = 3) + 
+      theme_minimal(base_size = 16) + 
+      labs(title = "Predicted Value of NHL Draft Picks", 
+           subtitle = "Picks given away by Team A in red; picks given away by Team B in blue", 
+           y = "Points", x = "Pick #", 
+           caption = "Values predicted using a non-linear regression model")
   })
 }
 
 shinyApp(ui, server)
 
-# use rsconnect::deployApp('shiny_app_nls/') 
-# - add titles to gts
+# rsconnect::deployApp('shiny_app_nls/') 

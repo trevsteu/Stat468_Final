@@ -1,18 +1,24 @@
 # References {.unnumbered}
 
+The following is a list of all sources used to complete this report. The resources are organized by the type of source, note that a more formal bibliography is given in my `references.bib` file.
+
+## AI
+
 -   ChatGPT Usage (will add link when done)
 
--   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
+## Articles/Blog Posts
 
--   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf)
+-   [Calculating Point Shares](https://www.hockey-reference.com/about/point_shares.html) (throughout the report)
 
 -   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
 
 -   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
 
--   [HockeyReference](https://www.hockey-reference.com/draft/) (for the data used in the report)
+-   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model chapter)
 
--   [R for Data Science (2e)](https://r4ds.hadley.nz/) (throughout the report)
+-   [The Ultimate Guide to Deploying a Shiny App on AWS](https://www.charlesbordet.com/en/guide-shiny-aws/?utm_source=chatgpt.com#)
+
+## Books 
 
 -   [DevOps for Data Science](https://do4ds.com/) (throughout the report)
 
@@ -20,22 +26,36 @@
 
 -   [Mastering Shiny](https://mastering-shiny.org/index.html) (for the RShiny app)
 
--   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (in the Model chapter)
+-   [R for Data Science (2e)](https://r4ds.hadley.nz/) (throughout the report)
 
--   [NHL Draft Eligibility](https://www.nhl.com/info/hockey-operations-guidelines) (in the Import chapter)
+## Papers 
 
--   [Calculating Point Shares](https://www.hockey-reference.com/about/point_shares.html) (throughout the report)
+-   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf)
 
--   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r) (in the Transform chapter)
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
 
--   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name) (in the Transform chapter)
+## Miscellaneous 
 
 -   [Create a gt display table output element for Shiny](https://gt.rstudio.com/reference/gt_output.html) (for the shiny app)
 
+<!-- -->
+
+-   [HockeyReference](https://www.hockey-reference.com/draft/) (for the data used in the report)
+
+-   [NHL Draft Eligibility](https://www.nhl.com/info/hockey-operations-guidelines) (in the Import chapter)
+
+-   [The R Installation Manager](https://github.com/r-lib/rig?tab=readme-ov-file#id-windows)
+
+## Stack Overflow/Forum Posts
+
+-   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r) (in the Transform chapter)
+
+<!-- -->
+
 -   [Read/Write parquet file from s3 using R](https://stackoverflow.com/questions/49937467/read-write-parquet-file-from-s3-using-r)
+
+<!-- -->
 
 -   [Show different feedback warnings depending on single user input R Shiny](https://forum.posit.co/t/show-different-feedback-warnings-depending-on-single-user-input-r-shiny/176582)
 
--   <https://github.com/r-lib/rig?tab=readme-ov-file#id-windows>
-
-For now this is just a list of links. Later I will formalize it.
+-   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name) (in the Transform chapter)
