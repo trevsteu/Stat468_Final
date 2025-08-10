@@ -100,7 +100,8 @@ ui <- fluidPage(
   br(),
   "A plot of the value of all picks in the draft is included below. The colour
   scheme is the same as in the tables above. Picks not included in the trade are in grey.",
-  plotOutput("plot", width = "950px")
+  plotOutput("plot", width = "950px"), 
+  br()
 )
 
 server <- function(input, output, session){

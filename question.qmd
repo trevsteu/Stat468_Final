@@ -9,7 +9,7 @@ Depending on the context, there can be countless approaches one could take to de
 
 This report will estimate value of pick $i$ (ie find $\hat v_i$) by fitting several models incorporating the PS and GP data by the players previously selected at pick $i$ (and the selections "close" to $n$). We will consider two different methods of measuring the quality of a player (and thus the quality of a pick), and for each we will fit a linear and non-linear regression model.
 
-The first two methods of evaluating player quality are similar to approaches taken by Moreau (2022), and will take the average PS (or GP) of all players taken at pick $i$. Next, will consider a similar metric which adjusts the PS values for active players based on what we estimate their PS will be in the remainder of their career. The final approach is from Luo (2024) and will define an indicator random variable $Z_{ij} = 1$ iff the player selected at pick $i$ of draft $j$ has played or will play in 200 career NHL games. We then take the average value of this indicator for each $i$, which will be our estimate of the probability that a player selected at pick $i$ will play in 200 NHL games. Thus in total we have four measures of the quality of players drafted at pick $i$ (mean PS, mean GP, adjusted mean PS, and mean proportion of players who play in $\ge$ 200 games.
+The first two methods of evaluating player quality are similar to approaches taken by @Article4, and will take the average PS (or GP) of all players taken at pick $i$. Next, will consider a similar metric which adjusts the PS values for active players based on what we estimate their PS will be in the remainder of their career. The final approach is from @Article3 and will define an indicator random variable $Z_{ij} = 1$ iff the player selected at pick $i$ of draft $j$ has played or will play in 200 career NHL games. We then take the average value of this indicator for each $i$, which will be our estimate of the probability that a player selected at pick $i$ will play in 200 NHL games. Thus in total we have four measures of the quality of players drafted at pick $i$ (mean PS, mean GP, adjusted mean PS, and mean proportion of players who play in $\ge$ 200 games.
 
 To maintain some consistency with previous related work, this report will define $v_i$ to be "true" value of the $i^{\text{th}}$ selection, and this value will be in terms of unitless "points", which are aimed at making comparing the value of picks easier. That is, instead of saying $v_i = \frac{a}{b} v_1$ for $i > 1$ where $a < b$, we will say $v_1 = 1000$ points, $v_i = c$ points for $0 < c < 1000$.
 
@@ -35,12 +35,12 @@ $$ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c $$where $c > 0$, meaning we w
 
 Some work in this area has been done before, such as:
 
--   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf)
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf) (@Article3)
 
--   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf)
+-   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf) (@Article3)
 
--   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/)
+-   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/) (@Article1)
 
--   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/)
+-   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/) (@Article2)
 
 This report will most closely follow the work done in the first two papers listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.

@@ -46,6 +46,7 @@ valid <- function(picks){
 
 pred_vals <- data.frame(overall = seq(1,224), pts = cbind(lapply(seq(1,224), value)))
 
+first_pick_val <- round(value(1), 3)
 last_pick_val <- round(value(224), 3)
 
 # ------------------------------------------------------------------------------------------------
@@ -75,7 +76,8 @@ ui <- fluidPage(
   br(),
   "A plot of the value of all picks in the draft is included below. The colour
   scheme is the same as in the tables above. Picks not included in the trade are in grey.",
-  plotOutput("plot", width = "950px")
+  plotOutput("plot", width = "950px"), 
+  br()
 )
 
 
