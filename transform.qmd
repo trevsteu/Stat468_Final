@@ -27,36 +27,51 @@ source("functions.R") # load functions defined in prior chapters
 
 ## Introduction
 
-At the end of the Visualize step we looked at the mean GP and mean PS of players selected at pick $i$. These are the first two of the four metrics that will be used to fit a model in the Model chapter. In the Transform chapter, we will create the other two metrics. First, we will implement the method taken by Luo (2024) which is to define a draft pick to be a "success" if that prospect becomes an NHL regular, which is defined to be playing in $\ge$ 200 NHL games for skaters. We will then look at the success rate of each pick number for the drafts in our dataset. That is, we will set $p_i = \frac{\text{number of successfull picks at pick $i$}}{\text{number of $i^{th}$ overall picks}}$ . Recall in our EDA section we mentioned that some drafts had fewer than 224 selections, which is why we divide by the number of $i^{th}$ overall picks instead of always dividing by 25. Note that Luo was using this method for *slightly* different analysis (he was evaluating prospect quality to better evaluate prospects, not value draft picks), but the general idea is very similar.
+The first two metrics we will fit models to are GP and PS, in the Transform chapter, we will create the other two metrics which we will base our model off of.
 
-The other transformation we will make in this step is to adjust our PS to better represent the careers of actve players (ie those who have not retired yet). Recall that in the Visualize chapter we looked at the average PS of all players in out dataset drafted at pick $i$. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. We can see in the plot below that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:
+The first transformation we will make in this chapter is to adjust our PS to better represent the careers of active players (ie those who have not retired yet). Recall that in the Visualize chapter we looked at the average PS of all players in out dataset drafted at pick $i$. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. We can see in Figure 6.2.1 that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:
 
 ```{r}
 all_data |> 
   group_by(year) |> 
   summarize(total_ps = sum(ps)) |>
   ggplot(aes(x = year, y = total_ps)) +
-  geom_point()
+  geom_point() + 
+  labs(title = "Total PS of Every Draft", 
+       x = "Draft Year", y = "Total PS", 
+       caption = "Figure 6.2.1: Total PS of Every Draft")
 ```
 
 Considering this, it makes sense to make an adjustment to active players based on an estimate of the PS they will generate in the remainder of their career.
+
+The other transformation we make in this chapter is to implement the method taken by @luo_improving_2024 which is to define a draft pick to be a "success" if that prospect becomes an NHL regular, which is defined to be playing in $\ge$ 200 NHL games for skaters. We will then fit a logistic regression model to estimate the probability of a player selected with pick $i$ becoming a regular NHL player. Note that @luo_improving_2024 using this definition for different analysis (he was evaluating prospect quality to better evaluate prospects, not value draft picks), but the applications are close enough and so we should be able to use his definition without any issues.
 
 ## Transforming PS
 
 ### Introduction
 
-A similar issue to the one raised above is that there are quite a few current players in our dataset who can still generate additional PS because they are still playing. The issues are related as it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is at least partially due to there being so many active players from those seasons.
+A similar issue to the one raised above is that there are quite a few active players in our dataset who can still generate additional PS because they are still playing. These two issues are related as it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is at least partially due to there being so many active players who were drafted in that time frame. Indeed, we can see in Figure 6.3.1.1 that there are still a large number of active
 
 ```{r}
-all_data |> 
-  filter(to == 2025) |> 
+active_players  <- all_data |> 
+  filter(to == 2025) |> # recall to == 2025 if the player is still active
   group_by(year) |> 
-  summarize(current_players = n()) |>
-  ggplot(aes(x = year, y = current_players)) + 
+  summarize(players = n()) |> 
+  mutate(type = "active")
+
+retired_players <- all_data |> 
+  filter(to < 2025 & to != year) |> # inactive players who played in the NHL
+  group_by(year) |> 
+  summarize(players = n()) |> 
+  mutate(type = "retired")
+
+num_nhl_players <- rbind(retired_players, active_players)
+
+ggplot(num_nhl_players, aes(x = year, y = players, col = type)) + 
   geom_point()
 ```
 
-We can see that our dataset has quite a few active players, and the full value of these players' careers cannot be fully known. As an aside, it is interesting that PS is so high for the drafts between 2010 and 2015 even though there are still so many active players from those drafts, I did some research but I could not find anything about it. One of my personal theories is that elite players might be skewing things, but Connor McDavid was drafted in 2015 and even he "only" has about 125 PS which is not nearly enough to skew the data on its own. I guess it is possible there were just really strong drafts, but it seems odd that there would be 6 strong drafts in a row.
+We can see that our dataset has quite a few active players, and the full value of these players' careers cannot be fully known. As an aside, it is interesting that PS is so high for the drafts between 2010 and 2015 even though there are still so many active players from those drafts, I did some research but I could not find anything about it. The 2015 draft is widely considered to be on of the best drafts ever, which explains why it does not follow the general decreasing trend after 2014, but this does not explain why the other drafts were so high. I guess it is possible the drafts between 2010 and 2014 were also really strong drafts, but it seems odd that there would be 6 strong drafts in a row.
 
 Estimating the remaining value of a player's career could be an entire project all on its own, so we have 3 options:
 

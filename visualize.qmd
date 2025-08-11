@@ -211,9 +211,10 @@ gp_plot_4 <- all_data |>
   geom_point() +
   geom_point(aes(x = 156, y = mean(filter(all_data, overall==156)$gp)), col = "dodgerblue") +
   geom_point(aes(x = 205, y = mean(filter(all_data, overall==205)$gp)), col = "salmon") +
-  labs(title = "Mean GP by Pick Number", subtitle = "Note the scales are different",
+  labs(title = "Mean GP by Pick Number", 
+       subtitle = "Note the scales are different",
        x = "Pick Number", y = "Mean GP", 
-       caption = "Figure 5.3.4.3: Averaged GP and PS Values") + 
+       caption = "Figure 5.3.4.3: GP and PS Values Averaged for Each Selection") + 
   annotate(geom = "segment", x = 156, y = 450, xend = 156, yend = 220, colour = "dodgerblue",
     arrow = arrow(type = "open", length = unit(0.32, "cm"))) +
   annotate(geom = "label", x = 90, y = 400,
@@ -227,7 +228,8 @@ ps_plot_4 <- all_data |>
   geom_point() +
   geom_point(aes(x = 156, y = mean(filter(all_data, overall==156)$ps)), col = "dodgerblue") +
   geom_point(aes(x = 205, y = mean(filter(all_data, overall==205)$ps)), col = "salmon") +
-  labs(title = "Mean PS by Pick Number", subtitle = "Note the scales are different",
+  labs(title = "Mean PS by Pick Number", 
+       subtitle = "Note the scales are different",
        x = "Pick Number", y = "Mean PS") + 
   annotate(geom = "segment", x = 175, y = 37.5, xend = 203, yend = 14, colour = "salmon",
     arrow = arrow(type = "open", length = unit(0.32, "cm"))) +
