@@ -22,12 +22,9 @@ jobs:
         with:
           r-version: '4.4.0'
       
-      - name: Install Packages
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with: 
-          packages: 
-            any::sodium
-        
+      - name: Install R packages
+        run: Rscript -e 'install.packages("curl")'
+    
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
         with:

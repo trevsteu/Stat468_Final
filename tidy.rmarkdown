@@ -3,9 +3,15 @@ title: "Tidy"
 author: "Trevor S"
 ---
 
+
+
+
 ## Setup
 
 We install and load the necessary packages, along with functions from prior chapters.
+
+
+
 
 ```{r, message = FALSE, warning = FALSE}
 # renv::install("rvest")
@@ -30,9 +36,15 @@ library(arrow)
 source("functions.R") # load functions defined in prior chapters
 ```
 
+
+
+
 ## Introduction
 
 In the Tidy chapter, we will put the data into tidy form, clean it, and store it in an S3 bucket, which will make our analysis in the following chapters easier. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues, as shown in Figure 4.2.1:
+
+
+
 
 ```{r, warning = FALSE}
 start_year <- 1996
@@ -43,6 +55,9 @@ import_draft(start_year)[23:30,] |> # picks 23-28
   opt_all_caps() |> 
   tab_source_note("Table 4.2.1: Some Issues in our Data")
 ```
+
+
+
 
 Some problems that immediately come up are:
 
@@ -86,6 +101,9 @@ We build a function to tidy the data. In particular, we want it to:
 
 Note that we cannot remove the round separating rows by removing a specified row number since many of the drafts in our dataset have different numbers of picks per round, and some rounds within the same draft have even had a different numbers of picks.
 
+
+
+
 ```{r, warning = FALSE, message = FALSE}
 tidy_draft <- function(year){
   draft_year_table <- import_draft(year) |> # get the untidied data
@@ -109,11 +127,17 @@ tidy_draft(1996) |>
   tab_source_note("Table 4.3.1: The Function Works Correctly")
 ```
 
+
+
+
 Figure 4.3.1 confirms the function completes the tasks listed at the start of this section. We can now proceed to import the data, we choose to clean it as we import it.
 
 ## Getting the Data
 
 We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes 2-3 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will soon store the data in a S3 bucket so we don't have to run this function any more than we have to.
+
+
+
 
 ```{r, warning=FALSE, message=FALSE, eval = FALSE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
@@ -133,9 +157,15 @@ all_data_test <- dbGetQuery(con, "SELECT *
 #   the chunk above since tidy_draft takes such a long time to run and render
 ```
 
+
+
+
 ## Verification
 
 We can check that we loaded the data correctly, there should be between 5250 and 5600 rows (the number of picks in a draft has changed over the years in our dataset as we will see, but is always between 210 and 224 so 25 drafts will be between ) and 6 columns:
+
+
+
 
 ```{r}
 dim(all_data) # confirm there are 5250-5600 rows and 6 columns
@@ -157,11 +187,17 @@ all_data |> # Confirm pick 123 of 2002 was removed (it was an invalid pick)
   tab_source_note("Table: 4.4.2: Pick 123 in 2002 was Removed")
 ```
 
+
+
+
 These checks all returned what they should.
 
 ## Storing the Data
 
 Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in an AWS S3 bucket so future chapters can get the data from the S3 bucket instead of from Hockey Reference, making this report render significantly faster. We do this by following the instructions given by @agarwal_how_2020, which tell us to save `all_data` in parquet file and then write it to our S3 bucket.
+
+
+
 
 ```{r}
 Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
@@ -173,7 +209,13 @@ s3write_using(all_data, FUN = write_parquet,
               bucket = bucket, object = "all_data.parquet")
 ```
 
+
+
+
 In this and future chapters, we still start by loading in all of the functions from `functions.R`, which includes all the functions and global constants defined in all chapters, in addition to querying the data from the AWS S3 bucket using duckdb. `functions.R` is included in this project's GitHub repo, and the part of it that loads `all_data` is also given below (here we load it into `all_data_test` to show that it actually works). I also followed some of the instructions from @michonneau_how_2023 to help me write the below code.
+
+
+
 
 ```{r, messages = FALSE, warning = FALSE, results= 'hide'}
 con <- dbConnect(duckdb())
@@ -196,4 +238,8 @@ all_data_test |>
   tab_source_note("Table 4.6.1: Data Loaded from S3 Bucket")
 ```
 
+
+
+
 Figure 4.6.1 confirms that the data can be loaded from the S3 bucket. In future chapters we will edit this data and will put the new version in the same S3 bucket. We now proceed to the Visualize chapter.
+
