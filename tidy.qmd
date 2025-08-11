@@ -32,7 +32,7 @@ source("functions.R") # load functions defined in prior chapters
 
 ## Introduction
 
-In the Tidy chapyer, we will put the data into tidy form, clean it, and store it in an S3 bucket, which will make our analysis in the following chapters easier. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues, as shown in Figure 4.2.1:
+In the Tidy chapter, we will put the data into tidy form, clean it, and store it in an S3 bucket, which will make our analysis in the following chapters easier. Despite the table from the previous chapter *looking* fairly clean, further inspection reveals some issues, as shown in Figure 4.2.1:
 
 ```{r, warning = FALSE}
 start_year <- 1996
