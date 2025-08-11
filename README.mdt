@@ -1,4 +1,5 @@
-The report (currently in progress) for this project can be viewed at this link: https://trevsteu.github.io/Stat468_Final/
+The report for this project can be viewed at this link: https://trevsteu.github.io/Stat468_Final/
+
 As described in the report, there are two shiny apps: 
 The first uses a nls model and is available here: https://trevsteu.shinyapps.io/nls_model_app/
 The second uses a logistic regression model and is available here: https://trevsteu.shinyapps.io/logist_model_app/

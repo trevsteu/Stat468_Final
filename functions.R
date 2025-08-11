@@ -85,7 +85,7 @@ DBI::dbDisconnect(con)
 metrics <- c("mean_ps", "mean_gp", "mean_adj_ps", "suc_rate")
 names <- c("Mean PS", "Mean GP", "Mean Adjusted PS", "Success Rate")
 
-for(i in 1:length(metrics)){
+for(i in seq(1, length(metrics)-1)){
   assign(str_glue("plot_{metrics[i]}"), 
          ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
            geom_point() + 
@@ -93,4 +93,9 @@ for(i in 1:length(metrics)){
                 x = "Overall", y = str_glue("{names[i]}")))
 }
 
+plot_suc_rate <- ggplot(all_data_comb, aes(x = overall,  y = suc_rate)) + 
+  geom_point(position = position_jitter(width = 0, height = 0.015)) + 
+  labs(title = "Success Rate verses Overall", 
+       x = "Overall", y = "Success Rate", 
+       caption = "Figure 7.1.1: Aggregated Metrics")
 # ---------------------------------------------------------------------------------------

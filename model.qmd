@@ -29,13 +29,13 @@ source("functions.R") # load functions defined in prior chapters
 
 ## Introduction/Recap
 
-Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, an then we will develop a model via non-linear regression. We will then put the models on the same scale by multiplying each predicted value by a constant, allowing us to compare models more effectively. Note that the following two Stack Overflow posts were once again very helpful when writing the code in this chapter:
+Now that we have metrics representing different ways of calculating the historical value of a draft pick, we can now develop models for predicting the value of future picks. First, we will fit a linear regression model to the data, then we will fit a logistic model for the indicator representing whether a player became an NHL regular, and then we will develop a model via non-linear regression. We will then put the models on the same scale by multiplying each predicted value by a constant, allowing us to compare models more effectively. Note that the following two Stack Overflow posts were once again very helpful when writing the code in this chapter:
 
 -   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r)
 
 -   [Specifying column with its index rather than name](https://stackoverflow.com/questions/16187091/specifying-column-with-its-index-rather-than-name)
 
-Recall the four plots we ended the Transform chapter with this plot, based on the mean PS, mean GP, success rate, and mean adjusted PS for every selection between 1 and 224. For convenience we replot this data below:
+Recall the four plots we ended the Transform chapter with this plot, based on the PS, GP, adjusted PS, and success rate, for every selection between 1 and 224. For convenience we replot this data below in Figure 7.1.1:
 
 ```{r}
 (plot_mean_ps + plot_mean_gp) / (plot_mean_adj_ps + plot_suc_rate)
@@ -102,6 +102,8 @@ plot_lm_p_reg = ggplot(all_data_comb, aes(x = overall, y = suc_rate)) +
 ```
 
 Based on the plots above, all four of these linear models are inadequate. Moreover, all of the models except for the one based on NHL regular probability fail our second requirement for a feasible model, which is that all picks have a strictly positive value. With this in mind, we move onto fitting a non-linear model.
+
+## Logistic Regression
 
 ## Non-Linear Regression
 
