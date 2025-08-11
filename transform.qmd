@@ -86,11 +86,11 @@ We can see that our dataset has quite a few active players, and the full value o
 
 Neither of the first two options are particularly appealing. The first is unideal because of sample size concerns and the changes that have taken place in terms of draft eligibility and strategy since the 1980s (which we would need to include to maintain a sample size of 25). The second option is also not great because it will severely underestimate the quality of star players drafted in the last few years (elite players can play for 15-20 seasons, so we could be missing three quarters of a player's career if he was drafted in 2020). Thus we will attempt to estimate the remaining value of a player's career.
 
-Estimating the remaining value of a player's career could be an entire project all on its own, so we will not go too into too much detail here. That being said, the adjustment we are about to make should reduce the amount that our model underestimates players who were drafted recently (while acknowledging that we will not completely fix it). Let $gp_{i,j}$ and $ps_{i,j}$ be the GP and PS of the player drafted at pick $i$ of draft $j$. If the player is retired then no adjustment is required, so we set $ps_{i,j}^{adj} = ps_{i,j}$. If that player is active, we will set $ps^{adj}_{i,j} = ps_{i,j} + \frac{ps_{i,j}}{gp_{i,j}} \times \hat gr_{i,j}$, where $\hat gr_{i,j}$ is our [**estimate**]{.underline} of the number of games left in the career of player $i$ who was drafted in year $j$. We will set $\hat{gr_{i,j}} = \frac{gp_{i,j}}{years_{i,j}} \cdot \hat yr_j$, where $years_{i,j}$ is the number of years since player $i$ from draft $j$ was drafted and $\hat yr_j$ is the estimated number of years left in the career of players drafted in year $j$. Thus the estimated number of games remaining in a player's career is their average number of games per season times the estimated number of years remaining. Simplifying, we have $ps_{i,j}^{adj} = ps_{i,j} + \frac{ps_{i,j}}{years_{i,j}} \cdot\hat{yr_{i,j}}$. We will estimate $yr_j$ later using data from 1996-2004 (almost all the players drafted between these years are retired). When we code this adjustment later in this chapter we will verify that the PS values of drafts with a large number of active players end up looking similar to drafts where everyone is retired.
+Estimating the remaining value of a player's career could be an entire project all on its own, so we will not go too into too much detail here. That being said, the adjustment we are about to make should reduce the amount that our model underestimates players who were drafted recently (while acknowledging that we will not completely fix it). Let $gp_{i,j}$ and $ps_{i,j}$ be the GP and PS of the player drafted at pick $i$ of draft $j$. If the player is retired, then no adjustment is required, so we set $ps_{i,j}^{adj} = ps_{i,j}$. If that player is active, we will set $ps^{adj}_{i,j} = ps_{i,j} + \frac{ps_{i,j}}{gp_{i,j}} \times \hat gr_{i,j}$, where $\hat gr_{i,j}$ is our [**estimate**]{.underline} of the number of games left in the career the player. We will set $\hat gr_{i,j} = \frac{gp_{i,j}}{years_{j}} \cdot \hat yr_j$, where $years_{j}$ is the number of years since players from draft $j$ were drafted and $\hat yr_j$ is the estimated number of years left in the career of all players drafted in year $j$. In other words, the estimated number of games remaining in a player's career is their average number of games per season times the estimated number of years remaining. Simplifying, we have $ps_{i,j}^{adj} = ps_{i,j} + \frac{ps_{i,j}}{years_{j}} \cdot\hat{yr_{j}}$. We will estimate $yr_j$ using data from 1996-2004 since almost all the players drafted between these years are retired. When we code this adjustment later in this chapter, we will verify that the PS values of drafts with a large number of active players end up looking similar to drafts where everyone is retired.
 
 ### Estimating Remaining Career Length
 
-Let $yr_j$ be the number of years players drafted in draft $j$ have remaining in their career, given they were drafted $k$ years ago. We aim to estimate this value, and will do so by setting $\hat{yr_j}$ to be the mean career length of players who retired at $k$ years after being drafted and were drafted between 1996 and 2004. We calculate it for $1 \le k \le 22$ to make the indexing more intuitive, even though we will only be using the values $k \ge 5$, since no active player drafted in 2020 or earlier can have played for less than 4 seasons.
+Let $yr_j$ be the number of years players drafted in draft $j$ have remaining in their career, given they were drafted $k$ years ago. We aim to estimate this value, and will do so by setting $\hat yr_j$ to be the mean career length of players were drafted between 1996 and 2004 AND played in at least $k$ seasons. We calculate it for $1 \le k \le 22$ to make the indexing more intuitive, even though we will only be using the values $k \ge 5$, since no active player drafted in 2020 or earlier can have played for less than 4 seasons. We calculate $\hat yr_j$ and then present it in graphical form (Figure 6.3.2.1) and in table form (Table 6.3.2.2).
 
 ```{r}
 get_length <- Vectorize(function(len){ 
@@ -105,52 +105,78 @@ est_yr <- data.frame(k = seq(1,22)) |>
   mutate(yr = get_length(k)) 
 
 ggplot(est_yr, aes(x = k, y = yr)) + 
-  geom_point() 
+  geom_point() + 
+  labs(title = "Estimated Years Left in a Player's Career", 
+       x = "Years Since Being Drafted", y = "Estimated Years Left in Career", 
+       caption = "Figure 6.3.2.1: Estimated Remaining Career Length")
 
-gt(est_yr)
+est_yr |> 
+  gt() |> 
+  opt_all_caps() |> 
+  cols_label(k = "Years Since Being Drafted", 
+             yr = "Estimated Years Remaining in Career") |> 
+    tab_source_note("Table 6.3.2.2: Estimated Remaining Career Length")
 ```
 
-The interpretation for this is that a current NHL player who was drafted 1 year ago has an estimated 9.48 years left in their career, a current NHL player who was drafted 5 years ago has an estimated 6.47 years left in their career, and on.
+The correct interpretation of these estimates is that a current NHL player who was drafted 1 year ago has an estimated 9.478 years left in their career, a current NHL player who was drafted 5 years ago has an estimated 6.475 years left in their career, and on.
 
 ### Adjusting PS Values
 
-Now that we have estimated the remaining number of years for each active NHL player, we can estimate the total PS for their career. Recall that in the introduction of this chapter we said $ps_{ij}^{adj} = ps_{ij} + \frac{ps_{ij}}{years_{ij}} \cdot\hat{yr_{ij}}$.
+Now that we have estimated the remaining number of years for each active NHL player, we can estimate the total PS for their career. Recall that in the introduction of this chapter we said $ps_{i,j}^{adj} = ps_{i,j} + \frac{ps_{i,j}}{years_{j}} \cdot\hat{yr_{i,j}}$. We make this adjustment and then produce Table 6.3.3.1, which has the PS and adjusted PS values
 
 ```{r}
-active_players <- all_data |> 
+active_players <- all_data |> # we need to make an adjustment for active players
   filter(to == 2025) |> 
   mutate(career_len = to - year) |> 
   mutate(adj_ps = ps + round(ps / career_len * get_length(career_len), 2)) |> 
   select(-career_len)
 
-inactive_players <- all_data |> 
+inactive_players <- all_data |> # no adjustment needed for retired players
   filter(to != 2025) |> 
   mutate(adj_ps = ps)
 
 
 all_data_adj <- rbind(active_players, inactive_players)
-reactable(all_data_adj)
+
+all_data_adj |> 
+  reactable(
+    defaultPageSize = 25,
+    columns = list(
+    year = colDef(name = "Year"),
+    overall = colDef(name = "Overall"),
+    to = colDef(name = "To"),
+    pos = colDef(name = "Pos"),
+    gp = colDef(name = "GP"),
+    ps = colDef(name = "PS"),
+    adj_ps = colDef(name = "Adjusted PS")
+  ))
 ```
 
-Note that the adjusted PS values for players who are expected to retire soon may not have changed much, if at all. To say it again, this estimation is not perfect, but it is better than the alternatives (using older data or ignoring the issue). In particular, this method assumes all players will continue to generate PS and play in games at the same rate as they have to this point in their career, and that the number of additional years a player will play for only depends on how many years ago they were drafted.
+Table 6.3.3.1: Data with Adjusted PS values
+
+Note that the adjusted PS values for players who are expected to retire soon may not have changed much, if at all. To say it again, this estimate is not perfect, but it is better than the alternatives (using older data or ignoring the issue). In particular, this method assumes all players will continue to generate PS and play in games at the same rate as they have to this point in their career, and that the number of additional years a player will play for only depends on how many years ago they were drafted.
 
 ### Evaluating our Adjustment
 
-We can do some checks to see if these estimates seem reasonable. First, we look at a plot of the PS values before and after the adjustment. We will plot all years for sake of comparison, but recall we only made changes for active players, and thus the drafts between 1996 and 2002 were completely unaffected (and thus the points are on top of each other):
+We can do some checks to see if these estimates seem reasonable. First, we look at a plot of the PS values before and after the adjustment. We will plot all years for sake of comparison, but recall we only made changes for active players, and thus the drafts between 1996 and 2002 were completely unaffected (and thus the PS and adjusted PS points are on top of each other):
 
 ```{r}
 all_data_adj |> 
   group_by(year) |> 
-  summarize(total_ps = sum(ps), total_adj_ps = sum(adj_ps)) |>
-  pivot_longer(cols = starts_with("total"), 
+  summarize("PS" = sum(ps), "Adjusted PS" = sum(adj_ps)) |>
+  pivot_longer(cols = ends_with("PS"), 
                names_to = "metric", values_to = "value") |> 
   ggplot(aes(x = year, y = value, col = metric)) +
-  geom_point()
+  geom_point() + 
+  labs(y = "Value", x = "Draft Year", 
+       title = "Total PS and Adjusted PS Values by Draft Class", 
+       caption = "Figure 6.3.4.1: PS and adjusted PS values", 
+       col = "Metric")
 ```
 
-It seems our adjustment was worthwhile since the drafts after 2010 (which are the drafts with a large number of active players) saw their PS values go up substantially.
+It seems our adjustment was worthwhile since we can see in Figure 6.3.4.1 that the drafts after 2010 (which are the drafts with a large number of active players) saw their PS values go up substantially.
 
-Next, we check the magnitude of our changes by calculating the mean and standard deviation of $p_{ij}$ for $j \in \{ 1996, ..., 2004\}$, $p_{ij}$ for $j \in \{ 2012, ..., 2020 \}$, and $p_{ij}^{adj}$ for $j \in \{ 2012, ..., 2020\}$. Note that the intervals are the same size and that the first interval is years where almost all players have retired, and the second interval contains years with more heavily adjusted drafts.
+Next, we check the magnitude of our changes by calculating the mean and standard deviation of $p_{i,j}$ for $j \in \{ 1996, ..., 2004\}$, $p_{i,j}$ for $j \in \{ 2012, ..., 2020 \}$, and $p_{i,j}^{adj}$ for $j \in \{ 2012, ..., 2020\}$. Note that the intervals are the same size and that the first interval is years where almost all players have retired, and the second interval contains years which had their PS values were more heavily adjusted.
 
 ```{r}
 mean_sd <- function(data){
@@ -166,55 +192,79 @@ mean_sd(filter(all_data_adj, year >= 2012)$adj_ps)
 
 Our adjustment looks quite good since the mean and standard deviation of the first and third sets seem close, indicating the adjusted PS values for drafts we adjusted "look like" the true PS values. Additionally, the first and second sets look quite different, suggesting that the adjustment we made was necessary.
 
-Another way we can check if the adjusted drafts seem similar to the drafts which required little adjustment is by comparing a histogram of the drafts between 1996 and 200 with the drafts between 2016 and 2020. Of course, we're not expecting them to be perfectly identical because there is a fair amount of variation even between drafts that required little to no adjustment (ex 1999 and 2003).
+Another way we can check if the adjusted drafts seem similar to the drafts which required little adjustment is by comparing a histogram of the drafts between 1996 and 200 with the drafts between 2016 and 2020. Of course, we're not expecting them to be perfectly identical because there is a fair amount of variation even between drafts that required little to no adjustment (for example 1999 and 2003 are quite different in Figure 6.2.1).
 
 ```{r, message=FALSE, warning=FALSE}
 all_data_adj |> 
   pivot_longer(cols = c(ps,adj_ps), 
                names_to = "metric", values_to = "value") |> 
-  filter((year %in% 1996:2000 & metric == "ps") | (year %in% 2016:2020 & metric == "adj_ps")) |> 
-  ggplot(aes(x = value, fill = metric)) + 
-  geom_histogram(position = "dodge")
-```
-
-These are a bit hard to compare because the tail gets so small so fast, but the values close to 0 look similar enough. We can zoom in on the tail, note that there isn't much to look at after 100:
-
-```{r, message=FALSE, warning=FALSE}
-all_data_adj |> 
-  pivot_longer(cols = c(ps,adj_ps), 
-               names_to = "metric", values_to = "value") |> 
-  filter((year %in% 1996:2000 & metric == "ps") | (year %in% 2016:2020 & metric == "adj_ps")) |> 
+  filter((year %in% 1996:2000 & metric == "ps") | 
+           (year %in% 2016:2020 & metric == "adj_ps")) |> 
   ggplot(aes(x = value, fill = metric)) + 
   geom_histogram(position = "dodge") + 
+  labs(x = "Value", y = "Number of Players", col = "Metric", 
+       title = "Histogram of PS Values from 1996-2000 and Adjusted\nPS Values from 2016-2020", 
+       caption = "Figure 6.3.4.2: Distribution of PS in adjusted and non-adjusted drafts", fill = "Metric") + 
+    scale_fill_manual(
+    breaks = c("ps", "adj_ps"),         
+    labels = c("PS (1996-2000)", "Adjusted PS (2016-2020)"),
+    values = c("ps" = "forestgreen", "adj_ps" = "salmon")
+  )
+```
+
+The values in Figure 6.3.4.2 are a bit hard to compare because the tail gets so small so fast, but the values close to 0 look similar enough. We can zoom in on the tail, note that there isn't much to look at after 100:
+
+```{r, message=FALSE, warning=FALSE}
+all_data_adj |> 
+  pivot_longer(cols = c(ps,adj_ps), 
+               names_to = "metric", values_to = "value") |> 
+  filter((year %in% 1996:2000 & metric == "ps") | 
+           (year %in% 2016:2020 & metric == "adj_ps")) |> 
+  ggplot(aes(x = value, fill = metric)) + 
+  geom_histogram(position = "dodge") + 
+  labs(x = "Value", y = "Number of Players", col = "Metric", 
+       title = "Histogram of PS Values from 1996-2000 and Adjusted\nPS Values from 2016-2020", 
+       subtitle = quote(paste("Domain is restricted to Values" %in% "(8.5, 100)")),
+       caption = "Figure 6.3.4.3: Distribution of PS in adjusted and non-adjusted drafts", fill = "Metric") + 
+    scale_fill_manual(
+    breaks = c("ps", "adj_ps"),         
+    labels = c("PS (1996-2000)", "Adjusted PS (2016-2020)"),
+    values = c("ps" = "forestgreen", "adj_ps" = "salmon")
+  ) + 
   coord_cartesian(xlim = c(8.5, 100))
 ```
 
-There seem to be a similar number of observations in each bin, so it seems like our estimations are reasonable. Note again that we are clear restrictions and potential sources of error with this approach, and in the model step we will fit a model using both the raw PS values and the adjusted PS values. Before moving on to the model step, we create a plot of the mean PS and adjusted PS values, which is the same as the last plot from the Visualize chapter, except we will be including the adjusted PS values.
+There seem to be a similar number of observations in each bin, so it seems like our estimations are reasonable. Note again that we are clear restrictions and potential sources of error with this approach, and in the Model chapter we will fit a model using both the raw PS values and the adjusted PS values. Before moving on to the next section of this chapter, we create a plot of the mean PS and adjusted PS values, which is the same as the last plot from the Visualize chapter, except we will be including the adjusted PS values. This plot is given below in Figure 6.3.4.4.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 all_data_adj |> 
   pivot_longer(cols = c(ps, adj_ps), names_to = "metric", values_to = "value") |> 
   group_by(metric, overall) |> 
   summarize(mean_val = mean(value)) |> 
   ggplot(aes(x = overall, y = mean_val, col = metric)) + 
-  geom_point(alpha = 0.4)
+  geom_point(alpha = 0.25) + 
+  labs(x = "Pick Number", y = "Average Value", col = "Metric", 
+       title = "Mean PS and Mean Adjusted PS Values by Overall", 
+       caption = "Figure 6.3.4.4: Average PS and Adjusted PS by Overall", 
+       fill = "Metric") + 
+    scale_colour_manual(
+    breaks = c("ps", "adj_ps"),         
+    labels = c("PS", "Adjusted PS"),
+    values = c("ps" = "forestgreen", "adj_ps" = "salmon")
+  ) 
 ```
 
-The mean Adjusted PS values are all are greater than or equal to the mean unadjusted PS values, which is to be expected what we would expect because $ps^{adj}_{ij} \ge ps_{ij}$ as we add PS to players who are still active NHL players and do not change the PS values of retired players. This is the third of the four metrics we will use in the Model chapter, though we will use the raw Adjusted PS values rather than the aggregated values.
+As we can see in Figure 6.3.4.4, the mean Adjusted PS values are all are greater than or equal to the mean unadjusted PS values, which is to be expected what we would expect because $ps^{adj}_{i,j} \ge ps_{i,j}$, we add PS to players who are still active NHL players and do not change the PS values of retired players. Adjusted PS is the third of the four metrics we will use in the Model chapter, though note that we we will use the raw adjusted PS values rather than the aggregated values.
 
 ## Transforming GP
 
 ### Introduction
 
-In this chapter we will add a column our dataset indicating whether the player became or is on track to become an NHL regular. We will adopt Luo's definition of an NHL regular being a skater who plays in or is on track to play in 200 games. This is straightforward a player is retired or has already played in enough games, but is more complex if the player is active and has not yet reached the required number of games. For these players, we will take an almost identical approach as Luo (2024), which changes the GP threshold depending on when a player was drafted. The modified threshold for skaters is given below, where $j$ is the year the player was drafted in $t_j$ is the threshold for players drafted in year $j$.
+In this section we will add a column our dataset indicating whether the player became or is on track to become an NHL regular. We will adopt the same definition as @luo_improving_2024, which is that a player is an NHL regular if they are a skater who played in, or is on track to play in, 200 NHL games. This is straightforward a player is retired or has already played in enough games, but is more complex if the player is active and has not yet reached the required number of games. For these players, we will take an almost identical approach as @luo_improving_2024, which changes the GP threshold depending on when a player was drafted. The modified threshold for skaters is given below, where $j$ is the year the player was drafted in $t_j$ is the threshold for players drafted in year $j$.
 
 $$t_j = \begin{cases}200 \text{,                if $j \le 2017$}\\ \frac{82\times(2025-j)}{3} \text{,    if $j \in \{ 2018, 2019, 2020 \}$}\\ \end{cases}$$
 
-Luo did not consider goalies at all in his paper, so one of the changes we will make from Luo's equation is that the threshold for goalies will be $\frac{t_j}{2}$ because goalies take longer to develop and even the best goalies only play in approximately 75% of their teams' games. Thus 100 games for a goalie is around 2.5 seasons' worth, which is roughly equivalent to 200 games for a skater.
-
-The only other difference between our threshold is Luo's is that the years are different, since Luo's work is from a year ago and used data from slightly different years. Additionally, Luo did some checks to make sure this estimate is appropriate, it turned out to be quite a good predictor of whether a player will play in 200 games. Here is a plot of the skater threshold for games played based on the skater's draft year.
-
-### Adding the Indicator
+Luo did not consider goalies at all in his paper, so one of the changes we will make from Luo's equation is that the threshold for goalies will be $\frac{t_j}{2}$ because goalies take longer to develop and even the best goalies only play in at most 75% of their teams' games. Thus 100 games for a goalie is around 2.5 seasons' worth, which is roughly equivalent to 200 games for a skater.
 
 ```{r, warning = FALSE}
 get_threshold <- function(year){  
@@ -226,45 +276,60 @@ thresholds <- data.frame(year = seq(2015,2020)) |>
 
 ggplot(thresholds, aes(x = year, y = t)) +    
   geom_point() +   
-  scale_x_discrete(limits = seq(2015, 2020))
+  scale_x_discrete(limits = seq(2015, 2020)) + 
+  labs(x = "Draft Year", y = "GP Threshold", 
+       title = 'Number of Games Required to be an "NHL Regular" by Draft Year', 
+       caption = "Figure 6.4.1.1: NHL Regular GP Thresholds")
 
-gt(thresholds)
+thresholds |> 
+  gt() |> 
+  opt_all_caps() |> 
+  cols_label(year = "Draft Year", t = "GP Threshold") |> 
+  tab_source_note("Table 6.4.1.2: NHL Regular GP Thresholds")
 ```
 
-We make this transformation in R, first for retired players, then for active players, and then use `rbind` ro combine them.
+Figure 6.4.2.1 includes a plot of the skater GP thresholds based on the skater's draft year. This information is also presented in table form in Table 6.4.2.2. Note that we don't care what the threshold is for player's drafted after 2020 because those players are not in our dataset. The only other difference between our threshold is Luo's is that the years are different, since Luo's work is from a year ago and used data from slightly different years. Note that Luo did some checks to make sure this estimate is appropriate, it turned out to be quite a good predictor of whether a player will play in 200 games.
+
+### Adding the Indicator
+
+We make the indicator as a new column, first for retired players, then for active players, and then use `rbind` ro combine them.
 
 ```{r}
-all_data_ret <- all_data_adj |>    
+all_data_ret <- all_data_adj |> # thresholds for retired players
   filter(to != 2025) |>   
-  mutate(thresh = ifelse(pos == "G", 100, 200),           
+  mutate(thresh = ifelse(pos == "G", 100, 200),        
          reg = gp >= thresh) |>    
   select(-thresh)  
 
-all_data_act <- all_data_adj |>    
+all_data_act <- all_data_adj |> # hresholds for active players
     filter(to == 2025) |>    
-  mutate(thresh = ifelse(pos == "G", get_threshold(year) / 2,                           
-                         get_threshold(year)),         
+  mutate(thresh = ifelse(pos == "G", get_threshold(year) / 2,
+                         get_threshold(year)),
          reg = gp >= thresh) |>    
   select(-thresh)  
 
 all_data_adj <- rbind(all_data_ret, all_data_act)
 ```
 
-We have now added the column necessary to create a model based on whether an NHL player became an NHL regular. We won't use the aggregated values to fit a model, but to see if this metric has potential we aggregate the data to get the success rate of every pick number and then plot it to ensure the success rate generally decreases ad the draft goes on.
+We have now added the column necessary to create a model based on whether an NHL player became an NHL regular. We won't use the aggregated values to fit a model, but to see if this metric has potential we aggregate the data to get the average rate at which every pick becomes an NHL regular and then plot it to ensure the rate generally decreases ad the draft goes on. We also jitter the data vertically to make the plot more readable.
 
 ```{r}
 all_data_adj |>    
   group_by(overall) |>    
   summarize(rate = mean(reg)) |>    
   ggplot(aes(x = overall, y = rate)) +
-  geom_point()
+  geom_point(position = position_jitter(width = 0, height = 0.015)) + 
+  labs(x = "Pick Number", y = "Rate of NHL Regulars", 
+       title = "Rate of NHL Regulars by Overall", 
+       subtitle = "Data jittered vertically to improve readability", 
+       caption = "Figure 6.4.2.1: NHL Regular Rate by Draft Position")
 ```
 
-This plot has a similar shape to the plots at the end of the Visualize chapter. We will use the raw `TRUE`/`FALSE` values to fit a model in the Model chapter.
+Figure 6.4.2.1 has a similar shape to the plots at the end of the Visualize chapter. We will use the raw `TRUE`/`FALSE` values to fit a logistic regression model in the Model chapter.
 
 ## Combining Everything
 
-Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot of the average values by pick each metric, note that no points can be directly on top of each other because all points have different `overall` values. When we fit the models we will use the raw values, but as seen in the Visualize chapter it is basically impossible to infer anything from the raw value plots. Note that the following two Stack Overflow posts were particularly helpful when writing this code:
+Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot of the average values by pick each metric in Figure 6.5.1, note that no points can be directly on top of each other because all points have different `overall` values, but the plot of sis once again jittered vertically. Note that the following two Stack Overflow posts were particularly helpful when writing this code:
 
 -   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r)
 
@@ -281,7 +346,7 @@ all_data_comb <- all_data_adj |>
 metrics <- c("mean_ps", "mean_gp", "mean_adj_ps", "suc_rate")
 names <- c("Mean PS", "Mean GP", "Mean Adjusted PS", "Success Rate")
 
-for(i in 1:length(metrics)){
+for(i in seq(1, length(metrics)-1)){
   assign(str_glue("plot_{metrics[i]}"), 
          ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
            geom_point() + 
@@ -289,14 +354,20 @@ for(i in 1:length(metrics)){
                 x = "Overall", y = str_glue("{names[i]}")))
 }
 
+plot_suc_rate <- ggplot(all_data_comb, aes(x = overall,  y = suc_rate)) + 
+              geom_point(position = position_jitter(width = 0, height = 0.015)) + 
+              labs(title = "Success Rate verses Overall", 
+                x = "Overall", y = "Success Rate", 
+                caption = "Figure 6.5.1: Aggregated Metrics")
+
 (plot_mean_ps + plot_mean_gp) / (plot_mean_adj_ps + plot_suc_rate)
 ```
 
-These plots all have the same general shape, though some of them are on different scale. In the next chapter we will fit a model to the raw data, put the models on the same scale, and evaluate the models.
+The plots in Figure 6.5.1 all have the same general shape, though some of them are on different scales. In the Model chapter, we will fit a model to the raw data, put the models on the same scale, and evaluate the models.
 
 ## Storing the Transformations
 
-As touched on at the very end of the Tidy chapter, we will be storing our data frames in our S3 bucket. We use the same code to add `all_data_adj` and `all_data_comb` to our S3 bucket within AWS. In functions.R we get these data frames by querying the S3 bucket using duckdb.
+As touched on at the very end of the Tidy chapter, we will be storing our data frames in an S3 bucket. We use the same code to add `all_data_adj` and `all_data_comb` to our S3 bucket within AWS. In `function.R` we get these data frames by querying the S3 bucket using duckdb.
 
 ```{r}
 Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),

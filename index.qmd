@@ -73,7 +73,7 @@ We define the following terms which will be used frequently throughout the repor
 
 -   To avoid confusion, here are the different definitions of "points":
 
-    -   Points as in goals + assists. This report will only use points in this way when discussing how point share is calculated in the Question chapter.
+    -   Points as in goals + assists. This report will **NEVER** use this definition of points.
 
     -   Points as in point share. Recall this is calculated to measure a player's effect on his team's points [**in the standings, not goals and assists.**]{.underline}
 
