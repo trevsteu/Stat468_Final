@@ -252,4 +252,4 @@ We take the following lessons from our EDA into our Transform and Model chapters
 
 The GP by pick number and PS by pick number metrics are two of the metrics we will use in the Model chapter.
 
-\[\^1\]: I initially tried to estimate pick value using a $k$-nearest neighbours algorithm, but it valued picks around pick 200 more than picks around 125 overall because of this.
+\[\^1\]: I initially tried to estimate pick value using a $k$-nearest neighbours algorithm, but it valued picks around pick 200 more than picks around 125 overall.
