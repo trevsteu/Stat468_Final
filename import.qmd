@@ -62,7 +62,9 @@ import_draft <- function(year){
   draft_year_table
 }
 
-gt(head(import_draft(start_year), 10)) |> 
+import_draft(start_year) |> 
+  head(10) |> 
+  gt() |> 
   opt_all_caps() |> 
   tab_source_note("Table 3.3.1: First 10 Picks of the 1996 Draft") |> 
   cols_label(amateur_team = "Amateur Team", gp_2 = "GP", x = "+/-",
@@ -110,7 +112,9 @@ old_ps_players <- player_stats_1997_1998 |>
   mutate(gp_1997 = coalesce(gp_1997, 0), # set NAs to 0
          gp_1998 = coalesce(gp_1998, 0)) # set NAs to 0
 
-gt(arrange(old_ps_players, player)) |> 
+old_ps_players |> 
+  arrange(player) |> 
+  gt() |> 
   opt_all_caps() |> 
   tab_source_note("Table 3.4.1: Players with games in 1996-1997 and/or 1997-1998") |>
   cols_label(gp_1997 = "GP in 1996-1997", gp_1998 = "GP in 1997-1998")

@@ -12,6 +12,10 @@ The following is a list of all sources used to complete this report. The resourc
 
 -   [Examining the value of NHL Draft picks](https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/amp/) (for background info on previous work)
 
+-   [How to read and write data from and to S3 bucket using R?](https://medium.com/@som028/how-to-read-and-write-data-from-and-to-s3-bucket-using-r-3fed7e686844) (for putting data into an S3 bucket)
+
+-   [How to work with remote Parquet files with the duckdb R package?](https://francoismichonneau.net/2023/06/duckdb-r-remote-data/) (for more help putting data into an S3 bucket)
+
 -   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/) (for background info on previous work)
 
 -   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (to create the non-linear regression models)
