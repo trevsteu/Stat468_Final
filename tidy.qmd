@@ -154,7 +154,7 @@ all_data |> # Confirm pick 123 of 2002 was removed (it was an invalid pick)
   filter(year == 2002 & overall <= 125 & overall >= 121) |> 
   gt() |> 
   opt_all_caps() |> 
-  tab_source_note("4.4.2: Pick 123 in 2002 was Removed")
+  tab_source_note("Table: 4.4.2: Pick 123 in 2002 was Removed")
 ```
 
 These checks all returned what they should.
@@ -193,7 +193,7 @@ all_data_test |>
   head(10) |> 
   gt() |>
   opt_all_caps() |> 
-  tab_source_note("4.6.1: Data Loaded from S3 Bucket")
+  tab_source_note("Table 4.6.1: Data Loaded from S3 Bucket")
 ```
 
 Figure 4.6.1 confirms that the data can be loaded from the S3 bucket. In future chapters we will edit this data and will put the new version in the same S3 bucket. We now proceed to the Visualize chapter.

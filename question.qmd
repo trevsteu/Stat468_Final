@@ -13,6 +13,22 @@ This report will estimate $v_i$ by fitting several regression models incorporati
 
 The first two methods of evaluating player quality are similar to approaches taken by @moreau_valuation_2025, @cacchione_mlb_2018, and @liner_determining_2020, and will take the PS (or GP) of all players taken at pick $i$. Next, will consider a similar metric which adjusts the PS values for active players based on what we estimate their PS will be at the time of their retirement. The final approach is from @luo_improving_2024, and will define an indicator random variable $Z_{ij} = 1$ if and only if the player selected at pick $i$ of draft $j$ became, or is on track to become, an NHL regular. We will then fit a logistic regression model, giving us an estimate of the probability that a player selected at pick $i$ will become an NHL regular. Thus in total we have four measures of the quality which will be considered: PS, GP, adjusted PS, and probability of becoming an NHL regular.
 
+## About Point Share (PS)
+
+Point Share is a metric which aims to mimic Bill James' Win Shares which was used to evaluate player contributions in the MLB @kubatko_calculating_nodate. We will look at the distribution of our dataset's PS values in the Visualize chapter, but PS itself is a good metric to use for a few reasons:
+
+-   As it turns out, the distribution of PS values is much more skewed than the distribution of GP values. Though we won't show this, it makes sense that this means PS is better at distinguishing between the quality of players than GP is.
+
+-   The formula for PS uses the number of goals in the league in a given season, so players who play in lower scoring eras will get more credit for their goals than players who play in eras with more scoring league wide.
+
+-   PS also adjusts for the quality of a player's team by comparing their team's scoring record with and without a player on the ice. This is also how it attempts to measure a player's defensive contributions.
+
+There are a few concerns about using PS:
+
+-   Using goals against to measure a player's defensive ability is dubious because it is largely dependent or the quality of their goalie.
+
+-   From an offensive perspective, it also does not adjust for quality of linemates or the quality of the opponent.
+
 ## Considerations
 
 We will fit 7 models in the Model chapter, so we need some criteria for what a feasible model looks like. We define a feasible model to be a model which satisfies **both** of the following:

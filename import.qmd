@@ -13,14 +13,12 @@ We install and load the necessary packages.
 # renv::install("tidyverse")
 # renv::install("janitor")
 # renv::install("gt")
-# renv::install("reactable")
 
 library(rvest)
 library(stringr)
 library(tidyverse)
 library(janitor)
 library(gt)
-library(reactable)
 ```
 
 ## Introduction

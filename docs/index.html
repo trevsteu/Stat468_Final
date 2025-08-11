@@ -281,7 +281,7 @@ window.Quarto = {
 <li><p><code>Amateur Team</code>: the team the player was drafted from (confusingly this is not necessarily an amateur team, a large number of players have been drafted from professional European teams).</p></li>
 <li><p><code>GP</code>, <code>G</code>, <code>A</code>, <code>PTS</code>, <code>+/-</code>, <code>PIM</code>: the player’s career games played, goals, assists, points (goals plus assists), plus minus, and penalty minutes. For players who never played in the NHL these will all be empty strings. For goalies, this <code>GP</code> column will match the next <code>GP</code> column for goalies, and these values can be, but are are not necessarily, the empty string for goalies (eg a goalie could have gotten an assist). Note that I will abbreviate games played to GP throughout this report.</p></li>
 <li><p><code>GP</code>, <code>W</code>, <code>L</code>, <code>T/O</code>, <code>SV%</code>, <code>GAA</code>: for goalies only, the goalie’s career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For goalies who never played in the NHL and all skaters, these columns will all be empty strings.</p></li>
-<li><p><code>PS</code>: the player’s estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, <strong>NOT</strong> goals and assists). There is more info on point shares <a href="https://www.hockey-reference.com/about/point_shares.html">here</a>. Note that I abbreviate point share to PS throughout this report.</p></li>
+<li><p><code>PS</code>: the player’s estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, <strong>NOT</strong> goals and assists). We will discuss the benefits and drawbacks of using point share in the Question chapter. Note that I abbreviate point share to PS throughout this report.</p></li>
 </ul>
 <p>All stats listed only pertain to regular season games, which is preferable anyway since we do not want to put players who played on bad teams at a disadvantage more than they already are (it’s harder to get a high PS if your team rarely wins). Note that we will only use a subset of the years between 1963 and 2025 and of the attributes listed above, as will be explained in the Import and Tidy chapters.</p>
 </section>
@@ -314,6 +314,12 @@ window.Quarto = {
 <li><p>Adjusted PS: The player’s point share at the end of their career. We sometimes use <span class="math inline">\(ps^{adj}_{i,j}\)</span> for the adjusted point share of the player drafted at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span>. Note that for retired players we have <span class="math inline">\(ps_{i,j}^{adj} = ps_{i,j}\)</span>, since if a player is retired we know what their point share was at the end of their career. For active players we will consider this value known, even though it needs to be estimated.</p></li>
 <li><p>GP: Games played. We sometimes use <span class="math inline">\(gp_{i,j}\)</span> for the number of games played by the player drafted at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span>.</p></li>
 <li><p>NHL Regular: A player who played in (or is on track to play in) at least 200 NHL games. This definition is the same as the one used by <span class="citation" data-cites="luo_improving_2024">Luo (<a href="#ref-luo_improving_2024" role="doc-biblioref">2024</a>)</span>, we will discuss it more in the Transform chapter.</p></li>
+</ul></li>
+<li><p>To avoid confusion, here are the different definitions of “points”:</p>
+<ul>
+<li><p>Points as in goals + assists. This report will only use points in this way when discussing how point share is calculated in the Question chapter.</p></li>
+<li><p>Points as in point share. Recall this is calculated to measure a player’s effect on his team’s points <u><strong>in the standings, not goals and assists.</strong></u></p></li>
+<li><p>Points as in the unitless value of a draft pick. To maintain consistency with past work, we will define <span class="math inline">\(v_i\)</span> to be in terms of points.</p></li>
 </ul></li>
 </ul>
 

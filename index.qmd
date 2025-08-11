@@ -27,7 +27,7 @@ The data used by this report is imported from [Hockey Reference](https://www.hoc
 
 -   `GP`, `W`, `L`, `T/O`, `SV%`, `GAA`: for goalies only, the goalie's career games played, wins, losses, ties plus overtime losses, save percentage, and goals against average. For goalies who never played in the NHL and all skaters, these columns will all be empty strings.
 
--   `PS`: the player's estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, **NOT** goals and assists). There is more info on point shares [here](https://www.hockey-reference.com/about/point_shares.html). Note that I abbreviate point share to PS throughout this report.
+-   `PS`: the player's estimated point shares, or points added to their team over the course of their career (here we mean points in the standings, **NOT** goals and assists). We will discuss the benefits and drawbacks of using point share in the Question chapter. Note that I abbreviate point share to PS throughout this report.
 
 All stats listed only pertain to regular season games, which is preferable anyway since we do not want to put players who played on bad teams at a disadvantage more than they already are (it's harder to get a high PS if your team rarely wins). Note that we will only use a subset of the years between 1963 and 2025 and of the attributes listed above, as will be explained in the Import and Tidy chapters.
 
@@ -70,3 +70,11 @@ We define the following terms which will be used frequently throughout the repor
     -   GP: Games played. We sometimes use $gp_{i,j}$ for the number of games played by the player drafted at pick $i$ of draft $j$.
 
     -   NHL Regular: A player who played in (or is on track to play in) at least 200 NHL games. This definition is the same as the one used by @luo_improving_2024, we will discuss it more in the Transform chapter.
+
+-   To avoid confusion, here are the different definitions of "points":
+
+    -   Points as in goals + assists. This report will only use points in this way when discussing how point share is calculated in the Question chapter.
+
+    -   Points as in point share. Recall this is calculated to measure a player's effect on his team's points [**in the standings, not goals and assists.**]{.underline}
+
+    -   Points as in the unitless value of a draft pick. To maintain consistency with past work, we will define $v_i$ to be in terms of "points" which do not have units but which make comparing the values of picks significantly easier and more intuitive.
