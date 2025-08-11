@@ -14,8 +14,6 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("DBI")
 # renv::install("duckdb")
 # renv::install("aws.s3")
-# renv::install("paws")
-# renv::install("arrow")
 
 library(rvest)
 library(tidyverse)
@@ -24,8 +22,6 @@ library(gt)
 library(DBI)
 library(duckdb)
 library(aws.s3)
-library(paws)
-library(arrow)
 
 source("functions.R") # load functions defined in prior chapters
 ```

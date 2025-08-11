@@ -6,8 +6,6 @@
 # renv::install("DBI")
 # renv::install("duckdb")
 # renv::install("aws.s3")
-# renv::install("paws")
-# renv::install("arrow")
 
 library(rvest)
 library(tidyverse)
@@ -17,8 +15,6 @@ library(stringr)
 library(DBI)
 library(duckdb)
 library(aws.s3)
-library(paws)
-library(arrow)
 
 start_year <- 1996
 end_year <- 2020

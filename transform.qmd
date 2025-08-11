@@ -29,7 +29,7 @@ source("functions.R") # load functions defined in prior chapters
 
 The first two metrics we will fit models to are GP and PS, in the Transform chapter, we will create the other two metrics which we will base our model off of.
 
-The first transformation we will make in this chapter is to adjust our PS to better represent the careers of active players (ie those who have not retired yet). Recall that in the Visualize chapter we looked at the average PS of all players in out dataset drafted at pick $i$. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. We can see in Figure 6.2.1 that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:
+The first transformation we will make in this chapter is to adjust our PS to better represent the careers of active players (ie those who have not retired yet). Recall that in the Visualize chapter we looked at the average PS of all players in out dataset drafted at pick $i$. As mentioned in the constraints section, one problem with this approach is that players drafted more recently will have had fewer years to generate PS. Figure 6.2.1 shows that, unsurprisingly, the total PS is quite a bit lower for the drafts between 2016 and 2020:
 
 ```{r}
 all_data |> 
@@ -50,30 +50,35 @@ The other transformation we make in this chapter is to implement the method take
 
 ### Introduction
 
-A similar issue to the one raised above is that there are quite a few active players in our dataset who can still generate additional PS because they are still playing. These two issues are related as it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is at least partially due to there being so many active players who were drafted in that time frame. Indeed, we can see in Figure 6.3.1.1 that there are still a large number of active
+A similar issue to the one raised above is that there are quite a few players in our dataset who can still generate additional PS because they haven't retired. These two issues are related as it is probably reasonable to expect that the discrepancy between the 2016-2020 PS totals and the other years is at least partially due to there being so many active players who were drafted in that time frame. Indeed, we can see in Figure 6.3.1.1 that there are still a large number of active players from around the 2010 draft onward.
 
 ```{r}
 active_players  <- all_data |> 
   filter(to == 2025) |> # recall to == 2025 if the player is still active
   group_by(year) |> 
   summarize(players = n()) |> 
-  mutate(type = "active")
+  mutate(type = "Active")
 
 retired_players <- all_data |> 
   filter(to < 2025 & to != year) |> # inactive players who played in the NHL
   group_by(year) |> 
   summarize(players = n()) |> 
-  mutate(type = "retired")
+  mutate(type = "Retired")
 
 num_nhl_players <- rbind(retired_players, active_players)
 
 ggplot(num_nhl_players, aes(x = year, y = players, col = type)) + 
-  geom_point()
+  scale_color_manual(values = c("Active" = "forestgreen", "Retired" = "salmon")) + 
+  geom_point(alpha = 0.8) + 
+  labs(title = "Active and Retired Players in Each Draft", 
+       x = "Draft Year", y = "Number of Players", 
+       caption = "Figure 6.3.1.1: Number of Retired and Active Players", 
+       col = "Player Status")
 ```
 
-We can see that our dataset has quite a few active players, and the full value of these players' careers cannot be fully known. As an aside, it is interesting that PS is so high for the drafts between 2010 and 2015 even though there are still so many active players from those drafts, I did some research but I could not find anything about it. The 2015 draft is widely considered to be on of the best drafts ever, which explains why it does not follow the general decreasing trend after 2014, but this does not explain why the other drafts were so high. I guess it is possible the drafts between 2010 and 2014 were also really strong drafts, but it seems odd that there would be 6 strong drafts in a row.
+We can see that our dataset has quite a few active players, and the full value of these players' careers cannot be fully known. As an aside, it is interesting that PS is so high for the drafts between 2010 and 2015 even though there are still so many active players from those drafts. The 2015 draft is widely considered to be on of the best drafts ever, which explains why it does not follow the general decreasing trend after 2014, but this does not explain why the other drafts were so high. I guess it is possible the drafts between 2010 and 2014 were also really strong drafts, but it seems odd that there would be 6 strong drafts in a row. I did a little bit of research but couldn't find anything about it. It certainly appears that an adjustment is required to give more recent draft classes more weight when fitting our regression models.
 
-Estimating the remaining value of a player's career could be an entire project all on its own, so we have 3 options:
+Estimating the remaining value of a player's career could be an entire project all on its own so we obviously won't do anything too involved, but we have 3 options:
 
 -   Only include drafts from before 2003 (there are no active NHL players who were drafted in 2002 or earlier).
 
@@ -81,7 +86,7 @@ Estimating the remaining value of a player's career could be an entire project a
 
 -   Make some sort of adjustment to the PS values of active players to account for the remainder of their career.
 
-Neither of the first two options are particularly appealing. The first is unideal because of sample size concerns and the changes that have taken place in terms of draft eligibility and strategy since the 1980s (which we would need to include to maintain a sample size of 25). Additionally, the second option is arguably worse because it will severely underestimate the quality of star players drafted in the last few years (elite players can play for 15-20 seasons, so we could be missing three quarters of a player's career if he was drafted in 2020). Thus the only remaining option is to attempt to estimate the remaining value of a player's career.
+Neither of the first two options are particularly appealing. The first is unideal because of sample size concerns and the changes that have taken place in terms of draft eligibility and strategy since the 1980s (which we would need to include to maintain a sample size of 25). The second option is also not great because it will severely underestimate the quality of star players drafted in the last few years (elite players can play for 15-20 seasons, so we could be missing three quarters of a player's career if he was drafted in 2020). Thus we will attempt to estimate the remaining value of a player's career.
 
 Estimating the remaining value of a player's career could be an entire project all on its own, but we will make an adjustment that should reduce the impact of this issue (while acknowledging that we will not completely fix it). Let $gp_{ij}$ and $ps_{ij}$ be the GP and PS of the player drafted at pick $i$ of draft $j$. If the player is retired then no adjustment is required, so we set $ps_{ij}^{adj} = ps_{j}$. If that player has not retired, we will set $ps^{adj}_{ij} = ps_{ij} + \frac{ps_{ij}}{gp_{ij}} \times \hat{gr_j}$, where $\hat {gr_j}$ is our [**estimate**]{.underline} of the number of games left in the career of players drafted in year $j$. We will set $\hat{gr_j} = \frac{gp_{ij}}{years_{ij}} \cdot \hat{yr_j}$, where $years_{ij}$ is the number of years since player $ij$ was drafted and $\hat{yr_j}$ is the estimated number of years left in their career. Thus the estimated number of games remaining in a player's career is their average number of games per season times the estimated number of years remaining. Simplifying, we have $ps_{ij}^{adj} = ps_{ij} + \frac{ps_{ij}}{years_{ij}} \cdot\hat{yr_{ij}}$. We will estimate $yr_j$ later using data from 1996-2004. When we code this adjustment later in this chapter we will verify that the PS values of drafts with a large number of active players end up looking similar to drafts where everyone is retired.
 
