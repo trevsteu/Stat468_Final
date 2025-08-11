@@ -129,7 +129,7 @@ old_ps_players |>
             n = length(which(gp > 0))) |> 
   gt() |> 
   opt_all_caps() |> 
-  tab_source_note("Table 3.4.2: Totals of Players in Figure 3.4.1") |>
+  tab_source_note("Table 3.4.2: Totals of Players in our Dataset") |>
   cols_label(total_gp = "total games", n = "number of players") |> 
   sub_values(values = "gp_1997", replacement = "1997") |>   
   sub_values(values = "gp_1998", replacement = "1998")

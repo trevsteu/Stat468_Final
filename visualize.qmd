@@ -5,7 +5,7 @@ author: "Trevor S"
 
 ## Setup
 
-We install and load the necessary packages, along with functions from prior chapters.
+We install and load the necessary packages, along with functions and data from prior chapters.
 
 ```{r,  message = FALSE, warning = FALSE}
 # renv::install("gt")
