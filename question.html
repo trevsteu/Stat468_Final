@@ -221,8 +221,9 @@ window.Quarto = {
    
   <ul>
   <li><a href="#approach" id="toc-approach" class="nav-link active" data-scroll-target="#approach"><span class="header-section-number">2.1</span> Approach</a></li>
-  <li><a href="#considerations" id="toc-considerations" class="nav-link" data-scroll-target="#considerations"><span class="header-section-number">2.2</span> Considerations</a></li>
-  <li><a href="#previous-work" id="toc-previous-work" class="nav-link" data-scroll-target="#previous-work"><span class="header-section-number">2.3</span> Previous Work</a></li>
+  <li><a href="#about-point-share-ps" id="toc-about-point-share-ps" class="nav-link" data-scroll-target="#about-point-share-ps"><span class="header-section-number">2.2</span> About Point Share (PS)</a></li>
+  <li><a href="#considerations" id="toc-considerations" class="nav-link" data-scroll-target="#considerations"><span class="header-section-number">2.3</span> Considerations</a></li>
+  <li><a href="#previous-work" id="toc-previous-work" class="nav-link" data-scroll-target="#previous-work"><span class="header-section-number">2.4</span> Previous Work</a></li>
   </ul>
 </nav>
     </div>
@@ -261,8 +262,22 @@ window.Quarto = {
 <p>This report will estimate <span class="math inline">\(v_i\)</span> by fitting several regression models incorporating player contribution data by the players previously selected at pick <span class="math inline">\(i\)</span>. We will consider GP and PS as our metrics for measuring player quality (and thus the quality of a pick), and for most of them we will fit a linear and non-linear regression model.</p>
 <p>The first two methods of evaluating player quality are similar to approaches taken by <span class="citation" data-cites="moreau_valuation_2025">Moreau, Perera, and Swartz (<a href="#ref-moreau_valuation_2025" role="doc-biblioref">2025</a>)</span>, <span class="citation" data-cites="cacchione_mlb_2018">Cacchione (<a href="#ref-cacchione_mlb_2018" role="doc-biblioref">2018</a>)</span>, and <span class="citation" data-cites="liner_determining_2020">Liner (<a href="#ref-liner_determining_2020" role="doc-biblioref">2020</a>)</span>, and will take the PS (or GP) of all players taken at pick <span class="math inline">\(i\)</span>. Next, will consider a similar metric which adjusts the PS values for active players based on what we estimate their PS will be at the time of their retirement. The final approach is from <span class="citation" data-cites="luo_improving_2024">Luo (<a href="#ref-luo_improving_2024" role="doc-biblioref">2024</a>)</span>, and will define an indicator random variable <span class="math inline">\(Z_{ij} = 1\)</span> if and only if the player selected at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span> became, or is on track to become, an NHL regular. We will then fit a logistic regression model, giving us an estimate of the probability that a player selected at pick <span class="math inline">\(i\)</span> will become an NHL regular. Thus in total we have four measures of the quality which will be considered: PS, GP, adjusted PS, and probability of becoming an NHL regular.</p>
 </section>
-<section id="considerations" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="considerations"><span class="header-section-number">2.2</span> Considerations</h2>
+<section id="about-point-share-ps" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="about-point-share-ps"><span class="header-section-number">2.2</span> About Point Share (PS)</h2>
+<p>Point Share is a metric which aims to mimic Bill James’ Win Shares which was used to evaluate player contributions in the MLB <span class="citation" data-cites="kubatko_calculating_nodate">Kubatko (<a href="#ref-kubatko_calculating_nodate" role="doc-biblioref">n.d.</a>)</span>. We will look at the distribution of our dataset’s PS values in the Visualize chapter, but PS itself is a good metric to use for a few reasons:</p>
+<ul>
+<li><p>As it turns out, the distribution of PS values is much more skewed than the distribution of GP values. Though we won’t show this, it makes sense that this means PS is better at distinguishing between the quality of players than GP is.</p></li>
+<li><p>The formula for PS uses the number of goals in the league in a given season, so players who play in lower scoring eras will get more credit for their goals than players who play in eras with more scoring league wide.</p></li>
+<li><p>PS also adjusts for the quality of a player’s team by comparing their team’s scoring record with and without a player on the ice. This is also how it attempts to measure a player’s defensive contributions.</p></li>
+</ul>
+<p>There are a few concerns about using PS:</p>
+<ul>
+<li><p>Using goals against to measure a player’s defensive ability is dubious because it is largely dependent or the quality of their goalie.</p></li>
+<li><p>From an offensive perspective, it also does not adjust for quality of linemates or the quality of the opponent.</p></li>
+</ul>
+</section>
+<section id="considerations" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="considerations"><span class="header-section-number">2.3</span> Considerations</h2>
 <p>We will fit 7 models in the Model chapter, so we need some criteria for what a feasible model looks like. We define a feasible model to be a model which satisfies <strong>both</strong> of the following:</p>
 <ul>
 <li><p><span class="math inline">\(v_i &gt; v_{i+k}\)</span> for all <span class="math inline">\(i, k \in \mathbb Z^+\)</span></p>
@@ -279,8 +294,8 @@ window.Quarto = {
 <p><span class="math display">\[ v_1 = v_2 + c = v_3 + 2c = ... = v_{224} + 223c \]</span></p>
 <p>where <span class="math inline">\(c &gt; 0\)</span>, meaning we would only have to find the value of <span class="math inline">\(c\)</span>.</p>
 </section>
-<section id="previous-work" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="previous-work"><span class="header-section-number">2.3</span> Previous Work</h2>
+<section id="previous-work" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="previous-work"><span class="header-section-number">2.4</span> Previous Work</h2>
 <p>Some work in this area has been done before, such as:</p>
 <ul>
 <li><p><a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">Valuation of NHL Draft Picks using Functional Data Analysis</a> (<span class="citation" data-cites="moreau_valuation_2025">Moreau, Perera, and Swartz (<a href="#ref-moreau_valuation_2025" role="doc-biblioref">2025</a>)</span>)</p></li>
@@ -298,6 +313,9 @@ Cacchione, Anthony. 2018. <span>“<span>MLB</span> <span>Rule</span> <span>IV</
 </div>
 <div id="ref-isacke_examining_2022" class="csl-entry" role="listitem">
 Isacke, Curtis. 2022. <span>“Examining the Value of <span>NHL</span> <span>Draft</span> Picks - <span>Sound</span> <span>Of</span> <span>Hockey</span>.”</span> <a href="https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/">https://soundofhockey.com/2022/06/06/examining-the-value-of-nhl-draft-picks/</a>.
+</div>
+<div id="ref-kubatko_calculating_nodate" class="csl-entry" role="listitem">
+Kubatko, Justin. n.d. <span>“Calculating <span>Point</span> <span>Shares</span>.”</span> <em>Hockey-Reference.com</em>. Accessed August 10, 2025. <a href="https://www.hockey-reference.com/about/point_shares.html">https://www.hockey-reference.com/about/point_shares.html</a>.
 </div>
 <div id="ref-liner_determining_2020" class="csl-entry" role="listitem">
 Liner, Jacob. 2020. <span>“<span>Determining</span> <span class="nocase">the</span> <span>Value</span> <span class="nocase">of</span> <span>NBA</span> <span>Draft</span> <span>Picks</span> <span>Using</span> <span>Advanced</span> <span>Statistics</span>,”</span> May. <a href="https://repository.arizona.edu/handle/10150/651330">https://repository.arizona.edu/handle/10150/651330</a>.
