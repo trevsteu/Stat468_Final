@@ -32,7 +32,7 @@ The following is a list of all sources used to complete this report. The resourc
 
 -   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf) (for the criteria used in the logistic model)
 
--   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf) (for background info on previous work; this report also took a very similar approach to the one taken in this paper)
+-   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf) (for background info on previous work; my report also took a very similar approach to the one taken in this paper)
 
 ## Miscellaneous
 

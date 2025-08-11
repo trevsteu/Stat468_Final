@@ -19,9 +19,9 @@ source("functions.R") # load functions defined in prior chapters
 
 ## Shiny Apps
 
-As mentioned in the Model chapter, there are two shiny apps associated with this project. The first, linked [here](https://trevsteu.shinyapps.io/nls_model_app/), uses non-linear regression to make predictions based on the PS of future picks. If I was advising a team, this is the model I would suggest using. The second app, linked [here](https://trevsteu.shinyapps.io/logist_model_app/), uses logistic regression to make predictions based on the probability of future picks becoming NHL regulars. [**Disclaimer: adding probabilities in this manner is dubious at best from a statistical perspective,**]{.underline} but `vetiver` does not easily support `nls` objects as mentioned in the Model chapter, so I needed to use a model from `lm` or `glm`, in order to satisfy many of the the devops requirements for this app.
+As mentioned in the Model chapter, there are two shiny apps associated with this project. The first, linked [here](https://trevsteu.shinyapps.io/nls_model_app/), uses non-linear regression to make predictions based on the PS of future picks. If I was advising a team, this is the model I would suggest using. The second app, linked [here](https://trevsteu.shinyapps.io/logist_model_app/), uses logistic regression to make predictions based on the expected value of each pick, which is the probability of the player selected at that pick becoming an NHL regular. [**Disclaimer: adding probabilities in this manner is dubious at best from a statistical perspective,**]{.underline} but `vetiver` does not easily support `nls` objects as mentioned in the Model chapter, so I needed to use a model from `lm` or `glm`, in order to satisfy many of the the devops requirements for this app. Using expected NHLers as the interpretation of pick value allows us to add values together, but the predictions are just not that good (it values pick 1 as pick 50 + pick 100, if any NHL GM traded the first overall pick for these two picks they would be fired on the spot).
 
-The apps differ only in the models they are based on (and their underlying code to access predictions). Thus the instructions for both apps are exactly the same, though the included screenshots are only for the app based on the model fit via non-linear regression.
+The apps differ only in the models they are based on (and their underlying code to access predictions, the logistic-based app has logging, and the nls-based app does not for example). Their UIs are almost identical (except for some asthetic differences), so the instructions for both apps are exactly the same, though the included screenshots are only for the app based on the model fit via non-linear regression.
 
 ## Usage of the App
 
@@ -43,17 +43,17 @@ There are a number of possible messages that can come up depending on the trade'
 
 ![Figure 8.3.5: Small Difference](images/shiny_app_5.png){alt="Figure 8.3.3: Evaluating a Trade"}
 
-The app also has a message for if the difference is \< 0.001 points, but it turns out to be quite difficult to find a trade which is this close. The app also protects the user from doing things that don't make sense. For example, clearly the only values that should be used are positive integers (for example pick -1 and pick 17.4 don't make sense). Additionally, the last pick in the draft is pick 224, so any positive integer greater than 224 should be banned too. If there are invalid inputs, the user will be visually warned, and the app will refuse to evaluate the value of picks for the affected team(s) and any comparisons. Furthermore, the tables and plots will also not render until all picks are valid. Note the app will still calculate the total points for one team if all of their picks are valid. We see examples of this in Figures 8.3.6 and 8.3.7:
+The app also has a message for if the difference is \< 0.001 points, but it turns out to be quite difficult to find a trade which is this close. The app also protects the user from doing things that don't make sense. For example, clearly the only values that should be used are positive integers (for example pick -1 and pick 17.4 don't make sense). Additionally, the last pick in the draft is pick 224, so any positive integer greater than 224 should be banned too. If there are invalid inputs, the user will be visually warned, and the app will refuse to evaluate the value of picks for the affected team(s) and any comparisons. In the app based on the logistic model, this is considered an ERROR for logging purposes. Furthermore, the tables and plots will also not render until all picks are valid. Note the app will still calculate the total points for one team if all of their picks are valid. We see examples of this in Figures 8.3.6 and 8.3.7:
 
 ![Figure 8.3.6: Both Teams have Invalid Picks (Nothing Renders)](images/shiny_app_6.png)
 
 ![Figure 8.3.7: One Team has Invalid Picks (Team B Still Renders)](images/shiny_app_7.png)
 
-Another possible situation is if picks are duplicated (either one team trades the same pick twice or both teams give up the pick). In this case, there is nothing technically wrong with the trade, so the user will be visually warned but the text, tables, and plots will render. An example of this is given in Figure 8.3.8:
+Another possible situation is if picks are duplicated (either one team trades the same pick twice or both teams give up the pick). In this case, there is nothing technically wrong with the trade, so the user will be visually warned but the text, tables, and plots will render. In the logistic model, this is considered a WARN for logging purposes. An example of this is given in Figure 8.3.8:
 
 ![Figure 8.3.8: Duplicated Picks](images/shiny_app_8.png)
 
-if there are duplicated picks which are also invalid, the user will be warned for both and nothing will render for either team. This is shown in Figure 8.3.9:
+if there are duplicated picks which are also invalid, the user will be warned for both and nothing will render for either team. This is logged as an ERROR in the logistic model. This is shown in Figure 8.3.9:
 
 ![Figure 8.3.9: Duplicated Invalid Picks](images/shiny_app_9.png)
 
