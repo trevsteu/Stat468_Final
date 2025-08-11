@@ -30,7 +30,13 @@ The following is a list of all sources used to complete this report. The resourc
 
 ## Papers
 
+-   [DETERMINING THE VALUE OF NBA DRAFT PICKS USING ADVANCED STATISTICS](#0) (for background info on previous work in other sports)
+
+<!-- -->
+
 -   [Improving NHL Draft Outcome Predictions using Scouting Reports](https://hluo27.github.io/assets/files/NHL_Draft_Scouting_Reports.pdf) (for the criteria used in the logistic model)
+
+-   [MLB Rule IV Draft: Valuing Draft Pick Slots](https://academicworks.cuny.edu/cgi/viewcontent.cgi?article=1759&context=cc_etds_theses) (for background info on previous work in other sports)
 
 -   [Valuation of NHL Draft Picks using Functional Data Analysis](https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf) (for background info on previous work; my report also took a very similar approach to the one taken in this paper)
 

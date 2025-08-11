@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -103,22 +123,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/core-js-2.5.3/shim.min.js"></script>
-
-<script src="site_libs/react-18.2.0/react.min.js"></script>
-
-<script src="site_libs/react-18.2.0/react-dom.min.js"></script>
-
-<script src="site_libs/reactwidget-2.0.0/react-tools.js"></script>
-
-<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-
-<link href="site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
-
-<script src="site_libs/reactable-binding-0.4.4/reactable.js"></script>
-
 
 
 </head>
@@ -280,19 +284,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="introduction" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.2</span> Introduction</h2>
-<p>In the import step we import the data required for this report. As mentioned before, we will be importing data from <a href="https://www.hockey-reference.com/draft">Hockey Reference</a>. Before we import any data, it’s important to consider <em>which</em> and <em>how many</em> years we want to include in this analysis.</p>
-<p>Since the NHL has changed dramatically over the years, care must be taken to ensure we do not include drafts from too long ago. There are two primary concerns with including data from too many years ago. The first concern is that requirements for a player to be eligible to be drafted in the first place have changed since the first NHL Draft in 1963, and the second concern is that teams have likely changed their drafting approach and strategy over time.</p>
-<p>One example of the first concern is that in 1979 the NHL began allowing players who had already played professionally for non-NHL teams to enter the draft. This meant that players who played professionally in Europe or in the World Hockey Association, which folded in 1979. Thus the level of talent available to be drafted would generally be higher in drafts from 1979 onward (there were more players eligible to be picked). Thus if we included drafts prior to 1979 we would probably underestimate the value of later selections, because selections later in a draft would likely have more talent available. There have also been changes in regards to the ages of players who are eligible, <a href="https://www.nhl.com/info/hockey-operations-guidelines">currently players need to be between 18-20 as of September 15th of the Draft’s year</a>.</p>
-<p>In regards to the second concern, teams may have become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft “steals” in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations, and we would likely overestimate the value of later picks, since the late round steals potentially may have been drafted sooner if the teams of the 1980s had the resources available to teams today. This would make our model a poor predictor of draft pick value for drafts occurring in the 2020s.</p>
-<p>A clear example of the evolving draft strategies which could impact our conclusion is the fact that it is becoming increasingly rare for teams to draft older prospects, especially with high picks. For example, 9 of the first 10 picks in the 1980 NHL Entry Draft were 19 or 20 years old at the time of the draft. In contrast, the first 19 or 20 year old was not selected until the 49th pick of the 2025 NHL Entry Draft. Though the impact of this change is not clear, it demonstrates a clear shift in drafting strategy, and it would be expected that the evaluation of prospects has changed over time too, which would change the relative value of picks (teams being more efficient drafters means later picks would be less valuable). With both of these concerns in mind, we clearly need to be careful about including drafts from too long ago.</p>
+<p>In the Import chapter we will import the data required for this report from <a href="https://www.hockey-reference.com/draft">Hockey Reference</a>. Before we import any data, it’s important to consider <em>which</em> and <em>how many</em> years we want to include in this analysis.</p>
+<p>Since the NHL has changed dramatically over the years, we must be careful to ensure we do not include drafts from too long ago. There are two primary concerns with including data from too many years ago. First, requirements for a player to be eligible to be drafted in the first place have changed since the first NHL Draft in 1963; second, teams have likely changed their drafting approach and strategy over time.</p>
+<p>One example of the first concern is that in 1979 the NHL began allowing players who had already played professionally for non-NHL teams to enter the draft. This meant that players who played professionally in Europe or in the World Hockey Association, which folded in 1979 would now be drafted. Thus the level of talent available to be drafted would generally be higher in drafts from 1979 onward (there were more players eligible to be picked). Thus if we included drafts prior to 1979 we would probably underestimate the value of later selections, because selections later in a draft would likely have more talent available. There have also been changes in regards to the ages of players who are eligible, <a href="https://www.nhl.com/info/hockey-operations-guidelines">currently players need to be between 18-20 as of September 15th of the Draft’s year</a>.</p>
+<p>In regards to the second concern, teams have likely become better at evaluating prospects as more advanced statistics have been developed, meaning that there are likely fewer late round draft “steals” in the 2020s than there were in the 1980s. Thus including drafts from the 1980s would skew our calculations, and we would likely overestimate the value of later picks, since the late round steals may have been drafted sooner if the teams of the 1980s had the resources available to teams today. Thus using drafts from the 1980s would make our model a poor predictor of draft pick value for drafts occurring in the 2020s.</p>
+<p>A clear example of the evolving draft strategies which could impact our conclusion is the fact that it is becoming increasingly rare for teams to draft older prospects, especially with high picks. For example, 9 of the first 10 picks in the 1980 NHL Entry Draft were 19 or 20 years old at the time of the draft. In contrast, the first 19 or 20 year old was not selected until the 49th pick of the 2025 NHL Entry Draft. Though the impact of this change is not clear, it demonstrates a clear shift in drafting strategy. Furthermore, it would not be surprising if the evaluation of prospects has changed over time too, which would change the relative value of picks (teams being more efficient drafters means later picks would be less valuable). With both of these concerns in mind, we clearly need to be careful about including drafts from too long ago.</p>
 <p>That being said, players drafted in recent years have not had sufficient time to contribute to their teams, so we should not include drafts from too recently either. Ideally, we would wait until all players from a draft class have retired before including it in our analysis. Practically speaking, this is not feasible since players can have very long careers (for example, Alex Ovechkin was drafted in 2004 and is still playing) which would force us to include older drafts to maintain the same sample size, which is also not ideal as explained above.</p>
 <p>Another consideration is that the formula for calculating a skater’s PS (point share; the metric we will use for predicting pick value) changed in either the 1997-1998 or 1998-1999 season. There is conflicting info on what year it changed; <a href="https://www.hockey-reference.com/about/point_shares.html">this link</a> says it changed in 1998-1999 because time on ice data was not available until 1998-1999, however <a href="https://www.hockey-reference.com/leagues/NHL_1998_skaters.html">the page of 1997-1998 data</a> has time on ice data. In the seasons where time on ice data was not available, games played was used instead. To maintain consistency, we would prefer to minimize the number of players in our dataset who played before the 1998-1999 season, since those seasons were definitely under the old PS formula. The PS formula for goalies has been the same since the 1983-1984 season, so it is not an issue.</p>
-<p>Taking these factors into consideration, we make the somewhat arbitrary decision to use the 25 drafts between and 1996 and 2020 (inclusive). We don’t have the code to check this yet, but at the end of this chapter we will find the number of games played by players in our dataset under the old PS formula. Less than 0.2% of games in our dataset were played under the old PS formula and thus these games are unlikely to meaningfully impact our conclusion. However, this percentage would get progressively worse if we were to include more from prior to the 1997-1998 season. The dates included are similar to those included by Moreau in his <a href="https://summit.sfu.ca/_flysystem/fedora/2023-02/etd22223.pdf">paper</a>, which was published in 2020 and included players drafted between 1982 and 2016, inclusive.</p>
-<p>One final note is that, as we will see in the Visualize chapter, a significant portion of the players in our dataset are still active, so we may want to adjust for this. This will be discussed further in the Transform chapter.</p>
+<p>Taking these factors into consideration, we make the somewhat arbitrary decision to use the 25 drafts between and 1996 and 2020 (inclusive). We don’t have the code or the data to check this yet, but at the end of this chapter we will find the number of games played by players in our dataset under the old PS formula. It turns out that less than 0.2% of games in our dataset were played under the old PS formula and thus the disparity in formulas are unlikely to meaningfully impact our conclusion. However, this percentage would get progressively worse if we were to include more from prior to the 1997-1998 season. The dates included are similar to those included by <span class="citation" data-cites="moreau_valuation_2025">Moreau, Perera, and Swartz (<a href="#ref-moreau_valuation_2025" role="doc-biblioref">2025</a>)</span>, which was origanlly published in 2020 and included players drafted between 1982 and 2016, inclusive.</p>
 </section>
 <section id="importing-the-data" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="importing-the-data"><span class="header-section-number">3.3</span> Importing the Data</h2>
-<p>We start off by creating a function to import data from Hockey Reference.</p>
+<p>We start off by creating a function while will import the data from a single draft. For sake of space we just look at the first 10 picks, the output is given in Figure 3.3.1</p>
 <div class="cell" data-warnings="false">
 <details class="code-fold">
 <summary>Code</summary>
@@ -303,34 +306,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">str_glue</span>(<span class="st">"https://www.hockey-reference.com/draft/NHL_{year}_entry.html"</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">5</span>) <span class="co"># to avoid getting rate limited</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span> </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_element</span>(<span class="st">"table"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">row_to_names</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(<span class="fu">import_draft</span>(start_year), <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the data is fairly easy to scrape, it's just an html table</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  draft_year_table <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_element</span>(<span class="st">"table"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">row_to_names</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  draft_year_table</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">head</span>(<span class="fu">import_draft</span>(start_year), <span class="dv">10</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_all_caps</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Table 3.3.1: First 10 Picks of the 1996 Draft"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="iaoqxtbuil" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#iaoqxtbuil table {
+<div id="ezhhlvonqf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ezhhlvonqf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#iaoqxtbuil thead, #iaoqxtbuil tbody, #iaoqxtbuil tfoot, #iaoqxtbuil tr, #iaoqxtbuil td, #iaoqxtbuil th {
+#ezhhlvonqf thead, #ezhhlvonqf tbody, #ezhhlvonqf tfoot, #ezhhlvonqf tr, #ezhhlvonqf td, #ezhhlvonqf th {
   border-style: none;
 }
 
-#iaoqxtbuil p {
+#ezhhlvonqf p {
   margin: 0;
   padding: 0;
 }
 
-#iaoqxtbuil .gt_table {
+#ezhhlvonqf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -356,12 +362,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_caption {
+#ezhhlvonqf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#iaoqxtbuil .gt_title {
+#ezhhlvonqf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -373,7 +379,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#iaoqxtbuil .gt_subtitle {
+#ezhhlvonqf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -385,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#iaoqxtbuil .gt_heading {
+#ezhhlvonqf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -397,13 +403,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_bottom_border {
+#ezhhlvonqf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_col_headings {
+#ezhhlvonqf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -418,12 +424,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_col_heading {
+#ezhhlvonqf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   border-left-style: none;
   border-left-width: 1px;
   border-left-color: #D3D3D3;
@@ -438,27 +444,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#iaoqxtbuil .gt_column_spanner_outer {
+#ezhhlvonqf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   padding-top: 0;
   padding-bottom: 0;
   padding-left: 4px;
   padding-right: 4px;
 }
 
-#iaoqxtbuil .gt_column_spanner_outer:first-child {
+#ezhhlvonqf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#iaoqxtbuil .gt_column_spanner_outer:last-child {
+#ezhhlvonqf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#iaoqxtbuil .gt_column_spanner {
+#ezhhlvonqf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -470,20 +476,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#iaoqxtbuil .gt_spanner_row {
+#ezhhlvonqf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#iaoqxtbuil .gt_group_heading {
+#ezhhlvonqf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -500,12 +506,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#iaoqxtbuil .gt_empty_group_heading {
+#ezhhlvonqf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
+  font-size: 80%;
+  font-weight: bolder;
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -515,15 +521,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#iaoqxtbuil .gt_from_md > :first-child {
+#ezhhlvonqf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#iaoqxtbuil .gt_from_md > :last-child {
+#ezhhlvonqf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#iaoqxtbuil .gt_row {
+#ezhhlvonqf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -542,12 +548,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#iaoqxtbuil .gt_stub {
+#ezhhlvonqf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
@@ -555,7 +561,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#iaoqxtbuil .gt_stub_row_group {
+#ezhhlvonqf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -569,15 +575,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#iaoqxtbuil .gt_row_group_first td {
+#ezhhlvonqf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#iaoqxtbuil .gt_row_group_first th {
+#ezhhlvonqf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#iaoqxtbuil .gt_summary_row {
+#ezhhlvonqf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -587,16 +593,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#iaoqxtbuil .gt_first_summary_row {
+#ezhhlvonqf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_first_summary_row.thick {
+#ezhhlvonqf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#iaoqxtbuil .gt_last_summary_row {
+#ezhhlvonqf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -606,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_grand_summary_row {
+#ezhhlvonqf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -616,7 +622,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#iaoqxtbuil .gt_first_grand_summary_row {
+#ezhhlvonqf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -626,7 +632,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_last_grand_summary_row_top {
+#ezhhlvonqf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -636,11 +642,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_striped {
+#ezhhlvonqf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#iaoqxtbuil .gt_table_body {
+#ezhhlvonqf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -649,7 +655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_footnotes {
+#ezhhlvonqf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -663,7 +669,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_footnote {
+#ezhhlvonqf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -672,7 +678,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#iaoqxtbuil .gt_sourcenotes {
+#ezhhlvonqf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -686,7 +692,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#iaoqxtbuil .gt_sourcenote {
+#ezhhlvonqf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -694,72 +700,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#iaoqxtbuil .gt_left {
+#ezhhlvonqf .gt_left {
   text-align: left;
 }
 
-#iaoqxtbuil .gt_center {
+#ezhhlvonqf .gt_center {
   text-align: center;
 }
 
-#iaoqxtbuil .gt_right {
+#ezhhlvonqf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#iaoqxtbuil .gt_font_normal {
+#ezhhlvonqf .gt_font_normal {
   font-weight: normal;
 }
 
-#iaoqxtbuil .gt_font_bold {
+#ezhhlvonqf .gt_font_bold {
   font-weight: bold;
 }
 
-#iaoqxtbuil .gt_font_italic {
+#ezhhlvonqf .gt_font_italic {
   font-style: italic;
 }
 
-#iaoqxtbuil .gt_super {
+#ezhhlvonqf .gt_super {
   font-size: 65%;
 }
 
-#iaoqxtbuil .gt_footnote_marks {
+#ezhhlvonqf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#iaoqxtbuil .gt_asterisk {
+#ezhhlvonqf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#iaoqxtbuil .gt_indent_1 {
+#ezhhlvonqf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#iaoqxtbuil .gt_indent_2 {
+#ezhhlvonqf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#iaoqxtbuil .gt_indent_3 {
+#ezhhlvonqf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#iaoqxtbuil .gt_indent_4 {
+#ezhhlvonqf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#iaoqxtbuil .gt_indent_5 {
+#ezhhlvonqf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#iaoqxtbuil .katex-display {
+#ezhhlvonqf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#iaoqxtbuil div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ezhhlvonqf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1021,17 +1027,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="gt_row gt_right" headers="gaa"></td>
 <td class="gt_row gt_right" headers="ps">2.7</td>
 </tr>
-</tbody>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="21" class="gt_sourcenote">Table 3.3.1: First 10 Picks of the 1996 Draft</td>
+</tr>
+</tfoot>
+
 </table>
 
 </div>
 </div>
 </div>
-<p>We compare the first 10 rows of the 1996 draft table shown above with the table on <a href="https://www.hockey-reference.com/draft/NHL_1996_entry.html">Hockey Reference</a>, and it seems that the function we created does what we want it to do.</p>
+<p>We compare the Figure 3.3.1 with the first 10 rows of the table on <a href="https://www.hockey-reference.com/draft/NHL_1996_entry.html">Hockey Reference</a>, and it seems that the function we created does what we want it to do.</p>
 </section>
 <section id="evaluating-our-choice-of-drafts" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="evaluating-our-choice-of-drafts"><span class="header-section-number">3.4</span> Evaluating our Choice of Drafts</h2>
-<p>We can now find the number of skaters who played under the old PS formula. As mentioned earlier, it is not clear whether the PS formula changed in the 1997-1998 or 1998-1999 season, so we will check both. Note that players drafted in 1998 or later cannot have played in NHL games in the 1996-1997 or 1997-1998 seasons, so we only need to check players drafted in 1996 and 1997. Also, Hockey Reference URLs use the year the season ended in, so to get stats for the 1996-1997 season the year will be 1997. We also need to be careful when doing analysis with uncleaned data, but this will not be an issue for the short checks we are doing here.</p>
+<p>We can now find the number of skaters who played under the old PS formula. As mentioned earlier, it is not clear whether the PS formula changed in the 1997-1998 or 1998-1999 season, so we will check both. Note that players drafted in 1998 or later cannot have played in NHL games in the 1996-1997 or 1997-1998 seasons, so we only need to check players drafted in 1996 and 1997. Also, Hockey Reference URLs use the year the season ended in, so to get stats for the 1996-1997 season the year will be 1997. We also should take care when doing analysis with uncleaned data, in this case it turns out to not be an issue.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1039,72 +1050,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(pos <span class="sc">!=</span> <span class="st">"G"</span>) <span class="sc">|&gt;</span> <span class="co"># the ps formula for goalies is the same for our entire dataset</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"player"</span>) <span class="co"># we just want to compare names</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>player_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(year){</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">str_glue</span>(<span class="st">"https://www.hockey-reference.com/leagues/NHL_{year}_skaters.html"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">5</span>) <span class="co"># to avoid getting rate limited</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  stats_table <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span> </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_element</span>(<span class="st">"table"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">row_to_names</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type.convert</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(player, gp) <span class="sc">|&gt;</span> </span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span> </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># players who played for n &gt; 1 teams get listed n+1 times; this fixes it </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">gp =</span> <span class="fu">max</span>(gp), <span class="at">.groups =</span> <span class="st">"drop"</span>)  </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  stats_table </span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>player_stats_1996_1997 <span class="ot">&lt;-</span> <span class="fu">full_join</span>(<span class="fu">player_stats</span>(<span class="dv">1997</span>), <span class="co"># year is end of season</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">player_stats</span>(<span class="dv">1998</span>), <span class="co"># year is end of season</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">by =</span> <span class="fu">join_by</span>(player))</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="ot">&lt;-</span> player_stats_1996_1997 <span class="sc">|&gt;</span> </span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">gp_1997 =</span> gp.x, <span class="at">gp_1998 =</span> gp.y) <span class="sc">|&gt;</span> </span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">%in%</span> draft_1996_1997<span class="sc">$</span>player) <span class="sc">|&gt;</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gp_1997 =</span> <span class="fu">coalesce</span>(gp_1997, <span class="dv">0</span>), </span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">gp_1998 =</span> <span class="fu">coalesce</span>(gp_1998, <span class="dv">0</span>))</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(<span class="fu">arrange</span>(old_ps_players, player))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># function to get the statistics for a given year so we can look at GP </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#    in just 1997 and 1998 (draft page only has career totals)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>player_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(year){ </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">str_glue</span>(<span class="st">"https://www.hockey-reference.com/leagues/NHL_{year}_skaters.html"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">5</span>) <span class="co"># to avoid getting rate limited</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  stats_table <span class="ot">&lt;-</span> html <span class="sc">|&gt;</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_element</span>(<span class="st">"table"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">row_to_names</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">type.convert</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(player, gp) <span class="sc">|&gt;</span> </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(player) <span class="sc">|&gt;</span> </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># players who played for n &gt; 1 teams get listed n+1 times; this fixes it </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">gp =</span> <span class="fu">max</span>(gp), <span class="at">.groups =</span> <span class="st">"drop"</span>)  </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  stats_table </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>player_stats_1997_1998 <span class="ot">&lt;-</span> <span class="fu">full_join</span>(<span class="fu">player_stats</span>(<span class="dv">1997</span>), <span class="co"># year is end of season</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">player_stats</span>(<span class="dv">1998</span>), <span class="co"># year is end of season</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">by =</span> <span class="fu">join_by</span>(player))</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># get the players who played in 1996-1997 and/or 1997-1998</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="ot">&lt;-</span> player_stats_1997_1998 <span class="sc">|&gt;</span> </span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">gp_1997 =</span> gp.x, <span class="at">gp_1998 =</span> gp.y) <span class="sc">|&gt;</span> </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">%in%</span> draft_1996_1997<span class="sc">$</span>player) <span class="sc">|&gt;</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gp_1997 =</span> <span class="fu">coalesce</span>(gp_1997, <span class="dv">0</span>), <span class="co"># set NAs to 0</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">gp_1998 =</span> <span class="fu">coalesce</span>(gp_1998, <span class="dv">0</span>)) <span class="co"># set NAs to 0</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">arrange</span>(old_ps_players, player)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_all_caps</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Table 3.4.1: Players with games in 1996-1997 and/or 1997-1998"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">gp_1997 =</span> <span class="st">"GP in 1996-1997"</span>, <span class="at">gp_1998 =</span> <span class="st">"GP in 1997-1998"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-b0a2fd56c13c89baa946" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-b0a2fd56c13c89baa946">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"player":["Andreas Dackell","Andrei Zyuzin","Boyd Devereaux","Brad Larsen","Brett Clark","Chris Allen","Chris Phillips","Dainius Zubrus","Daniel Goneau","Derek Morris","Erik Andersson","Erik Rasmussen","Jan Bulis","Jeff Brown","Joe Thornton","Johan Lindbom","Kai Nurminen","Konstantin Shafranov","Magnus Arvedson","Marco Sturm","Matt Cullen","Matt Higgins","Olli Jokinen","Patrick Marleau","Pavel Kubina","Ronnie Sundin","Ruslan Salei","Sergei Samsonov","Travis Brigley"],"gp_1997":[79,0,0,0,0,0,0,68,41,0,0,0,0,1,0,0,67,5,0,0,0,0,0,0,0,0,30,0,0],"gp_1998":[82,56,38,1,41,1,72,69,11,82,12,21,48,60,55,38,0,0,61,74,61,1,8,74,10,1,66,81,2]},"columns":[{"id":"player","name":"player","type":"character"},{"id":"gp_1997","name":"gp_1997","type":"numeric"},{"id":"gp_1998","name":"gp_1998","type":"numeric"}],"dataKey":"5b73118f04cefb2704f38f15850ea112"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p>I checked all of these manually and it turns out that the Jeff Brown listed is not the Jeff Brown that was drafted in 1996, so he should be excluded (the Jeff Brown drafted in 1996 played in 0 NHL games). All other players are correct.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">!=</span> <span class="st">"Jeff Brown"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp_1997, gp_1998), </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"gp"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_gp =</span> <span class="fu">sum</span>(gp), </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">length</span>(<span class="fu">which</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div id="qcwbjjgaqs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qcwbjjgaqs table {
+<div id="igvpyyrojy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#igvpyyrojy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qcwbjjgaqs thead, #qcwbjjgaqs tbody, #qcwbjjgaqs tfoot, #qcwbjjgaqs tr, #qcwbjjgaqs td, #qcwbjjgaqs th {
+#igvpyyrojy thead, #igvpyyrojy tbody, #igvpyyrojy tfoot, #igvpyyrojy tr, #igvpyyrojy td, #igvpyyrojy th {
   border-style: none;
 }
 
-#qcwbjjgaqs p {
+#igvpyyrojy p {
   margin: 0;
   padding: 0;
 }
 
-#qcwbjjgaqs .gt_table {
+#igvpyyrojy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1130,12 +1128,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_caption {
+#igvpyyrojy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qcwbjjgaqs .gt_title {
+#igvpyyrojy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1147,7 +1145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#qcwbjjgaqs .gt_subtitle {
+#igvpyyrojy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1159,7 +1157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#qcwbjjgaqs .gt_heading {
+#igvpyyrojy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1171,13 +1169,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_bottom_border {
+#igvpyyrojy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_col_headings {
+#igvpyyrojy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1192,12 +1190,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_col_heading {
+#igvpyyrojy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   border-left-style: none;
   border-left-width: 1px;
   border-left-color: #D3D3D3;
@@ -1212,27 +1210,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#qcwbjjgaqs .gt_column_spanner_outer {
+#igvpyyrojy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   padding-top: 0;
   padding-bottom: 0;
   padding-left: 4px;
   padding-right: 4px;
 }
 
-#qcwbjjgaqs .gt_column_spanner_outer:first-child {
+#igvpyyrojy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qcwbjjgaqs .gt_column_spanner_outer:last-child {
+#igvpyyrojy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qcwbjjgaqs .gt_column_spanner {
+#igvpyyrojy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1244,20 +1242,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#qcwbjjgaqs .gt_spanner_row {
+#igvpyyrojy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qcwbjjgaqs .gt_group_heading {
+#igvpyyrojy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
   padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1274,12 +1272,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#qcwbjjgaqs .gt_empty_group_heading {
+#igvpyyrojy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
+  font-size: 80%;
+  font-weight: bolder;
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1289,15 +1287,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#qcwbjjgaqs .gt_from_md > :first-child {
+#igvpyyrojy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qcwbjjgaqs .gt_from_md > :last-child {
+#igvpyyrojy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qcwbjjgaqs .gt_row {
+#igvpyyrojy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1316,12 +1314,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#qcwbjjgaqs .gt_stub {
+#igvpyyrojy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
@@ -1329,7 +1327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qcwbjjgaqs .gt_stub_row_group {
+#igvpyyrojy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1343,15 +1341,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#qcwbjjgaqs .gt_row_group_first td {
+#igvpyyrojy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qcwbjjgaqs .gt_row_group_first th {
+#igvpyyrojy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qcwbjjgaqs .gt_summary_row {
+#igvpyyrojy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1361,16 +1359,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qcwbjjgaqs .gt_first_summary_row {
+#igvpyyrojy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_first_summary_row.thick {
+#igvpyyrojy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qcwbjjgaqs .gt_last_summary_row {
+#igvpyyrojy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1380,7 +1378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_grand_summary_row {
+#igvpyyrojy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1390,7 +1388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qcwbjjgaqs .gt_first_grand_summary_row {
+#igvpyyrojy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1400,7 +1398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_last_grand_summary_row_top {
+#igvpyyrojy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1410,11 +1408,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_striped {
+#igvpyyrojy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qcwbjjgaqs .gt_table_body {
+#igvpyyrojy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1423,7 +1421,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_footnotes {
+#igvpyyrojy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1437,7 +1435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_footnote {
+#igvpyyrojy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1446,7 +1444,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qcwbjjgaqs .gt_sourcenotes {
+#igvpyyrojy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1460,7 +1458,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qcwbjjgaqs .gt_sourcenote {
+#igvpyyrojy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1468,72 +1466,707 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qcwbjjgaqs .gt_left {
+#igvpyyrojy .gt_left {
   text-align: left;
 }
 
-#qcwbjjgaqs .gt_center {
+#igvpyyrojy .gt_center {
   text-align: center;
 }
 
-#qcwbjjgaqs .gt_right {
+#igvpyyrojy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qcwbjjgaqs .gt_font_normal {
+#igvpyyrojy .gt_font_normal {
   font-weight: normal;
 }
 
-#qcwbjjgaqs .gt_font_bold {
+#igvpyyrojy .gt_font_bold {
   font-weight: bold;
 }
 
-#qcwbjjgaqs .gt_font_italic {
+#igvpyyrojy .gt_font_italic {
   font-style: italic;
 }
 
-#qcwbjjgaqs .gt_super {
+#igvpyyrojy .gt_super {
   font-size: 65%;
 }
 
-#qcwbjjgaqs .gt_footnote_marks {
+#igvpyyrojy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qcwbjjgaqs .gt_asterisk {
+#igvpyyrojy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qcwbjjgaqs .gt_indent_1 {
+#igvpyyrojy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qcwbjjgaqs .gt_indent_2 {
+#igvpyyrojy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qcwbjjgaqs .gt_indent_3 {
+#igvpyyrojy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qcwbjjgaqs .gt_indent_4 {
+#igvpyyrojy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qcwbjjgaqs .gt_indent_5 {
+#igvpyyrojy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#qcwbjjgaqs .katex-display {
+#igvpyyrojy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#qcwbjjgaqs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#igvpyyrojy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="player" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">player</th>
+<th id="gp_1997" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">GP in 1996-1997</th>
+<th id="gp_1998" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">GP in 1997-1998</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Andreas Dackell</td>
+<td class="gt_row gt_right" headers="gp_1997">79</td>
+<td class="gt_row gt_right" headers="gp_1998">82</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Andrei Zyuzin</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">56</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Boyd Devereaux</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">38</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Brad Larsen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Brett Clark</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">41</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Chris Allen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Chris Phillips</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">72</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Dainius Zubrus</td>
+<td class="gt_row gt_right" headers="gp_1997">68</td>
+<td class="gt_row gt_right" headers="gp_1998">69</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Daniel Goneau</td>
+<td class="gt_row gt_right" headers="gp_1997">41</td>
+<td class="gt_row gt_right" headers="gp_1998">11</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Derek Morris</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">82</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Erik Andersson</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">12</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Erik Rasmussen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">21</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Jan Bulis</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">48</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Jeff Brown</td>
+<td class="gt_row gt_right" headers="gp_1997">1</td>
+<td class="gt_row gt_right" headers="gp_1998">60</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Joe Thornton</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">55</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Johan Lindbom</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">38</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Kai Nurminen</td>
+<td class="gt_row gt_right" headers="gp_1997">67</td>
+<td class="gt_row gt_right" headers="gp_1998">0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Konstantin Shafranov</td>
+<td class="gt_row gt_right" headers="gp_1997">5</td>
+<td class="gt_row gt_right" headers="gp_1998">0</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Magnus Arvedson</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">61</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Marco Sturm</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">74</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Matt Cullen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">61</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Matt Higgins</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Olli Jokinen</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Patrick Marleau</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">74</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Pavel Kubina</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">10</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Ronnie Sundin</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Ruslan Salei</td>
+<td class="gt_row gt_right" headers="gp_1997">30</td>
+<td class="gt_row gt_right" headers="gp_1998">66</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="player">Sergei Samsonov</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">81</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="player">Travis Brigley</td>
+<td class="gt_row gt_right" headers="gp_1997">0</td>
+<td class="gt_row gt_right" headers="gp_1998">2</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="3" class="gt_sourcenote">Table 3.4.1: Players with games in 1996-1997 and/or 1997-1998</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<p>I checked all of the names in Figure 3.4.1 manually and it turns out that the Jeff Brown listed is not the Jeff Brown that was drafted in 1996, so he should be excluded (the Jeff Brown drafted in 1996 played in 0 career NHL games). All other players are correct. We see the summarized totals below in Figure 3.4.2:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>old_ps_players <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(player <span class="sc">!=</span> <span class="st">"Jeff Brown"</span>) <span class="sc">|&gt;</span> <span class="co"># remove the other Jeff Brown</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gp_1997, gp_1998), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"gp"</span>) <span class="sc">|&gt;</span> <span class="co"># put data in long format to summarize</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_gp =</span> <span class="fu">sum</span>(gp), </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">length</span>(<span class="fu">which</span>(gp <span class="sc">&gt;</span> <span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_all_caps</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Table 3.4.2: Totals of Players in Figure 3.4.1"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">total_gp =</span> <span class="st">"total games"</span>, <span class="at">n =</span> <span class="st">"number of players"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub_values</span>(<span class="at">values =</span> <span class="st">"gp_1997"</span>, <span class="at">replacement =</span> <span class="st">"1997"</span>) <span class="sc">|&gt;</span>   </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub_values</span>(<span class="at">values =</span> <span class="st">"gp_1998"</span>, <span class="at">replacement =</span> <span class="st">"1998"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="vothmjbivv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vothmjbivv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vothmjbivv thead, #vothmjbivv tbody, #vothmjbivv tfoot, #vothmjbivv tr, #vothmjbivv td, #vothmjbivv th {
+  border-style: none;
+}
+
+#vothmjbivv p {
+  margin: 0;
+  padding: 0;
+}
+
+#vothmjbivv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vothmjbivv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vothmjbivv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vothmjbivv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vothmjbivv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vothmjbivv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vothmjbivv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vothmjbivv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vothmjbivv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vothmjbivv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vothmjbivv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vothmjbivv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vothmjbivv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vothmjbivv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vothmjbivv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vothmjbivv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vothmjbivv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vothmjbivv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vothmjbivv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vothmjbivv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vothmjbivv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vothmjbivv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vothmjbivv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vothmjbivv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vothmjbivv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vothmjbivv .gt_left {
+  text-align: left;
+}
+
+#vothmjbivv .gt_center {
+  text-align: center;
+}
+
+#vothmjbivv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vothmjbivv .gt_font_normal {
+  font-weight: normal;
+}
+
+#vothmjbivv .gt_font_bold {
+  font-weight: bold;
+}
+
+#vothmjbivv .gt_font_italic {
+  font-style: italic;
+}
+
+#vothmjbivv .gt_super {
+  font-size: 65%;
+}
+
+#vothmjbivv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vothmjbivv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vothmjbivv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vothmjbivv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vothmjbivv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vothmjbivv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vothmjbivv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#vothmjbivv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#vothmjbivv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1542,31 +2175,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="gt_col_headings header">
 <th id="year" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">year</th>
-<th id="total_gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total_gp</th>
-<th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">n</th>
+<th id="total_gp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total games</th>
+<th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">number of players</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="year">gp_1997</td>
+<td class="gt_row gt_left" headers="year">1997</td>
 <td class="gt_row gt_right" headers="total_gp">290</td>
 <td class="gt_row gt_right" headers="n">6</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="year">gp_1998</td>
+<td class="gt_row gt_left" headers="year">1998</td>
 <td class="gt_row gt_right" headers="total_gp">1066</td>
 <td class="gt_row gt_right" headers="n">26</td>
 </tr>
-</tbody>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="3" class="gt_sourcenote">Table 3.4.2: Totals of Players in Figure 3.4.1</td>
+</tr>
+</tfoot>
+
 </table>
 
 </div>
 </div>
 </div>
-<p>We can see a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results.</p>
+<p>Figure 3.4.2 shows that a very small proportion of the players in our dataset (approximately 5400 players) played games under the old PS formula and that these games represent an insignificant proportion of the games in our dataset (there are 774,820 games in total, the old PS games represent about 0.175% of these). Thus we can see that the different PS formulas is not a major concern and is unlikely to significantly impact our results.</p>
 <p>Note also that we will also use GP (games played) as a measure of player success, and that there have been 82 games per regular season for most NHL seasons since 1996 (2004-2005 was cancelled, 2012-2013, 2019-2020, and 2020-2021 were shortened to 48 games, between 68-71 games, and 56 games, respectively). It is unlikely these will meaningfully affect our results given how many games are in our dataset. We can now proceed to the Tidy step.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-moreau_valuation_2025" class="csl-entry" role="listitem">
+Moreau, Ryker, Harsha Perera, and Tim Swartz. 2025. <span>“Valuation of <span>NHL</span> Draft Picks Using Functional Data Analysis - <span>Ryker</span> <span>Moreau</span>, <span>Harsha</span> <span>Perera</span>, <span>Tim</span> <span>B</span> <span>Swartz</span>, 2025.”</span> <a href="https://journals.sagepub.com/doi/10.1177/22150218251324875">https://journals.sagepub.com/doi/10.1177/22150218251324875</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
