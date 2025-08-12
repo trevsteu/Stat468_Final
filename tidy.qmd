@@ -66,7 +66,7 @@ We build a function to tidy the data. In particular, we want it to:
 
 -   Correct the types of each column so we can use numeric columns in calculations.
 
--   Change `gp` and `ps` values to `0` for players who never played in the NHL or have a negative `ps`.
+-   Change `gp` and `ps` values to `0` for players who never played in the NHL or have a negative `ps`. Players who generate a negative `ps` in their career are not necessarily worse picks than those who generate 0 in their careers, so we will just set them to 0. This matches what @moreau_valuation_2025 did.
 
 -   Standardize position to either be F (forward, any combination of LW, RW, C), D (defenceman), or G (goalie). Note that Kaspars Astashenko has his position listed as "D/W", a quick search of the [NHL website](https://www.nhl.com/player/kaspars-astashenko-8468000) reveals he was a defenceman.
 

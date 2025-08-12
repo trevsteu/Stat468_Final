@@ -59,9 +59,9 @@ We define the following terms which will be used frequently throughout the repor
 
 -   $v_i$: the true value of pick $i$. This is unknown and is what we are trying to estimate.
 
--   $\hat v_i$: our estimate of the value of pick $i$.
+-   $\hat v_{i, m}$: our estimate of the value of pick $i$ based on metric $m$.
 
--   $h_{i, j, m}$: the value of the $i^{th}$ pick of draft $j$ when we measure value using metric $m$. We will consider this value known even though it needs to be estimated for certain metrics. Most of our metrics cannot be negative, so we have a lower bound on $h_{i, j, m}$ for active players. Note that there are four metrics (possible values for $m$) that we will consider:
+-   There are four metrics (possible values for $m$) that we will consider:
 
     -   PS: Point share. We sometimes use $ps_{i,j}$ for the point share of the player drafted at pick $i$ of draft $j$.
 
@@ -71,7 +71,7 @@ We define the following terms which will be used frequently throughout the repor
 
     -   NHL Regular: A player who played in (or is on track to play in) at least 200 NHL games. This definition is the same as the one used by @luo_improving_2024, we will discuss it more in the Transform chapter.
 
--   To avoid confusion, here are the different definitions of "points":
+-   To avoid confusion, here are some different definitions of "points":
 
     -   Points as in goals + assists. This report will **NEVER** use this definition of points.
 
