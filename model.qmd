@@ -66,7 +66,7 @@ lm_pred_vals <- data.frame(overall = seq(1, 224),
                           )
 
 lm_pred_vals |> 
-  round(4) |> 
+  round(4) |>
   reactable(
     columns = list(
     overall = colDef(name = "Overall"),
@@ -75,7 +75,7 @@ lm_pred_vals |>
     adj_ps = colDef(name = "Adjusted PS")))
 ```
 
-Table 7.3.1: Predicted Values from our Linear Models
+Table 7.3.1: Predicted Values from Linear Regression Models
 
 Next we plot the fitted values. Recall that in the Visualize chapter we noted that pretty much any plot involving all PS or GP values will be impossible to interpret. With this in mind, Figures 7.3.2, 7.3.3, and 7.3.4 plot the fitted lines on top of the averaged values, but note that we did [**not**]{.underline} use the aggregated values to fit the model, we're just using them for aesthetic/readability-related purposes.
 
@@ -86,7 +86,7 @@ for(i in 1:length(metrics)){
   assign(str_glue("plot_{metrics[i]}"), 
          ggplot(all_data_comb, aes_string(x = "overall", y = str_glue("mean_{metrics[i]}"))) + 
            geom_point(alpha = 0.5) + 
-           labs(title = str_glue("Mean {names[i]} by Pick Number Overall"), 
+           labs(title = str_glue("Mean {names[i]} by Pick Number"), 
                 x = "Pick Number", y = str_glue("{names[i]}"), 
                 subtitle = "Predictions made by a linear regression model",
                 caption = str_glue("Figure 7.3.{i+1}: Mean {names[i]} vs Pick Number")))
@@ -114,15 +114,23 @@ In this section we will fit a logistic model, which will aim to estimate the pro
 logist_model <- glm(all_data_adj$reg ~ overall, family = "binomial")
 ```
 
-Next, we create a vector of predicted values. Recall that in logistic regression the value that `predict` returns is $\hat \beta_0 + \hat \beta_1 i$, but that the probability we aim to estimate is $\frac{1}{1+e^{-(\hat \beta_0 + \hat \beta_1 i)}}$. We therefore need to translate these predicted values into probabilities.
+Next, we create a vector of predicted values. Recall that in logistic regression the value that `predict` returns is $\hat \beta_0 + \hat \beta_1 i$, but that the probability we aim to estimate is $\frac{1}{1+e^{-(\hat \beta_0 + \hat \beta_1 i)}}$. We therefore need to translate these predicted values into probabilities. The predicted probabilities are given in Table 7.4.1:
 
 ```{r}
 logist_pred_vals <- predict(logist_model, data.frame(overall = seq(1,224)))
 logist_pred_probs <- data.frame(overall = seq(1,224), 
                                 p_reg = 1 / (1 + exp(-logist_pred_vals)))
+logist_pred_probs |> 
+  round(6) |>
+  reactable(
+    columns = list(
+    overall = colDef(name = "Overall"),
+    p_reg = colDef(name = "Probability of Becoming Regular NHLer")))
 ```
 
-Now that we have the predicted probabilities, we plot them below in Figure 7.4.1:
+Table 7.4.1: Predicted Values from Logistic Regression Models
+
+Now that we have the predicted probabilities, we plot them below in Figure 7.4.2:
 
 ```{r}
 plot_lm_p_reg <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) + 
@@ -133,7 +141,7 @@ plot_lm_p_reg <- ggplot(all_data_comb, aes(x = overall, y = suc_rate)) +
   labs(x = "Pick Number", y = "Success Rate", 
        title = "Success Rate by Pick Number", 
        subtitle = "Predictions made by a logistic regression model",
-       caption = "Figure 7.4.1: Success Rate vs Overall")
+       caption = "Figure 7.4.2: Success Rate vs Overall")
 
 plot_lm_p_reg
 ```
@@ -176,11 +184,18 @@ nls_pred_vals <- data.frame(overall = seq(1, 224),
                           gp = nls_pred_vals[[2]], 
                           adj_ps = nls_pred_vals[[3]])
 nls_pred_vals |> 
-  round(4) |> 
-  reactable()
+  round(4) |>
+  reactable(
+    columns = list(
+    overall = colDef(name = "Overall"),
+    ps = colDef(name = "PS"),
+    gp = colDef(name = "GP"),
+    adj_ps = colDef(name = "Adjusted PS")))
 ```
 
-We now plot the fitted line. We once again use plot the line on top of the historical averages to make the plot easier to read.
+Table 7.5.1: Predicted Values from Non-Linear Regression Models
+
+We now plot the fitted lines in Figures 7.5.2, 7.5.3, and 7.5.4. We once again use plot the lines on top of the averaged values to make the plots easier to read.
 
 ```{r, fig.asp=1}
 for(i in seq(1,3)){
@@ -190,13 +205,19 @@ for(i in seq(1,3)){
            geom_point() + 
            geom_line(data = nls_pred_vals, 
                      aes_string(x = "overall", y = str_glue("{metrics[i]}")), 
-                     col = "red", lwd = 1.5))
+                     col = "red", lwd = 1.5) + 
+           labs(title = str_glue("{names[i]} by Pick Number"), 
+                x = "Pick Number", y = str_glue("{names[i]}"), 
+                subtitle = "Predictions made by a non-linear regression model",
+                caption = str_glue("Figure 7.5.{i+1}: Mean {names[i]} vs Pick Number")))
 }
 
-plot_nls_ps / plot_nls_gp / plot_nls_adj_ps
+plot_nls_ps 
+plot_nls_gp 
+plot_nls_adj_ps
 ```
 
-Now that we have fit the models, we plot the residual vs overall values. Note that typically we'd plot the residual vs fitted values, but this plot is impossible to make any inferences from because so many of the fitted values are relatively small, meaning they all get clumped together.
+Just based on looking at these models, it's pretty obvious that these are the three best models we have fit. Now that we have models that show promise, we plot the residuals vs overall values in Figures 7.5.5, 7.5.6, and 7.5.7 to check the model assumptions. Note that sometimes we'd plot the residual vs fitted values, but this plot is impossible to make any inferences from because so many of the fitted values are relatively small, and thus they all get clumped together on the far left part of the plots.
 
 ```{r, fig.asp=1}
 all_resids <- data.frame(overall = all_data_adj$overall, 
@@ -206,14 +227,21 @@ all_resids <- data.frame(overall = all_data_adj$overall,
 
 for(i in seq(1,3)){
   assign(str_glue("plot_resid_{metrics[i]}"), 
-         ggplot(all_resids, aes_string(x = "overall", y = str_glue("{metrics[i]}_resid"))) + 
-           geom_point(alpha = 0.3))
+         ggplot(all_resids, aes_string(x = "overall", 
+                                       y = str_glue("{metrics[i]}_resid"))) + 
+           geom_point(alpha = 0.3) + 
+    labs(title = str_glue("Residual Plot of {names[i]} by Pick Number"), 
+                x = "Pick Number", y = str_glue("Residual"), 
+                subtitle = "Predictions made by a non-linear regression model",
+                caption = str_glue("Figure 7.5.{i+4}: Residual plot of {names[i]}")))
 }
 
-plot_resid_ps / plot_resid_gp / plot_resid_adj_ps
+plot_resid_ps
+plot_resid_gp
+plot_resid_adj_ps
 ```
 
-This clearly fails a number of the model assumptionts, most notably the assumption regarding a constant residual variance. This is not really that surprising and is not a major cause for concern as pretty much any feasible model will show the same general pattern for a few reasons. First, there is no upper bound on our residuals since (in theory) players can play in infinitely many games or generate infinite PS. However, there is a lower bound on the residuals because if a player never plays in an NHL game and/or never generates any PS, then the associated residual will be the predicted value. That is, there is a limit to how much a player can underperform relative to draft position (since we don't allow negative PS and negative GP is not possible), but there is no limit to how much they can overperform. One other thing to note is that, generally speaking, there seems to be more variance among earlier picks than later picks because earlier picks can over or underperform a lot, while later picks can overperform a lot or underperform a little (because their expectations are lower, even if they do nothing they didn't underperform *that* much).
+Figures 7.5.5, 7.5.6, and 7.5.7 reveal that the models clearly fail a number of the model assumptions, most notably the assumption regarding the residuals having a constant variance. However, given the context we are working in, this is not really that surprising and is not a major cause for concern. Notice that pretty much any feasible model will show the same general pattern for at least a few reasons. First, there is no [*upper*]{.underline} bound on our residuals since (in theory) players can play in infinitely many games or generate infinite PS. However, there is a [*lower*]{.underline} bound on them because if a player never plays in an NHL game and/or never generates any PS, then the associated residual will be the negative predicted value. That is, there is a limit to how much a player can [**underperform**]{.underline} relative to draft position (since we don't allow negative PS and negative GP is not possible), but there is no limit to how much they can [**overperform**]{.underline}. One other thing to note is that, generally speaking, there seems to be more variance among earlier picks than later picks. This also makes sense because earlier picks can over or underperform a lot, while later picks can overperform a lot or underperform a little (because their expectations are lower, even if they do nothing they didn't underperform *that* much).
 
 We will look at a QQ Plot of the residuals. [This ggplot2 documentation page](https://ggplot2.tidyverse.org/reference/geom_qq.html) was very helpful for this part.
 
@@ -222,44 +250,67 @@ for(i in seq(1,3)){
   assign(str_glue("qq_{metrics[i]}"), 
          ggplot(all_resids, aes_string(sample = str_glue("{metrics[i]}_resid"))) + 
            stat_qq() + 
-           stat_qq_line(col = "red", lwd = 0.5))
+           stat_qq_line(col = "red", lwd = 0.5) + 
+           labs(title = str_glue("QQ Plot of the Residuals using {names[i]}"), 
+                subtitle = "Predictions made by a non-linear regression model",
+                x = "Theoretical Quantiles", y = "Sample Quantiles", 
+                caption = str_glue("Figure 7.5.{i+7}: QQ Plot from {names[i]} Model")))
 }
 
-qq_ps / qq_gp / qq_adj_ps
+qq_ps
+qq_gp  
+qq_adj_ps
 ```
 
 Clearly the residuals are not normally distributed. This is another result of the points mentioned above, that there is a lower bound on a player's underperformance, but no upper bound on how much they can overperform.
 
-The lesson to take from these plots is that deriving confidence intervals or calculating p-values is almost certainly a bad idea because the assumptions that those mechanisms rely on are clearly invalid. On the other hand, taking point estimates is probably okay since we effectively found a line of best fit which doesn't rely on any of the model assumptions. With this in mind, we will be relying on the point estimates given by this model for the remainder of this report.
+The lesson to take from these plots is that deriving confidence intervals or calculating p-values is almost certainly a bad idea because the assumptions that those mechanisms rely on are clearly invalid. On the other hand, taking point estimates is probably okay since we effectively found a curve of best fit which doesn't rely on any of the model assumptions. With this in mind, we will be relying on the point estimates given by this model for the remainder of this report.
 
 ## Model Selection
 
-For convenience we replot the fitted values from the non-linear models we fit in the last section.
+For convenience, we replot Figures 7.5.2, 7.5.3, and 7.5.4 from the last section.
 
 ```{r}
-plot_nls_ps + plot_nls_gp + plot_nls_adj_ps
+plot_nls_ps
+plot_nls_gp
+plot_nls_adj_ps
 ```
 
-One problem with these plots is that they're all on different scales, which makes comparing models very difficult. Recall from the Introduction chapter that we want to end up with a model which has $\hat v_1 = 1000$ "points" to maintain consistency with existing work. To do this, we set $C_m = \frac{1000}{v_{1,m}}$, and then multiply all of the other $\hat v_{i,m}$ values by $C_m$ for $i \not= 1$, and then use `reactable` to make sure it worked.
+One problem with these plots is that they're all on different scales, which makes comparing models very difficult. To maintain consistency with existing work, we hope to fit a model so that $\hat v_1 = 1000$ "points". To do this, we set $C_m = \frac{1000}{\hat v_{1,m}}$, and then multiply all of the other $\hat v_{i,m}$ values by $C_m$ for $i \not= 1$, and then use `reactable` to make sure it worked. The results are given in Table 7.6.1
 
 ```{r}
 C_m <- c(1, 1000 / nls_pred_vals[1,-1])
 
 scaled_vals <- nls_pred_vals * C_m
 
-reactable(round(scaled_vals, 4))
+scaled_vals |>   
+  round(4) |>
+  reactable(
+    columns = list(
+    overall = colDef(name = "Overall"),
+    ps = colDef(name = "PS"),
+    gp = colDef(name = "GP"),
+    adj_ps = colDef(name = "Adjusted PS")))
 ```
 
-This seems to look good. Now that the predicted values are on the same scale, we can plot them on top of each other.
+Table 7.6.1: Predicted Values on the Same Scale
+
+This seems to look good. Now that the predicted values are on the same scale, we plot them on top of each other in Figure 7.6.2:
 
 ```{r}
 ggplot(scaled_vals, aes(x = overall)) + 
-  geom_line(aes(y = ps), col = "blue", lwd = 1.2) + 
-  geom_line(aes(y = gp), col = "limegreen", lwd = 0.75) + 
-  geom_line(aes(y = adj_ps), col = "salmon", lwd = 0.8, lty = 4)
+  geom_line(aes(y = ps, col = "PS"), lwd = 1.75) + 
+  geom_line(aes(y = gp, col = "GP"), lwd = 0.75) + 
+  geom_line(aes(y = adj_ps, col = "Adjusted PS"), lwd = 0.85, lty = 4) + 
+  theme(legend.position = "right") +
+  labs(x = "Pick Number", y = "Value of Pick (Points)", 
+       title = "Predicted Values of Each Pick", 
+       subtitle = "Models fit using a non-linear regression model", 
+       caption = "Figure 7.6.2: All 3 of the Predicted Curves", 
+       col = "Model")
 ```
 
-Interestingly, the PS and Adjusted PS lines are basically directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate $C_m$: Why doesn't this work???
+Figure 7.6.2 reveals that the PS and Adjusted PS lines are interestingly almost directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate $C_m$:
 
 $$RSS_m  = \sum^n_{i=1}(\hat v_{i,m} - v_i)^2 \Longrightarrow RSS \times C_m^2 = \sum^n_{i=1}(C_m\hat v_{i,m} - C_mv_i)^2 $$
 
@@ -278,35 +329,37 @@ RSS <- c(18.05, 233.1, 19.83)
 RSS * unlist(C_m[-1])
 ```
 
-Recall that since the correlation between PS and GP was $\approx$ 0.85, we will not use a model which incorporates both due to multicollinearity concerns. Given the choice, we prefer to use a metric based on PS rather than GP for a few reasons.
+Given the choice between a metric using PS and one using GP, we prefer to use a metric based on PS for a few reasons.
 
 -   PS credits players for contributing to their team, whereas GP gives credit for being good enough to play for a team.
 
--   The RSS associated with the model with GP is significantly higher than the RSS for both of the PS-related models.
+-   The RSS associated with the model with GP is meaningfully higher than the RSS for both of the PS-related models.
 
--   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. Specifically, there is a hard cap on how many games a player can play in a certain time frame, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distinguishing metric. We know PS has a longer tail because the maximum of PS is more standard deviations away from the mean than the maximum of GP, as we showed at the start of our EDA in the Visualize chapter.
+-   While both metrics are right skewed, in this context we prefer a metric which has a longer right tail since this will allow us to distinguish good players from elite players. It was shown near the start of the Visualize chapter that the maximum of the GP data is around 6 standard deviations from the mean, whereas the maximum of the PS data is almost 10 standard deviations away. This is not that surprising since there is a hard cap on how many games a player can play in a certain time frame, but the limit on PS is impossible to reach (a player would have to win every game in his career and be fully responsible for each and every win). In other words, if two players each played in 82 games per season for 10 seasons before retiring, they would both have played in 820 games, but their PS values could be quite different, indicating that PS is a more distinguishing metric.
 
 -   The PS formula includes time on ice, which tends to be a better measure of player involvement than GP. For example, Player A who plays 20 minutes a night and and Player B who plays 10 minutes a night may have the same GP, but Player A would likely be considered more valuable because he plays twice as much.
 
-Now that we've settled either using PS or Adjusted PS, we take a closer look at the difference between their predicted values. The mean disparity between the two predicted values is about 1.04, which indicates the metric we choose is unlikely to significantly impact our conclusion since picks are values out of 1000. Note that we need to take the absoute value since the since the scaled version of Adjusted PS may be smaller than the scaled PS values.
+Now that we've settled either using PS or Adjusted PS, we take a closer look at the difference between their predicted values. The mean disparity between the two predicted values is about 1.04, which indicates the metric we choose is unlikely to significantly impact our conclusion since picks are values out of 1000. Note that we need to take the absloute value since the since the scaled version of Adjusted PS may be smaller than the scaled PS values (even though the unscaled adjusted PS values are always greater than the scaled PS values).
 
 ```{r}
 mean(abs(scaled_vals$adj_ps - scaled_vals$ps))
 ```
 
-We can also plot the percent differences.
+We can also plot the percent differences, as is done in Figure 7.6.3:
 
 ```{r}
-ggplot(scaled_vals, aes(x = overall)) + 
-  geom_line(aes(y = ps / adj_ps), col = "dodgerblue") + 
-  geom_line(aes(y = adj_ps / ps), col = "salmon")
+ggplot(scaled_vals, aes(x = overall, y = ps / adj_ps)) + 
+  geom_line() + 
+  labs(x = "Pick Number", y = "Scaled PS / Scaled Adjusted PS", 
+       main = "Percent Difference Between PS and Adjusted PS", 
+       caption = "Figure 7.6.3: Percent Difference Between PS and Adjusted PS")
 ```
 
-We see that most of the variation between the PS and Adjusted PS values occurs late in the draft, but these picks are very close in raw point values since 3% of a relatively small number is a small number. With this in mind, we choose the model based on PS (not Adjusted PS). As the analysis in this section has showed, there is almost zero difference between the models based on PS and Adjusted PS models. Therefore we prefer to use the simpler model, which in this case is PS. The RSS values for both models are fairly close, and even though the RSS is smaller for Adjusted PS we will chose the PS model due to it being a simpler model.
+We can see in Figure 7.6.3 that percentage-wise, most of the variation between the PS and Adjusted PS values occurs late in the draft. However, these these picks are still very close in raw point values since 3% of a relatively small number is a small number. With this in mind, we choose the model based on PS (not adjusted PS). As the analysis in this section has showed, there is almost zero difference between the models based on PS and adjusted PS models. Therefore we prefer to use the simpler model, which in this case is PS. The RSS values for both models are fairly close so even though the RSS is smaller for adjusted PS, we will base the remainder of this report on the model based on PS.
 
 ## Finishing Touches
 
-To make the rest of this report and shiny app simpler, we will refit the model with scaled PS values:
+To make the rest of this report and Shiny app simpler, we will refit the model with the scaled PS values:
 
 ```{r}
 scal_ps <- all_data_adj$ps * C_m[[2]]
@@ -316,7 +369,7 @@ nls_scal_ps <- nls(scal_ps ~ SSlogis(log(overall), phi1, phi2, phi3))
 summary(nls_scal_ps)
 ```
 
-We now create two functions which will be used in our R Shiny app. The first is `value`, which takes in a pick and returns the number of points (a more user-friendly version of `predict`), and the second is `pick`, which takes in a number of point and returns the closest pick to that number of points. Recall we fit the model $$ v_{i,m} = \frac{\phi_{1, m}}{1+ (\frac{e^{\phi_{2,m}}}{i})^{1/\phi_{3,m}}} $$and we found $\phi_{1,m} = 1695.81038, \phi_{2,m} = 0.4402, \phi_{3,m} = -1.21381$. Creating the `value` function is now straightforward.
+We now create two functions which will be used in our R Shiny app. The first is `value`, which takes in a pick and returns the number of points (a more user-friendly version of `predict`), and the second is `pick`, which takes in a number of points and returns the closest pick to that number of points. Recall we fit the model $$ v_{i,m} = \frac{\phi_{1, m}}{1+ (\frac{e^{\phi_{2,m}}}{i})^{1/\phi_{3,m}}} $$and from the R output above we have $\phi_{1,m} = 1695.81037, \phi_{2,m} = 0.4402, \phi_{3,m} = -1.21381$. Creating the `value` function is now straightforward.
 
 ```{r}
 phis <- unname(coef(nls_scal_ps))
@@ -333,7 +386,7 @@ value(1) # should be 1000
 value(224) # should be approx 27.762
 ```
 
-The `pick` function is more complex, we need to take the inverse of the value function. It's not a difficult computation and it's a few steps so we omit the steps, it turns out the inverse is given below:
+The `pick` function is more complex, we need to take the inverse of the value function. It's not a difficult computation, but it's a few steps so we omit the derivation, it turns out the inverse is given below:
 
 $$
 i = \frac{e^{\phi_{2,m}}}{(\frac{\phi_{1,m}}{v_{i,m}} - 1)^{\phi_{3,m}}}
@@ -349,16 +402,20 @@ pick(1000) # should be 1
 pick(27.76) # should be 224
 
 i <- seq(1, 224)
-all(pick(value(i)) == i)
+all(pick(value(i)) == i) # this should be TRUE
 ```
 
-Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue. As one final check, we see what the difference in values was for a [recent NHL trade in which the Philadelpha Flyers acquired the 12th overall selection from the Pittsburgh Penguins in exchange for the 22nd and 31st selections](https://www.sportsnet.ca/nhl/article/penguins-trade-12th-overall-pick-to-flyers-for-nos-22-and-31/). We can see that this difference is about 39 points, which is equivalent to Pittsburgh receiving a mid 5th round pick in surplus value. This seems about right, it is widely accepted that the team that acquires the highest pick almost always gives up more than they receive. This is why teams only trade up if they really like a player who is available at the current pick, but that the team thinks will not be available at their next pick.
+Note that the `value` and `pick` functions we implemented in R are not perfect inverses of each other because of the use of `round`, but for the purposes of our R Shiny app this will not be an issue.
+
+As one final check, we see what the difference in values was for a [recent NHL trade in which the Philadelpha Flyers acquired the 12th overall selection from the Pittsburgh Penguins in exchange for the 22nd and 31st selections](https://www.sportsnet.ca/nhl/article/penguins-trade-12th-overall-pick-to-flyers-for-nos-22-and-31/).
 
 ```{r}
 value(12) - value(22) - value(31)
 
 pick(abs(value(12) - value(22) - value(31)))
 ```
+
+We can see that this difference is about 39 points, which is equivalent to Pittsburgh receiving a mid 5th round pick in surplus value. This seems about right, it is widely accepted that the team that acquires the highest pick almost always gives up more than they receive. This is why teams only trade up if they really like a player who is available at the current pick, while also thinking that the player will not be available at their next pick.
 
 Finally, we create a data frame of predicted values and store it in our S3 bucket:
 
@@ -379,7 +436,7 @@ s3write_using(pred_vals, FUN = write_parquet,
 
 ## Storing a Model
 
-We now store the model and data in an S3 bucket so we can access them from within our Shiny app. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html). Since `vetiver` cannot be used for `nls` objects, we will use it on the logistic model using success rate to show that I know how to do it. There will be 2 versions of the app, one using the logistic model (which satisfies the devops requirements) and one using the nls model (which has objectively better predictions, as explained earlier in this chapter).
+We now store the model and data in an S3 bucket so we can access them later if needed. Note that some of the steps given on DevOps for Data Science were in Python, I found the equivalent R steps [here](https://vetiver.posit.co/get-started/deploy.html). Since `vetiver` cannot be used for `nls` objects, we will use it on the logistic model using success rate to show that I know how to do it. There will be 2 versions of the app, one using the logistic model (which satisfies the devops requirements) and one using the nls model (which has objectively better predictions, as explained earlier in this chapter).
 
 ```{r}
 logist_model <- glm(all_data_adj$reg ~ overall, family = "binomial")
@@ -396,4 +453,4 @@ board <- board_s3(bucket = bucket)
 vetiver_pin_write(board, v)
 ```
 
-We now proceed to the Communication chapter, which contains the key results from this report.
+We now proceed to the Communication chapter, which sumaarizes the key results from this report and explains how to use the Shiny app.

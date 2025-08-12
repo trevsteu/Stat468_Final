@@ -20,6 +20,8 @@ The following is a list of all sources used to complete this report. The resourc
 
 -   [Non-linear Regression in R](https://tuos-bio-data-skills.github.io/intro-stats-book/non-linear-regression-in-R.html) (to create the non-linear regression models)
 
+-   [A quantile-quantile plot](https://ggplot2.tidyverse.org/reference/geom_qq.html) (for the QQ plots in the Model chapter)
+
 -   [Reactable Documentation](https://glin.github.io/reactable/articles/examples.html#footers) (used in the Transform and Model chapters)
 
 -   [The Ultimate Guide to Deploying a Shiny App on AWS](https://www.charlesbordet.com/en/guide-shiny-aws/?utm_source=chatgpt.com#) (massively helpful with the Dev Ops-related components of the Shiny app)

@@ -83,13 +83,13 @@ DBI::dbDisconnect(con)
 # ---------------------------------------------------------------------------------------
 
 metrics <- c("mean_ps", "mean_gp", "mean_adj_ps", "suc_rate")
-names <- c("Mean PS", "Mean GP", "Mean Adjusted PS", "Success Rate")
+names <- c("PS", "GP", "Adjusted PS", "Success Rate")
 
 for(i in seq(1, length(metrics)-1)){
   assign(str_glue("plot_{metrics[i]}"), 
          ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
            geom_point() + 
-           labs(title = str_glue("{names[i]} verses Pick Number"), 
+           labs(title = str_glue("Mean {names[i]} verses Pick Number"), 
                 x = "Pick Number", y = str_glue("{names[i]}")))
 }
 

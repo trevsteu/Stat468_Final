@@ -329,7 +329,7 @@ Figure 6.4.2.1 has a similar shape to the plots at the end of the Visualize chap
 
 ## Combining Everything
 
-Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot of the average values by pick each metric in Figure 6.5.1, note that no points can be directly on top of each other because all points have different `overall` values, but the plot of sis once again jittered vertically. Note that the following two Stack Overflow posts were particularly helpful when writing this code:
+Now that we have the metrics we will use in the Model chapter, we will combine them into a single data frame to make the modelling as straightforward as possible. We also make a plot of the average values by pick each metric in Figure 6.5.1, note that no points can be directly on top of each other because all points have different `overall` values, but the plot of sis once again jittered vertically. We would probably prefer to plot these curves on the same plot, but their scales are completely different so this would be meaningless. Note that the following two Stack Overflow posts were particularly helpful when writing this code:
 
 -   [Dynamic Variable naming in r](https://stackoverflow.com/questions/20855818/dynamic-variable-naming-in-r)
 
@@ -350,7 +350,7 @@ for(i in seq(1, length(metrics)-1)){
   assign(str_glue("plot_{metrics[i]}"), 
          ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
            geom_point() + 
-           labs(title = str_glue("{names[i]} verses Pick Number"), 
+           labs(title = str_glue("Mean {names[i]} verses Pick Number"), 
                 x = "Pick Number", y = str_glue("{names[i]}")))
 }
 
