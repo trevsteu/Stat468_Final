@@ -63,4 +63,4 @@ Some work in this area has been done before, such as:
 
 -   [NHL draft: What does it cost to trade up?](https://www.broadstreethockey.com/post/nhl-draft-pick-value-trading-up/) (@tulsky_nhl_2013)
 
-This report will most closely follow the work done in the first three papers listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.
+This report will most closely follow the work done by the first three papers listed. As an interesting aside, Eric Tulsky, who wrote the last article listed above in 2013, was hired as General Manager of the Carolina Hurricanes in 2024.

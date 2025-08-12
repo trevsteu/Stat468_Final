@@ -310,9 +310,7 @@ ggplot(scaled_vals, aes(x = overall)) +
        col = "Model")
 ```
 
-Figure 7.6.2 reveals that the PS and Adjusted PS lines are interestingly almost directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate $C_m$:
-
-$$RSS_m  = \sum^n_{i=1}(\hat v_{i,m} - v_i)^2 \Longrightarrow RSS \times C_m^2 = \sum^n_{i=1}(C_m\hat v_{i,m} - C_mv_i)^2 $$
+Figure 7.6.2 reveals that the PS and Adjusted PS lines are interestingly almost directly on top of each other, which implies that the adjustment we made had little impact on the predictions. We can also compare the residual sum of squares without rescaling all the values and refitting the models by simply multiplying the RSS values by the appropriate $C_m$.
 
 ```{r}
 summary(nls_ps)

@@ -1,10 +1,10 @@
 # References {.unnumbered}
 
-The following is a list of all sources used to complete this report. The resources are organized by the type of source, note that a more formal bibliography is given in my `references.bib` file.
+The following is a list of all sources used to complete this report. The resources are organized by the type of source, note that I also have a `references.bib` file.
 
 ## AI
 
--   ChatGPT Usage (will add link when done)
+-   [ChatGPT Usage](https://chatgpt.com/share/689a9dd6-e248-8008-a18c-d4326e35e26a)
 
 ## Articles/Blog Posts
 

@@ -187,5 +187,3 @@ server <- function(input, output, session){
 }
 
 shinyApp(ui, server)
-
-# rsconnect::deployApp('shiny_app_nls/') 

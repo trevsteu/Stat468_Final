@@ -196,4 +196,4 @@ all_data_test |>
   tab_source_note("Table 4.6.1: Data Loaded from S3 Bucket")
 ```
 
-Figure 4.6.1 confirms that the data can be loaded from the S3 bucket. In future chapters we will edit this data and will put the new version in the same S3 bucket. We now proceed to the Visualize chapter.
+Figure 4.6.1 confirms that the data has been loaded from the S3 bucket. In future chapters we will edit this data and will put the new version in the same S3 bucket. We now proceed to the Visualize chapter.

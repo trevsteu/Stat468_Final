@@ -22,9 +22,12 @@ jobs:
         with:
           r-version: '4.4.0'
       
-      - name: Install R packages
-        run: sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y libcurl4-openssl-dev
-    
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y libcurl4-openssl-dev libsodium-dev
+            
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
         with:

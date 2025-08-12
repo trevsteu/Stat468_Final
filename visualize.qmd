@@ -21,7 +21,7 @@ source("functions.R") # load functions defined in prior chapters
 
 ## Introduction
 
-In the Visualize chapter, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful in the Model chapter.
+In the Visualize chapter, we will perform some EDA (Exploratory Data Analysis) to get a sense of what our data looks like. Specifically, we will see if there are any patterns or trends that may be useful to know about for the Transform and Model chapters.
 
 ## Exploratory Data Analysis (EDA)
 

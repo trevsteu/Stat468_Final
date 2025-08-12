@@ -19,9 +19,9 @@ source("functions.R") # load functions defined in prior chapters
 
 ## Shiny Apps
 
-As mentioned in the Model chapter, there are two shiny apps associated with this project. The first, linked [here](https://trevsteu.shinyapps.io/nls_model_app/), uses non-linear regression to make predictions based on the PS of future picks. If I was advising a team, this is the model I would suggest using. The second app, linked [here](https://trevsteu.shinyapps.io/logist_model_app/), uses logistic regression to make predictions based on the expected value of each pick, which is the probability of the player selected at that pick becoming an NHL regular. [**Disclaimer: adding probabilities in this manner is dubious at best from a statistical perspective,**]{.underline} but `vetiver` does not easily support `nls` objects as mentioned in the Model chapter, so I needed to use a model from `lm` or `glm`, in order to satisfy many of the the devops requirements for this app. Using expected NHLers as the interpretation of pick value allows us to add values together, but the predictions are just not that good (it values pick 1 as pick 50 + pick 100, if any NHL GM traded the first overall pick for these two picks they would be fired on the spot).
+As mentioned in the Model chapter, there are two shiny apps associated with this project. The first, linked [here](https://trevsteu.shinyapps.io/nls_model_app/), uses non-linear regression to make predictions based on the PS of future picks. If I was advising a team, this is the model I would suggest using. The second app, linked [here](https://trevsteu.shinyapps.io/logist_model_app/), uses logistic regression to make predictions based on the expected value of each pick, which is the probability of the player selected at that pick becoming an NHL regular. [**Disclaimer: adding probabilities in this manner is dubious at best from a statistical perspective,**]{.underline} but `vetiver` does not easily support `nls` objects as mentioned in the Model chapter, so I needed to use a model from `lm` or `glm`, in order to satisfy many of the the devops requirements for this app. Using expected NHLers as the interpretation of pick value allows us to add values together, but the predictions are just not very good (it values pick 1 as pick 50 + pick 100, if any NHL GM traded the first overall pick for these two picks they would be fired on the spot). I have also chosen not to scale the predicted values from the logistic model; the interpretation of expected NHLers is very convenient and easy to understand so I don't want to lose that.
 
-The apps differ only in the models they are based on (and their underlying code to access predictions, the logistic-based app has logging, and the nls-based app does not for example). Their UIs are almost identical (except for some asthetic differences), so the instructions for both apps are exactly the same, though the included screenshots are only for the app based on the model fit via non-linear regression.
+The apps differ only in the models they are based on (and a little bit in their underlying code). Their UIs are almost identical (except for some aesthetic differences), so the instructions for both apps are exactly the same, though the included screenshots are only for the app based on the model fit via non-linear regression.
 
 ## Usage of the App
 
@@ -61,40 +61,31 @@ if there are duplicated picks which are also invalid, the user will be warned fo
 
 ## Summary of Results
 
-We also present two other summaries of the results. First, we have a plot of the value of each pick, note that a `geom_point()` version of these exact plots are used in the shiny apps
+We also present two other summaries of the results. First, we have a plot of the value of each pick given in Figure 8.4.1, note that a `geom_point()` version of these exact plots are used in the shiny apps.
 
 ```{r}
 ggplot(pred_vals_nls, aes(x = overall, y = as.numeric(pts))) + 
   geom_line() + 
-ggplot(pred_vals_logist, aes(x = overall, y = 1/(1+exp(-as.numeric(pts))))) + 
-  geom_line()
+  labs(x = "Pick Number", y = "Value of Pick (Points)", 
+       title = "Predicted Value of Each Selection\nin the NHL Entry Draft", 
+       subtitle = "Values predicted using a non-linear \nregression model") + 
+  ggplot(pred_vals_logist, aes(x = overall, y = 1/(1+exp(-as.numeric(pts))))) + 
+  geom_line() + 
+    labs(x = "Pick Number", y = "Value of Pick (Exoected NHLers)", 
+       title = "Predicted Value of Each Selection in \nthe NHL Entry Draft", 
+       subtitle = "Values predicted using a logistic regression \nmodel",     
+       caption = "Figure 8.4.1")
 ```
 
-We also provide a table of all predicted pick values based on the models.
+We also provide a table of all predicted pick values based on the models, which are given in Table 8.4.2.
 
 ```{r}
 reactable(data.frame(cbind(pred_vals_nls, 
-                           1/(1+exp(-pred_vals_logist[2])))))
+                           1/(1+exp(-pred_vals_logist[2])))), 
+          columns = list(
+            overall = colDef(name = "Overall"),
+            pts = colDef(name = "Points"),
+            pts.1 = colDef(name = "Probability of Becoming Regular NHLer")))
 ```
 
-## Things to do:
-
--   Github Actions
-
--   Add references to .bib file
-
--   Read thru instructions to see if I'm missing anything
-
--   Give all plots titles and labels
-
--   Remove unnecessary library calls
-
--   Make sure everything flows logically, make notation consistent
-
--   make sure links work, make sure links are in bibliography
-
--   Add comments to code
-
--   Spell check
-
--   remove unnecessary files from github (ie holding_file, model2, etc).
+Table 8.4.2: Table of Predicted Values
