@@ -89,13 +89,14 @@ for(i in seq(1, length(metrics)-1)){
   assign(str_glue("plot_{metrics[i]}"), 
          ggplot(all_data_comb, aes_string(x = "overall", y = metrics[i])) + 
            geom_point() + 
-           labs(title = str_glue("{names[i]} verses Overall"), 
-                x = "Overall", y = str_glue("{names[i]}")))
+           labs(title = str_glue("{names[i]} verses Pick Number"), 
+                x = "Pick Number", y = str_glue("{names[i]}")))
 }
 
 plot_suc_rate <- ggplot(all_data_comb, aes(x = overall,  y = suc_rate)) + 
   geom_point(position = position_jitter(width = 0, height = 0.015)) + 
-  labs(title = "Success Rate verses Overall", 
-       x = "Overall", y = "Success Rate", 
-       caption = "Figure 7.1.1: Aggregated Metrics")
+  labs(title = "Success Rate verses Pick Number", 
+       x = "Pick Number", y = "Success Rate", 
+       caption = "Figure 7.2.1: Aggregated Metrics")
+
 # ---------------------------------------------------------------------------------------

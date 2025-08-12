@@ -201,7 +201,7 @@ gp_plot_3 + ps_plot_3
 
 Though the plots in Figure 5.3.4.3 are still quite busy, they show a strange trend that there seems to be more players drafted around 200 overall that end up having successful careers, than drafted around 125. I am not sure of an underlying reason for this, but we will need to be careful when modeling to ensure that these late picks are not given more value than earlier picks.[^visualize-1]
 
-[^visualize-1]:  I initially tried to estimate pick value using a $k$-nearest neighbours algorithm, but it valued picks around pick 200 more than picks around 125 overall.
+[^visualize-1]: I initially tried to estimate pick value using a $k$-nearest neighbours algorithm, but it valued picks around pick 200 more than picks around 125 overall.
 
 The plots in Figure 5.3.4.3 are not great because they are missing the vast majority of our dataset (20 drafts plus all the players who played in 0 NHL games for the 5 years in the sample). To improve this, we plot the mean GP and mean PS of the players selected at each pick in Figure 5.3.4.4. We will use the non-averaged PS and GP values when fitting a model, but the relationship between Overall and PS or GP is much more clear when the values are averaged.
 
