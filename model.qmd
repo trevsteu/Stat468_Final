@@ -156,7 +156,7 @@ Where
 
 -   $\phi_{1, m},\phi_{2, m},\phi_{3, m}$ are parameters we are estimating, the value of the parameter depends on which metric we are using.
 
-We choose to use `nls` because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates so it makes interpretations significantly easier. We fit the models using the same metrics as before except for the model based on whether players become NHL regulars.
+We choose to use `nls` because it allows us to directly fit a model with non-linear parameters, we do not need to transform the explanatory or response variates so it makes interpretations significantly easier. We fit the models using the same metrics as before, except for the model based on whether players become NHL regulars.
 
 ```{r}
 metrics <- c("ps", "gp", "adj_ps")
@@ -175,7 +175,9 @@ nls_pred_vals <- data.frame(overall = seq(1, 224),
                           ps = nls_pred_vals[[1]], 
                           gp = nls_pred_vals[[2]], 
                           adj_ps = nls_pred_vals[[3]])
-reactable(round(nls_pred_vals, 4))
+nls_pred_vals |> 
+  round(4) |> 
+  reactable()
 ```
 
 We now plot the fitted line. We once again use plot the line on top of the historical averages to make the plot easier to read.
