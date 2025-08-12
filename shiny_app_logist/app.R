@@ -79,6 +79,8 @@ ui <- fluidPage(
   theme = bslib::bs_theme(bootswatch = "darkly"),
   useShinyFeedback(),
   titlePanel("Draft Pick Trade Evaluator (Logistic Version)"),
+  
+  # generate text boxes
   fluidRow(
     lapply(c("A", "B"),
            \(t) column(6, titlePanel(str_glue("Team {t} Trades Away:")),
@@ -86,6 +88,7 @@ ui <- fluidPage(
                               numericInput(str_glue("{t}_{i}"), str_glue("Pick {i}"),
                                            min = 1, max = 224, step = 1, value = NA))))),
   
+  # evaluate button
   fluidRow(column(3, actionButton("eval", "Evaluate Trade!", class = "btn-lg btn-primary"))),
   br(),
   textOutput("A_points"),
@@ -106,6 +109,9 @@ ui <- fluidPage(
 
 server <- function(input, output, session){
   log4r::info(log, "App Started")
+  
+  # both vectors of picks update as the user types. This allows for warnings to come up
+  #   as the user types instead of only after they click evaluate
   observe({
     temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
     temp_B <- c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)
@@ -118,68 +124,81 @@ server <- function(input, output, session){
         is_dup <- sum(input[[pick]] == c(temp_A, temp_B)) > 1
         message <- ""
         errors <- FALSE
-        if(! in_range & !is.na(input[[pick]]) & is_dup){
+        if(! in_range & !is.na(input[[pick]]) & is_dup){ # pick out of range and duplicated
           message <- str_glue("Ensure this pick is an integer between 1 and 224 (inclusive). \n
                    This pick is also included more than once in the trade.")
           log4r::error(log, "Duplicated picks which are outside acceptable values 
                       (evaluations are not allowed)")
           errors <- TRUE
         }
-        else if(!in_range){
+        else if(!in_range){ # pick out of range
           message <- "Ensure this pick is an integer between 1 and 224 (inclusive)."
           log4r::error(log, "Pick outside acceptable values (evaluations are not allowed)")
           errors <- TRUE
         }
-        else if(!is.na(input[[pick]]) & is_dup){
+        else if(!is.na(input[[pick]]) & is_dup){ # picks duplicated
           message <- "This pick is included more than once in the trade."
           log4r::warn(log, "Duplicated picks (evaluations are still allowed)")
           errors <- TRUE
         }
-        shinyFeedback::feedbackWarning(pick, errors, message)}}})
+        # give the user the feedback
+        shinyFeedback::feedbackWarning(pick, errors, message)}}}) 
   
-  A_picks <- reactive({
+  A_picks <- reactive({ 
     temp_A <- c(input$A_1, input$A_2, input$A_3, input$A_4, input$A_5)
     valid_A <- valid(temp_A)
-    req(valid_A)
+    req(valid_A) # only update A_picks if all picks are in the range
     temp_A})
   B_picks <- reactive({
     valid_B <- valid(c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5))
-    req(valid_B)
+    req(valid_B) # only update B_picks if all picks are in the range
     c(input$B_1, input$B_2, input$B_3, input$B_4, input$B_5)})
 
-  value_A <- eventReactive(input$eval, 
-                           {
+  value_A <- eventReactive(input$eval, # wait for evaluate to be clicked
+                           { # calculate the value of the picks that Team A gives away
                            round(sum(unlist(filter(pred_vals, overall %in% A_picks())[,2])), 7)
                            })
-  value_B <- eventReactive(input$eval, 
-                           {
+  value_B <- eventReactive(input$eval, # wait for evaluate to be clicked
+                           { # calculate the value of the picks that Team B gives away
                            round(sum(unlist(filter(pred_vals, overall %in% B_picks())[,2])), 7)
                            })  
   
   output$A_points <- renderText({
-    str_glue("Team A trades away {value_A()} expected NHLers")
+    str_glue("Team A trades away {value_A()} expected NHLers") # Team A summary message
   })
   output$B_points <- renderText({
-    str_glue("Team B trades away {value_B()} expected NHLers")
+    str_glue("Team B trades away {value_B()} expected NHLers") # Team B summary message
   })
   
   output$equiv <- renderText({
     diff <- round(value_A() - value_B(), 7)
     team <- ifelse(diff > 0, "A", "B")
+    # prepare the message about the difference in values. This gets rendered no matter what the 
+    #   difference is
     winner_stat <- str_glue("Team {team} loses the trade since they give up {abs(diff)} more 
       expected NHLers than they receive")
+    
+    # Generate a message about the context of the trade
+    
+    # Message if difference almost 0
     if(abs(diff) < 0.001){
       str_glue("The point difference is less than 0.001 expected NHLers, which is
                effectively nothing")
     }
+    
+    # Message if 0 < difference < value of pick 224
     else if(abs(diff) < last_pick_val){
       str_glue("{winner_stat}, which is less than the value of the last 
       pick in the draft ({last_pick_val} expected NHLers).")
     }
+    
+    # Message if difference > value of pick 1
     else if(abs(diff) > first_pick_val){
       str_glue("{winner_stat}, which is more than the value of the first 
       pick in the draft ({first_pick_val} expected NHLers).")
     }
+    
+    # Message if value of pick 224 < difference < value of pick 1 
     else{
       diff_pick <- pick(abs(diff))
       str_glue("{winner_stat}. This trade is roughly equivalent to Team {team} giving up pick
@@ -187,6 +206,7 @@ server <- function(input, output, session){
     }
   })
   
+  # create the table of Team A's picks
   output$pred_gt_A <- pred_vals |>
     mutate(xnhls = round(as.numeric(xnhls), 7)) |>
     filter(overall %in% A_picks()) |>
@@ -196,6 +216,7 @@ server <- function(input, output, session){
     data_color(palette = "salmon") |>
     render_gt()
   
+  # create the table of Team B's picks
   output$pred_gt_B <- pred_vals |>
     mutate(xnhls = round(as.numeric(xnhls), 7)) |>
     filter(overall %in% B_picks()) |>
@@ -205,6 +226,9 @@ server <- function(input, output, session){
     data_color(palette = "dodgerblue") |>
     render_gt()
   
+  # Create the plot of all picks, and colour the picks that are involved in the trade
+  #   this plot is why we make all the predictions when the app is rendered (since 
+  #   we need all of them for this plot. 
   output$plot <- renderPlot({
     temp_A <- filter(pred_vals, overall %in% A_picks())
     temp_B <- filter(pred_vals, overall %in% B_picks())
