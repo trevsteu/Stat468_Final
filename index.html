@@ -307,15 +307,15 @@ window.Quarto = {
 <p>We define the following terms which will be used frequently throughout the report:</p>
 <ul>
 <li><p><span class="math inline">\(v_i\)</span>: the true value of pick <span class="math inline">\(i\)</span>. This is unknown and is what we are trying to estimate.</p></li>
-<li><p><span class="math inline">\(\hat v_i\)</span>: our estimate of the value of pick <span class="math inline">\(i\)</span>.</p></li>
-<li><p><span class="math inline">\(h_{i, j, m}\)</span>: the value of the <span class="math inline">\(i^{th}\)</span> pick of draft <span class="math inline">\(j\)</span> when we measure value using metric <span class="math inline">\(m\)</span>. We will consider this value known even though it needs to be estimated for certain metrics. Most of our metrics cannot be negative, so we have a lower bound on <span class="math inline">\(h_{i, j, m}\)</span> for active players. Note that there are four metrics (possible values for <span class="math inline">\(m\)</span>) that we will consider:</p>
+<li><p><span class="math inline">\(\hat v_{i, m}\)</span>: our estimate of the value of pick <span class="math inline">\(i\)</span> based on metric <span class="math inline">\(m\)</span>.</p></li>
+<li><p>There are four metrics (possible values for <span class="math inline">\(m\)</span>) that we will consider:</p>
 <ul>
 <li><p>PS: Point share. We sometimes use <span class="math inline">\(ps_{i,j}\)</span> for the point share of the player drafted at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span>.</p></li>
 <li><p>Adjusted PS: The player’s point share at the end of their career. We sometimes use <span class="math inline">\(ps^{adj}_{i,j}\)</span> for the adjusted point share of the player drafted at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span>. Note that for retired players we have <span class="math inline">\(ps_{i,j}^{adj} = ps_{i,j}\)</span>, since if a player is retired we know what their point share was at the end of their career. For active players we will consider this value known, even though it needs to be estimated.</p></li>
 <li><p>GP: Games played. We sometimes use <span class="math inline">\(gp_{i,j}\)</span> for the number of games played by the player drafted at pick <span class="math inline">\(i\)</span> of draft <span class="math inline">\(j\)</span>.</p></li>
 <li><p>NHL Regular: A player who played in (or is on track to play in) at least 200 NHL games. This definition is the same as the one used by <span class="citation" data-cites="luo_improving_2024">Luo (<a href="#ref-luo_improving_2024" role="doc-biblioref">2024</a>)</span>, we will discuss it more in the Transform chapter.</p></li>
 </ul></li>
-<li><p>To avoid confusion, here are the different definitions of “points”:</p>
+<li><p>To avoid confusion, here are some different definitions of “points”:</p>
 <ul>
 <li><p>Points as in goals + assists. This report will <strong>NEVER</strong> use this definition of points.</p></li>
 <li><p>Points as in point share. Recall this is calculated to measure a player’s effect on his team’s points <u><strong>in the standings, not goals and assists.</strong></u></p></li>
