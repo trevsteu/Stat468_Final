@@ -3,22 +3,12 @@
 # renv::install("janitor")
 # renv::install("dplyr")
 # renv::install("stringr")
-# renv::install("DBI")
-# renv::install("duckdb")
-# renv::install("aws.s3")
-# renv::install("paws")
-# renv::install("arrow")
 
 library(rvest)
 library(tidyverse)
 library(janitor)
 library(dplyr)
 library(stringr)
-library(DBI)
-library(duckdb)
-library(aws.s3)
-library(paws)
-library(arrow)
 
 start_year <- 1996
 end_year <- 2020
@@ -55,30 +45,13 @@ tidy_draft <- function(year){
 
 # ---------------------------------------------------------------------------------------
 
-# We don't need to add the files to the bucket since they're already there. 
-con <- dbConnect(duckdb())
+all_data <- read.csv("all_data.csv")
+all_data_adj <- read.csv("all_data_adj.csv")
+all_data_comb <- read.csv("all_data_comb.csv")
+scal_ps <- read.csv("scal_ps.csv")
 
-Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
-           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
-           "AWS_DEFAULT_REGION" = "us-east-2")
-
-dbExecute(con, "INSTALL httpfs;")
-dbExecute(con, "LOAD httpfs;")
-
-all_data <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/all_data.parquet');")
-all_data_adj <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/all_data_adj.parquet');")
-all_data_comb <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/all_data_comb.parquet');")
-scal_ps <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/scal_ps.parquet');")
-pred_vals_nls <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/pred_vals_nls.parquet');")
-pred_vals_logist <- dbGetQuery(con, "SELECT * 
-                            FROM read_parquet('s3://trevor-stat468/pred_vals_logist.parquet');")
-
-DBI::dbDisconnect(con)
+pred_vals_nls <- read.csv("pred_vals_nls.csv")
+pred_vals_logist <- read.csv("pred_vals_logist.csv")
 
 # ---------------------------------------------------------------------------------------
 

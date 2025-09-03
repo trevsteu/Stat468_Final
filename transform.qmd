@@ -367,9 +367,9 @@ The plots in Figure 6.5.1 all have the same general shape, though some of them a
 
 ## Storing the Transformations
 
-As touched on at the very end of the Tidy chapter, we will be storing our data frames in an S3 bucket. We use the same code to add `all_data_adj` and `all_data_comb` to our S3 bucket within AWS. In `function.R` we get these data frames by querying the S3 bucket using duckdb.
+As touched on at the very end of the Tidy chapter, we will be storing our data frames in an S3 bucket. We use the same code to add `all_data_adj` and `all_data_comb` to our S3 bucket within AWS. In `function.R` we get these data frames by querying the S3 bucket using duckdb. This code isn't functional anymore, so we redo it with csv files.
 
-```{r}
+```{r, eval = FALSE}
 Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
            "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
            "AWS_DEFAULT_REGION" = "us-east-2")
@@ -379,4 +379,9 @@ s3write_using(all_data_adj, FUN = write_parquet,
               bucket = bucket, object = "all_data_adj.parquet")
 s3write_using(all_data_comb, FUN = write_parquet, 
               bucket = bucket, object = "all_data_comb.parquet")
+```
+
+```{r}
+write.csv(all_data_adj, "all_data_adj.csv", row.names = FALSE)
+write.csv(all_data_comb, "all_data_comb.csv", row.names = FALSE)
 ```

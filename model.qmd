@@ -11,18 +11,10 @@ We install and load the necessary packages, along with functions and data from p
 # renv::install("patchwork")
 # renv::install("stringr")
 # renv::install("reactable")
-# renv::install("pins")
-# renv::install("vetiver")
-# renv::install("plumber")
-# renv::install("aws.s3")
 
 library(patchwork)
 library(stringr)
 library(reactable)
-library(pins)
-library(vetiver)
-library(plumber)
-library(aws.s3)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -415,9 +407,9 @@ pick(abs(value(12) - value(22) - value(31)))
 
 We can see that this difference is about 39 points, which is equivalent to Pittsburgh receiving a mid 5th round pick in surplus value. This seems about right, it is widely accepted that the team that acquires the highest pick almost always gives up more than they receive. This is why teams only trade up if they really like a player who is available at the current pick, while also thinking that the player will not be available at their next pick.
 
-Finally, we create a data frame of predicted values and store it in our S3 bucket:
+Finally, we create a data frame of predicted values and store it in our S3 bucket. Note that this code is no longer functional because otherwise I'd have to pay for AWS.
 
-```{r}
+```{r, eval = FALSE}
 Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
            "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
            "AWS_DEFAULT_REGION" = "us-east-2")
@@ -438,7 +430,11 @@ We now store the model and data in an S3 bucket so we can access them later if n
 
 ```{r}
 logist_model <- glm(all_data_adj$reg ~ overall, family = "binomial")
+```
 
+The following code is no longer functional because otherwise I'd have to pay for AWS.
+
+```{r, eval = FALSE}
 s3write_using(data.frame(overall = seq(1,224), 
                          pts = predict(logist_model, 
                                        data.frame(overall = seq(1,224)))), 

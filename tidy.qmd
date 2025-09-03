@@ -11,21 +11,11 @@ We install and load the necessary packages, along with functions from prior chap
 # renv::install("rvest")
 # renv::install("tidyverse")
 # renv::install("gt")
-# renv::install("DBI")
-# renv::install("duckdb")
-# renv::install("aws.s3")
-# renv::install("paws")
-# renv::install("arrow")
 
 library(rvest)
 library(tidyverse)
 library(stringr)
 library(gt)
-library(DBI)
-library(duckdb)
-library(aws.s3)
-library(paws)
-library(arrow)
 
 source("functions.R") # load functions defined in prior chapters
 ```
@@ -113,14 +103,14 @@ Figure 4.3.1 confirms the function completes the tasks listed at the start of th
 
 ## Getting the Data
 
-We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes 2-3 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will soon store the data in a S3 bucket so we don't have to run this function any more than we have to.
+We now load in all of the data and use `rbind()` to bind the tables together, giving us a single data frame to work with. This also means that our data will be in a mix of long and wide format, since the `year` and `overall` columns are formatted like they are in long format but the `to`, `pos`, `gp`, and `ps` columns are the same as they would be in a wide format. Note that this function takes 2-3 minutes to run (because of the `Sys.sleep(5)` line, which is necessary to prevent us getting rate limited). We will soon store the data in a S3 bucket so we don't have to run this function any more than we have to. Note that this code is no longer functional due to me cancelling my AWS free trial, we'll use csv files instead.
 
 ```{r, warning=FALSE, message=FALSE, eval = FALSE}
 all_data <- do.call(rbind, lapply(seq(start_year, end_year, 1),
                    \(x) tidy_draft(x)))
 ```
 
-```{r, message=FALSE, echo=FALSE, include=FALSE, warning=FALSE}
+```{r, eval = FALSE}
 con <- dbConnect(duckdb())
 
 dbExecute(con, "INSTALL httpfs;")
@@ -131,6 +121,10 @@ all_data_test <- dbGetQuery(con, "SELECT *
 
 # I'm cheating here by loading from the bucket because I don't want to run
 #   the chunk above since tidy_draft takes such a long time to run and render
+```
+
+```{r}
+all_data_test <- read.csv("all_data.csv")
 ```
 
 ## Verification
@@ -161,9 +155,9 @@ These checks all returned what they should.
 
 ## Storing the Data
 
-Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in an AWS S3 bucket so future chapters can get the data from the S3 bucket instead of from Hockey Reference, making this report render significantly faster. We do this by following the instructions given by @agarwal_how_2020, which tell us to save `all_data` in parquet file and then write it to our S3 bucket.
+Finally, recall that the `import_data` function (and thus the `tidy_draft` function) both take quite a while to run, especially when importing data for a large number of years. To resolve this issue, we will store the data in an AWS S3 bucket so future chapters can get the data from the S3 bucket instead of from Hockey Reference, making this report render significantly faster. We do this by following the instructions given by @agarwal_how_2020, which tell us to save `all_data` in parquet file and then write it to our S3 bucket. Once again, this code is not functional because I don't have an AWS account, so we use csv files.
 
-```{r}
+```{r, eval = FALSE}
 Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
            "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"), 
            "AWS_DEFAULT_REGION" = "us-east-2")
@@ -173,9 +167,13 @@ s3write_using(all_data, FUN = write_parquet,
               bucket = bucket, object = "all_data.parquet")
 ```
 
+```{r}
+write.csv(all_data, "all_data.csv", row.names = FALSE)
+```
+
 In this and future chapters, we still start by loading in all of the functions from `functions.R`, which includes all the functions and global constants defined in all chapters, in addition to querying the data from the AWS S3 bucket using duckdb. `functions.R` is included in this project's GitHub repo, and the part of it that loads `all_data` is also given below (here we load it into `all_data_test` to show that it actually works). I also followed some of the instructions from @michonneau_how_2023 to help me write the below code.
 
-```{r, messages = FALSE, warning = FALSE, results= 'hide'}
+```{r, messages = FALSE, warning = FALSE, results= 'hide', eval = FALSE}
 con <- dbConnect(duckdb())
 
 dbExecute(con, "INSTALL httpfs;")
@@ -185,6 +183,10 @@ all_data_test <- dbGetQuery(con, "SELECT *
                             FROM read_parquet('s3://trevor-stat468/all_data.parquet');")
 
 DBI::dbDisconnect(con)
+```
+
+```{r}
+all_data_test <- read.csv("all_data.csv")
 ```
 
 ```{r}
