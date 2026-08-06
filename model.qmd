@@ -454,7 +454,7 @@ pred_vals_logist <- data.frame(overall = seq(1,224),
                          pts = predict(logist_model, 
                                        data.frame(overall = seq(1,224))))
 
-write.csv(pred_vals_logist, "pred_vals_log.csv")
+write.csv(pred_vals_logist, "pred_vals_logist.csv")
 ```
 
 We now proceed to the Communication chapter, which sumaarizes the key results from this report and explains how to use the Shiny app.
