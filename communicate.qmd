@@ -81,7 +81,7 @@ We also provide a table of all predicted pick values based on the models, which 
 
 ```{r}
 reactable(data.frame(cbind(pred_vals_nls, 
-                           1/(1+exp(-pred_vals_logist[2])))), 
+                           1/(1+exp(-pred_vals_logist["pts"])))), 
           columns = list(
             overall = colDef(name = "Overall"),
             pts = colDef(name = "Points"),
